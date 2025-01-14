@@ -4,7 +4,8 @@ import com.bootjpabase.carenation.api.sample.domain.dto.request.SampleListReques
 import com.bootjpabase.carenation.api.sample.domain.dto.response.SampleResponseDTO;
 import com.bootjpabase.carenation.api.sample.service.SampleService;
 import com.bootjpabase.carenation.api.sample.service.SampleServiceTx;
-import com.bootjpabase.carenation.global.dto.BaseResponse;
+import com.bootjpabase.carenation.global.constant.ResponseMessageConst;
+import com.bootjpabase.carenation.global.domain.dto.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -36,29 +37,44 @@ public class SampleController {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = SampleResponseDTO.class))),
             @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    @Operation(summary = "샘플 목록 조회", description = "샘플 목록 조회 API")
+    @Operation(summary = "샘플 목록 조회", description = "샘플 목록 조회 API (제목, 내용이 없을 경우 전체목록 조회)")
     @GetMapping("sampleList")
     public BaseResponse getSampleList(
-            @Parameter(in = ParameterIn.QUERY, name = "title", description = "샘플 제목", example = "title1", schema = @Schema(implementation = String.class))
+            @Parameter(name = "title", description = "샘플 제목", example = "title1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
             @RequestParam(required = false) String title,
-            @Parameter(in = ParameterIn.QUERY, name = "content", description = "샘플 내용", example = "content1", schema = @Schema(implementation = String.class))
+            @Parameter(name = "content", description = "샘플 내용", example = "content1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
             @RequestParam(required = false) String content
     ) throws Exception {
         BaseResponse baseResponse;
 
+        /*
         // 조회용 dto set
         SampleListRequestDTO dto = SampleListRequestDTO.builder()
                 .title(title)
                 .content(content)
                 .build();
+         */
+
+        // 조회용 dto set
+        SampleListRequestDTO dto2 = new SampleListRequestDTO();
+
+        // 제목이 있을 때
+        if(!ObjectUtils.isEmpty(title)){
+            dto2.setTitle(title);
+        }
+
+        // 내용이 있을 때
+        if(!ObjectUtils.isEmpty(content)){
+            dto2.setContent(content);
+        }
 
         // Sample 목록 조회
-        List<SampleResponseDTO> resultList = sampleService.getSampleList(dto);
+        List<SampleResponseDTO> resultList = sampleService.getSampleList(dto2);
 
         // response set
         baseResponse = ObjectUtils.isEmpty(resultList)
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), "데이터 없음", SampleResponseDTO.builder().build(), 0)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), "조회 성공", resultList, resultList.size());
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, SampleResponseDTO.builder().build(), 0)
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList, resultList.size());
 
         return baseResponse;
     }

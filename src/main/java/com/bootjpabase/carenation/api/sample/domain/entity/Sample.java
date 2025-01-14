@@ -1,5 +1,6 @@
 package com.bootjpabase.carenation.api.sample.domain.entity;
 
+import com.bootjpabase.carenation.global.domain.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -12,7 +13,7 @@ import org.hibernate.annotations.Comment;
 @Builder
 @Getter
 @Setter
-public class Sample {
+public class Sample extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

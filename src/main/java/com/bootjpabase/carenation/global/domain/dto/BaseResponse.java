@@ -1,4 +1,4 @@
-package com.bootjpabase.carenation.global.dto;
+package com.bootjpabase.carenation.global.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
