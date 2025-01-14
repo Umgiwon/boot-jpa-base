@@ -25,7 +25,9 @@ public class SampleServiceTx {
      * Sample 단건 저장
      * @param dto
      */
-    public void saveSample(SampleSaveRequestDTO dto) {
+    public boolean saveSample(SampleSaveRequestDTO dto) {
+
+        boolean result = false;
 
         // 저장할 entity 객체 생성
         Sample saveSample = Sample.builder()
@@ -35,13 +37,18 @@ public class SampleServiceTx {
 
         // 단건 저장
         sampleRepository.save(saveSample);
+        result = true;
+
+        return result;
     }
 
     /**
      * Sample 다건 저장
      * @param dtoList
      */
-    public void saveAllSample(List<SampleSaveRequestDTO> dtoList) {
+    public boolean saveAllSample(List<SampleSaveRequestDTO> dtoList) {
+
+        boolean result = false;
 
         // 저장할 entity 목록 담을 array 초기화
         List<Sample> saveSampleList = new ArrayList<>();
@@ -57,6 +64,9 @@ public class SampleServiceTx {
 
         // 담긴 저장목록 다건 저장
         sampleRepository.saveAll(saveSampleList);
+        result = true;
+
+        return result;
     }
 
     /**

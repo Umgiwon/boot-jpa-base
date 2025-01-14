@@ -20,19 +20,19 @@ public class BaseResponse {
     @Schema(description = "Message")
     private String message;
 
-    @Schema(description = "Data")
-    private Object data;
-
     @Schema(description = "Data Size")
     private int dataSize;
 
-    public static BaseResponse getBaseResponseBuilder(int httpCode, String message, Object data, int dataSize) {
+    @Schema(description = "Data")
+    private Object data;
+
+    public static BaseResponse getBaseResponseBuilder(int httpCode, String message, int dataSize, Object data) {
         return BaseResponse.builder()
                 .timeStamp(LocalDateTime.now())
                 .httpCode(httpCode)
                 .message(message)
-                .data(data)
                 .dataSize(dataSize)
+                .data(data)
                 .build();
     }
 
