@@ -1,8 +1,6 @@
 package com.bootjpabase.carenation.api.sample.controller;
 
-import com.bootjpabase.carenation.api.sample.domain.dto.request.SampleDetailRequestDTO;
-import com.bootjpabase.carenation.api.sample.domain.dto.request.SampleListRequestDTO;
-import com.bootjpabase.carenation.api.sample.domain.dto.request.SampleSaveRequestDTO;
+import com.bootjpabase.carenation.api.sample.domain.dto.request.*;
 import com.bootjpabase.carenation.api.sample.domain.dto.response.SampleResponseDTO;
 import com.bootjpabase.carenation.api.sample.service.SampleService;
 import com.bootjpabase.carenation.api.sample.service.SampleServiceTx;
@@ -93,7 +91,7 @@ public class SampleController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "저장 성공", content = @Content(schema = @Schema(implementation = SampleResponseDTO.class))),
+            @ApiResponse(responseCode = "200", description = "저장 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
             @ApiResponse(responseCode = "204", description = "저장 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "샘플 단건 저장", description = "샘플 단건 저장 API")
@@ -119,24 +117,25 @@ public class SampleController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "저장 성공", content = @Content(schema = @Schema(implementation = SampleResponseDTO.class))),
+            @ApiResponse(responseCode = "200", description = "저장 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
             @ApiResponse(responseCode = "204", description = "저장 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
+    @Operation(summary = "샘플 다건 저장", description = "샘플 다건 저장 API")
     @PostMapping("sampleList")
     public BaseResponse saveSampleList(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(
                     examples = {
                             @ExampleObject(name = "예제1", value = """
-                                        [
-                                            {
-                                                "title": "title11",
-                                                "content": "content11"
-                                            },
-                                            {
-                                                "title": "title12",
-                                                "content": "content12"
-                                            }
-                                        ]
+                                            [
+                                                {
+                                                    "title": "title11",
+                                                    "content": "content11"
+                                                },
+                                                {
+                                                    "title": "title12",
+                                                    "content": "content12"
+                                                }
+                                            ]
                                     """)
                     }
             ))
@@ -157,6 +156,59 @@ public class SampleController {
         return baseResponse;
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "204", description = "수정 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    @Operation(summary = "샘플 수정", description = "샘플 수정 API")
+    @PatchMapping("sample")
+    public BaseResponse updateSample(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
+                    content = @Content(schema = @Schema(implementation = SampleUpdateRequestDTO.class)))
+            @org.springframework.web.bind.annotation.RequestBody SampleUpdateRequestDTO dto
+    ) throws Exception {
+        BaseResponse baseResponse;
 
+        // Sample 수정
+        boolean result = sampleServiceTx.updateSample(dto);
 
+        // response set
+        if(result) {
+            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.UPDATE_SUCCESS, 0, null);
+        } else {
+            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.UPDATE_FAIL, 0, null);
+        }
+
+        return baseResponse;
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "204", description = "수정 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    @Operation(summary = "샘플 삭제", description = "샘플 삭제 API")
+    @DeleteMapping("sample")
+    public BaseResponse deleteSample(
+            @Parameter(name = "sampleSn", description = "샘플 순번", example = "1", in = ParameterIn.QUERY, schema = @Schema(implementation = Long.class))
+            @RequestParam Long sampleSn
+    ) throws Exception {
+        BaseResponse baseResponse;
+
+        // 삭제용 dto set
+        SampleDeleteRequestDTO dto = SampleDeleteRequestDTO.builder()
+                .sampleSn(sampleSn)
+                .build();
+
+        // Sample 삭제
+        boolean result = sampleServiceTx.deleteSample(dto);
+
+        // response set
+        if(result) {
+            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 0, null);
+        } else {
+            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.DELETE_FAIL, 0, null);
+        }
+
+        return baseResponse;
+    }
 }

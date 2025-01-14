@@ -9,6 +9,7 @@ import com.bootjpabase.carenation.api.sample.repository.SampleRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,26 +74,41 @@ public class SampleServiceTx {
      * Sample 수정
      * @param dto
      */
-    public void updateSample(SampleUpdateRequestDTO dto) {
+    public boolean updateSample(SampleUpdateRequestDTO dto) {
+
+        boolean result = false;
 
         // 수정할 entity 조회
-        Sample updateSample = sampleRepository.findById(dto.getSampleSn()).orElseThrow();
+        Sample updateSample = sampleRepository.findById(dto.getSampleSn()).orElse(null);
 
         // entity 영속성 컨텍스트 수정
-        updateSample.setTitle(dto.getTitle());
-        updateSample.setContent(dto.getContent());
+        if(!ObjectUtils.isEmpty(updateSample)) {
+            updateSample.setTitle(dto.getTitle());
+            updateSample.setContent(dto.getContent());
+            result = true;
+        }
+
+
+        return result;
     }
 
     /**
      * Sample 삭제
      * @param dto
      */
-    public void deleteSample(SampleDeleteRequestDTO dto) {
+    public boolean deleteSample(SampleDeleteRequestDTO dto) {
+
+        boolean result = false;
 
         // 삭제할 entity 조회
-        Sample deleteSample = sampleRepository.findById(dto.getSampleSn()).orElseThrow();
+        Sample deleteSample = sampleRepository.findById(dto.getSampleSn()).orElse(null);
 
         // 삭제
-        sampleRepository.delete(deleteSample);
+        if(!ObjectUtils.isEmpty(deleteSample)) {
+            sampleRepository.delete(deleteSample);
+            result = true;
+        }
+
+        return result;
     }
 }
