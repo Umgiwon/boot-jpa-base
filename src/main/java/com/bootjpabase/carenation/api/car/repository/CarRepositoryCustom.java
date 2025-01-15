@@ -61,7 +61,7 @@ public class CarRepositoryCustom {
      * @return
      */
     private BooleanExpression eqCategory(String category) {
-        return (!ObjectUtils.isEmpty(category)) ? car.category.eq(category) : null;
+        return (!ObjectUtils.isEmpty(category)) ? car.category.contains(category) : null;
     }
 
     /**
@@ -70,7 +70,7 @@ public class CarRepositoryCustom {
      * @return
      */
     private BooleanExpression eqManufacturer(String manufacturer) {
-        return (!ObjectUtils.isEmpty(manufacturer)) ? car.manufacturer.eq(manufacturer) : null;
+        return (!ObjectUtils.isEmpty(manufacturer)) ? car.manufacturer.contains(manufacturer) : null;
     }
 
     /**
@@ -79,7 +79,7 @@ public class CarRepositoryCustom {
      * @return
      */
     private BooleanExpression eqModelName(String modelName) {
-        return (!ObjectUtils.isEmpty(modelName)) ? car.modelName.eq(modelName) : null;
+        return (!ObjectUtils.isEmpty(modelName)) ? car.modelName.contains(modelName) : null;
     }
 
 
