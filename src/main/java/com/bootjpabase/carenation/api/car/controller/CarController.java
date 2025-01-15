@@ -93,7 +93,7 @@ public class CarController {
 
         // response set
         if(result) {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 0 , true);
+            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true);
         } else {
             baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
         }
@@ -137,7 +137,7 @@ public class CarController {
 
         // response set
         if(result) {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 0, true);
+            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1, true);
         } else {
             baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
         }
@@ -163,7 +163,7 @@ public class CarController {
 
         // response set
         if(result) {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.UPDATE_SUCCESS, 0, true);
+            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.UPDATE_SUCCESS, 1, true);
         } else {
             baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.UPDATE_FAIL, 0, false);
         }
