@@ -7,7 +7,7 @@ spring:
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/carenation
+    url: jdbc:mariadb://localhost:3306/carmanager
     username: root
     password: 1234
 
@@ -37,4 +37,4 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
-  packages-to-scan: com.bootjpabase.carenation
+  packages-to-scan: com.bootjpabase.carmanager

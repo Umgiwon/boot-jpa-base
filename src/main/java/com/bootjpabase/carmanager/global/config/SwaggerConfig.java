@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("Carenation API 문서")
+    @Value("Car Management API 문서")
     private String API_TITLE;
 
-    @Value("Carenation - 자동차 관리 API 문서")
+    @Value("Car Management - 자동차 관리 API 문서")
     private String API_DECRIPTION;
 
     @Value("1.0")

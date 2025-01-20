@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 @SpringBootTest()
-class CarenationCarAPITest {
+class CarManagerAPITest {
 
     @Autowired
     private MockMvc mockMvc;

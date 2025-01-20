@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "자동차 관리 API", description = "carenation - 자동차 관리 API")
+@Tag(name = "자동차 관리 API", description = "Car Management - 자동차 관리 API")
 @RestController
 @RequiredArgsConstructor
 @Validated
