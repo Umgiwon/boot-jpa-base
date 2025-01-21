@@ -1,7 +1,9 @@
 package com.bootjpabase.carmanager.api.sample.domain.dto.request;
 
+import com.bootjpabase.carmanager.global.validate.groups.sample.SampleSaveValidate;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,11 +18,13 @@ import org.hibernate.validator.constraints.Length;
 @JsonIgnoreProperties(ignoreUnknown = true) // json 데이터를 java 객체로 역직렬화 할 때 매핑되지 않은 필드를 무시
 public class SampleSaveRequestDTO {
 
-    @Length(max = 30, message = "제목은 30글자 이하로 입력해야 합니다.")
+    @NotBlank(message = "제목은 필수입니다", groups = {SampleSaveValidate.class})
+    @Length(max = 30, message = "제목은 30글자 이하로 입력해야 합니다.", groups = {SampleSaveValidate.class})
     @Schema(description = "제목 입력값", example = "샘플의 저장할 제목")
     private String title;
 
-    @Length(max = 150, message = "내용은 150글자 이하로 입력해야 합니다.")
+    @NotBlank(message = "내용은 필수입니다", groups = {SampleSaveValidate.class})
+    @Length(max = 150, message = "내용은 150글자 이하로 입력해야 합니다.", groups = {SampleSaveValidate.class})
     @Schema(description = "내용 입력값", example = "샘플의 저장할 내용")
     private String content;
 }

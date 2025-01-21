@@ -4,8 +4,12 @@ import com.bootjpabase.carmanager.api.sample.domain.dto.request.*;
 import com.bootjpabase.carmanager.api.sample.domain.dto.response.SampleResponseDTO;
 import com.bootjpabase.carmanager.api.sample.service.SampleService;
 import com.bootjpabase.carmanager.api.sample.service.SampleServiceTx;
+import com.bootjpabase.carmanager.global.annotation.sample.ValidContent;
+import com.bootjpabase.carmanager.global.annotation.sample.ValidTitle;
 import com.bootjpabase.carmanager.global.constant.ResponseMessageConst;
 import com.bootjpabase.carmanager.global.domain.dto.BaseResponse;
+import com.bootjpabase.carmanager.global.validate.groups.sample.SampleSaveValidate;
+import com.bootjpabase.carmanager.global.validate.groups.sample.SampleUpdateValidate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -41,9 +45,9 @@ public class SampleController {
     @GetMapping("sampleList")
     public BaseResponse getSampleList(
             @Parameter(name = "title", description = "샘플 제목", example = "title1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String title,
+            @RequestParam(required = false) @ValidTitle String title,
             @Parameter(name = "content", description = "샘플 내용", example = "content1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String content
+            @RequestParam(required = false) @ValidContent String content
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -101,7 +105,7 @@ public class SampleController {
     public BaseResponse saveSample(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = SampleSaveRequestDTO.class)))
-            @org.springframework.web.bind.annotation.RequestBody SampleSaveRequestDTO dto
+            @org.springframework.web.bind.annotation.RequestBody @Validated(SampleSaveValidate.class) SampleSaveRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -141,7 +145,7 @@ public class SampleController {
                                     """)
                     }
             ))
-            @org.springframework.web.bind.annotation.RequestBody List<SampleSaveRequestDTO> dto
+            @org.springframework.web.bind.annotation.RequestBody @Validated(SampleSaveValidate.class) List<SampleSaveRequestDTO> dto
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -167,7 +171,7 @@ public class SampleController {
     public BaseResponse updateSample(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = SampleUpdateRequestDTO.class)))
-            @org.springframework.web.bind.annotation.RequestBody SampleUpdateRequestDTO dto
+            @org.springframework.web.bind.annotation.RequestBody @Validated(SampleUpdateValidate.class) SampleUpdateRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 

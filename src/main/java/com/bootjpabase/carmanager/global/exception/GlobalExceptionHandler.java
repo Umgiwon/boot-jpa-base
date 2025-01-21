@@ -101,7 +101,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Constraint Violdation Exception 처리 핸들러 (@valid, @validated 어노테이션)
+     * Constraint Violdation Exception 처리 핸들러 (custom 어노테이션)
      * @param e
      * @return
      */
