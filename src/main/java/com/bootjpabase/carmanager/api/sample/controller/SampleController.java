@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.List;
 @Tag(name = "Sample API", description = "Sample API 설명")
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/sample/")
 public class SampleController {
 

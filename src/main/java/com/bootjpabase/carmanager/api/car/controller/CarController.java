@@ -154,7 +154,7 @@ public class CarController {
     public BaseResponse updateCar(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = CarUpdateRequestDTO.class)))
-            @RequestBody CarUpdateRequestDTO dto
+            @RequestBody @Validated CarUpdateRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 

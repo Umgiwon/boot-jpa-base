@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true) // json 데이터를 java 객체로 역직렬화 할 때 매핑되지 않은 필드를 무시
 public class CarUpdateRequestDTO {
 
-    @NotNull
+    @NotNull(message = "자동차 순번은 필수입니다")
     @Schema(description = "자동차 순번", example = "1")
     private Long carSn;
 
