@@ -1,19 +1,15 @@
 package com.bootjpabase.carmanager.global.exception;
 
 import com.bootjpabase.carmanager.global.enums.ApiReturnCode;
-import com.bootjpabase.carmanager.global.validate.common.CustomCollectionValidator;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
@@ -28,14 +24,14 @@ public class GlobalExceptionHandler {
 
     private final String ERROR_PATH = "/error";
 
-    /* Collection valid를 위한 로직 추가 */
+    /* Collection valid를 위한 로직 추가 (해당 로직이 없어도 @Valid 어노테이션이 정상 작동 하는것으로 확인되어 주석처리(2025.01.24)
     protected final LocalValidatorFactoryBean validator;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.addValidators(new CustomCollectionValidator(validator));
     }
-    /* //Collection valid를 위한 로직 추가 */
+    */
 
     /**
      * RuntimeException 발생시 처리 핸들러

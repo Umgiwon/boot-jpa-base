@@ -8,8 +8,6 @@ import com.bootjpabase.carmanager.global.annotation.sample.ValidContent;
 import com.bootjpabase.carmanager.global.annotation.sample.ValidTitle;
 import com.bootjpabase.carmanager.global.constant.ResponseMessageConst;
 import com.bootjpabase.carmanager.global.domain.dto.BaseResponse;
-import com.bootjpabase.carmanager.global.validate.groups.sample.SampleSaveValidate;
-import com.bootjpabase.carmanager.global.validate.groups.sample.SampleUpdateValidate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -19,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;
@@ -105,7 +104,7 @@ public class SampleController {
     public BaseResponse saveSample(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = SampleSaveRequestDTO.class)))
-            @org.springframework.web.bind.annotation.RequestBody @Validated(SampleSaveValidate.class) SampleSaveRequestDTO dto
+            @org.springframework.web.bind.annotation.RequestBody @Valid SampleSaveRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -145,7 +144,7 @@ public class SampleController {
                                     """)
                     }
             ))
-            @org.springframework.web.bind.annotation.RequestBody @Validated(SampleSaveValidate.class) List<SampleSaveRequestDTO> dto
+            @org.springframework.web.bind.annotation.RequestBody @Valid List<SampleSaveRequestDTO> dto
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -171,7 +170,7 @@ public class SampleController {
     public BaseResponse updateSample(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = SampleUpdateRequestDTO.class)))
-            @org.springframework.web.bind.annotation.RequestBody @Validated(SampleUpdateValidate.class) SampleUpdateRequestDTO dto
+            @org.springframework.web.bind.annotation.RequestBody @Valid SampleUpdateRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 
