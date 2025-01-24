@@ -17,10 +17,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +28,6 @@ import java.util.List;
 @Tag(name = "자동차 관리 API", description = "Car Management - 자동차 관리 API")
 @RestController
 @RequiredArgsConstructor
-@Validated
 @RequestMapping("/cars/")
 public class CarController {
 
@@ -84,7 +83,7 @@ public class CarController {
     public BaseResponse saveCar(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = CarSaveRequestDTO.class)))
-            @RequestBody @Validated CarSaveRequestDTO dto
+            @RequestBody @Valid CarSaveRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -128,7 +127,7 @@ public class CarController {
                                     """)
                     }
             ))
-            @RequestBody @Validated List<CarSaveRequestDTO> dto
+            @RequestBody @Valid List<CarSaveRequestDTO> dto
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -154,7 +153,7 @@ public class CarController {
     public BaseResponse updateCar(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = CarUpdateRequestDTO.class)))
-            @RequestBody @Validated CarUpdateRequestDTO dto
+            @RequestBody @Valid CarUpdateRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 
