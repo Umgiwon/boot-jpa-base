@@ -104,7 +104,7 @@ public class SampleController {
     public BaseResponse saveSample(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = SampleSaveRequestDTO.class)))
-            @org.springframework.web.bind.annotation.RequestBody @Valid SampleSaveRequestDTO dto
+            @RequestBody @Valid SampleSaveRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -144,7 +144,7 @@ public class SampleController {
                                     """)
                     }
             ))
-            @org.springframework.web.bind.annotation.RequestBody @Valid List<SampleSaveRequestDTO> dto
+            @RequestBody @Valid List<SampleSaveRequestDTO> dto
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -170,7 +170,7 @@ public class SampleController {
     public BaseResponse updateSample(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = SampleUpdateRequestDTO.class)))
-            @org.springframework.web.bind.annotation.RequestBody @Valid SampleUpdateRequestDTO dto
+            @RequestBody @Valid SampleUpdateRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 
