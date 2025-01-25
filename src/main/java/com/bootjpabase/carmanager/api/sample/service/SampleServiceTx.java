@@ -88,7 +88,6 @@ public class SampleServiceTx {
             result = true;
         }
 
-
         return result;
     }
 
