@@ -88,8 +88,8 @@ class CarManagerAPITest {
 
         // When & Then
         mockMvc.perform(post("/cars/car")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testSaveCar)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testSaveCar)))
                 .andExpect(status().isOk()) // API 응답 상태가 200인지 확인
                 .andExpect(jsonPath("$.httpCode").value(200))
                 .andDo(print()); // 요청/응답 출력
