@@ -83,8 +83,15 @@ public class SampleServiceTx {
 
         // entity 영속성 컨텍스트 수정
         if(!ObjectUtils.isEmpty(updateSample)) {
-            updateSample.setTitle(dto.getTitle());
-            updateSample.setContent(dto.getContent());
+
+            // 수정할 값이 있을 경우에만 수정
+            if(!ObjectUtils.isEmpty(dto.getTitle())) {
+                updateSample.setTitle(dto.getTitle());
+            }
+            if(!ObjectUtils.isEmpty(dto.getContent())) {
+                updateSample.setContent(dto.getContent());
+            }
+
             result = true;
         }
 

@@ -44,6 +44,9 @@ dependencies {
     // MariaDB client
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
+//    // MySqlDB client
+//    runtimeOnly 'com.mysql:mysql-connector-j:8.2.0'
+
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
