@@ -27,7 +27,6 @@ public class SampleServiceTx {
      * @param dto
      */
     public boolean saveSample(SampleSaveRequestDTO dto) {
-
         boolean result = false;
 
         // 저장할 entity 객체 생성
@@ -48,7 +47,6 @@ public class SampleServiceTx {
      * @param dtoList
      */
     public boolean saveAllSample(List<SampleSaveRequestDTO> dtoList) {
-
         boolean result = false;
 
         // 저장할 entity 목록 담을 array 초기화
@@ -75,7 +73,6 @@ public class SampleServiceTx {
      * @param dto
      */
     public boolean updateSample(SampleUpdateRequestDTO dto) {
-
         boolean result = false;
 
         // 수정할 entity 조회
@@ -88,6 +85,7 @@ public class SampleServiceTx {
             if(!ObjectUtils.isEmpty(dto.getTitle())) {
                 updateSample.setTitle(dto.getTitle());
             }
+
             if(!ObjectUtils.isEmpty(dto.getContent())) {
                 updateSample.setContent(dto.getContent());
             }
@@ -103,7 +101,6 @@ public class SampleServiceTx {
      * @param dto
      */
     public boolean deleteSample(SampleDeleteRequestDTO dto) {
-
         boolean result = false;
 
         // 삭제할 entity 조회

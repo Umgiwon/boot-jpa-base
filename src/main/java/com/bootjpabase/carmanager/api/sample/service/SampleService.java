@@ -20,15 +20,6 @@ public class SampleService {
     private final SampleRepositoryCustom sampleRepositoryCustom;
 
     /**
-     * Sample 목록 조회
-     * @param dto
-     * @return
-     */
-    public List<SampleResponseDTO> getSampleList(SampleListRequestDTO dto) {
-        return sampleRepositoryCustom.getSampleList(dto);
-    }
-
-    /**
      * Sample 단건 조회
      * @param dto
      * @return
@@ -37,4 +28,12 @@ public class SampleService {
         return sampleRepositoryCustom.getSample(dto);
     }
 
+    /**
+     * Sample 목록 조회
+     * @param dto
+     * @return
+     */
+    public List<SampleResponseDTO> getSampleList(SampleListRequestDTO dto) {
+        return sampleRepositoryCustom.getSampleList(dto);
+    }
 }

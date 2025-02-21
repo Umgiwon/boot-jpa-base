@@ -35,46 +35,6 @@ public class CarController {
     private final CarServiceTx carServiceTx;
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = CarResponseDTO.class))),
-            @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
-    })
-    @Operation(summary = "자동차 목록 조회", description = "자동차 목록 조회 API (검색 조건이 없을 경우 전체목록 조회)")
-    @GetMapping("carList")
-    public BaseResponse getCarList(
-            @Parameter(name = "category", description = "카테고리", example = "미니 SUV", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String category,
-            @Parameter(name = "manufacturer", description = "제조사", example = "현대", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String manufacturer,
-            @Parameter(name = "modelName", description = "모델명", example = "코나", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String modelName,
-            @Parameter(name = "productionYear", description = "생산년도", example = "2024", in = ParameterIn.QUERY, schema = @Schema(implementation = Integer.class))
-            @RequestParam(required = false) Integer productionYear,
-            @Parameter(name = "rentalYn", description = "대여 가능 여부(N: 불가능, Y: 가능)", example = "Y", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String rentalYn
-    ) throws Exception {
-        BaseResponse baseResponse;
-
-        // 조회용 dto set
-        CarListRequestDTO dto = CarListRequestDTO.builder()
-                .category(ObjectUtils.isEmpty(category) ? null : category)
-                .manufacturer(ObjectUtils.isEmpty(manufacturer) ? null : manufacturer)
-                .modelName(ObjectUtils.isEmpty(modelName) ? null : modelName)
-                .productionYear(ObjectUtils.isEmpty(productionYear) ? null : productionYear)
-                .rentalYn(ObjectUtils.isEmpty(rentalYn) ? null : rentalYn)
-                .build();
-
-        // Car 목록 조회
-        List<CarResponseDTO> resultList = carService.getCarList(dto);
-
-        // response set
-        baseResponse = ObjectUtils.isEmpty(resultList)
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, CarResponseDTO.builder().build())
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList);
-
-        return baseResponse;
-    }
-
-    @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "저장 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
             @ApiResponse(responseCode = "204", description = "저장 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
@@ -91,11 +51,9 @@ public class CarController {
         boolean result = carServiceTx.saveCar(dto);
 
         // response set
-        if(result) {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true);
-        } else {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
-        }
+        baseResponse = result
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true)
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
 
         return baseResponse;
     }
@@ -135,11 +93,49 @@ public class CarController {
         boolean result = carServiceTx.saveAllCar(dto);
 
         // response set
-        if(result) {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, dto.size(), true);
-        } else {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
-        }
+        baseResponse = result
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, dto.size(), true)
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
+
+        return baseResponse;
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = CarResponseDTO.class))),
+            @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    @Operation(summary = "자동차 목록 조회", description = "자동차 목록 조회 API (검색 조건이 없을 경우 전체목록 조회)")
+    @GetMapping("carList")
+    public BaseResponse getCarList(
+            @Parameter(name = "category", description = "카테고리", example = "미니 SUV", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
+            @RequestParam(required = false) String category,
+            @Parameter(name = "manufacturer", description = "제조사", example = "현대", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
+            @RequestParam(required = false) String manufacturer,
+            @Parameter(name = "modelName", description = "모델명", example = "코나", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
+            @RequestParam(required = false) String modelName,
+            @Parameter(name = "productionYear", description = "생산년도", example = "2024", in = ParameterIn.QUERY, schema = @Schema(implementation = Integer.class))
+            @RequestParam(required = false) Integer productionYear,
+            @Parameter(name = "rentalYn", description = "대여 가능 여부(N: 불가능, Y: 가능)", example = "Y", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
+            @RequestParam(required = false) String rentalYn
+    ) throws Exception {
+        BaseResponse baseResponse;
+
+        // 조회용 dto set
+        CarListRequestDTO dto = CarListRequestDTO.builder()
+                .category(ObjectUtils.isEmpty(category) ? null : category)
+                .manufacturer(ObjectUtils.isEmpty(manufacturer) ? null : manufacturer)
+                .modelName(ObjectUtils.isEmpty(modelName) ? null : modelName)
+                .productionYear(ObjectUtils.isEmpty(productionYear) ? null : productionYear)
+                .rentalYn(ObjectUtils.isEmpty(rentalYn) ? null : rentalYn)
+                .build();
+
+        // Car 목록 조회
+        List<CarResponseDTO> resultList = carService.getCarList(dto);
+
+        // response set
+        baseResponse = !ObjectUtils.isEmpty(resultList)
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList)
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, CarResponseDTO.builder().build());
 
         return baseResponse;
     }
@@ -161,11 +157,9 @@ public class CarController {
         boolean result = carServiceTx.updateCar(dto);
 
         // response set
-        if(result) {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.UPDATE_SUCCESS, 1, true);
-        } else {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.UPDATE_FAIL, 0, false);
-        }
+        baseResponse = result
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.UPDATE_SUCCESS, 1, true)
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.UPDATE_FAIL, 0, false);
 
         return baseResponse;
     }

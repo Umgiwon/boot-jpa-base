@@ -23,13 +23,37 @@ public class SampleRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     /**
+     * Sample 단건 조회
+     * @param dto
+     * @return
+     */
+    public SampleResponseDTO getSample(SampleDetailRequestDTO dto) {
+        SampleResponseDTO result;
+
+        result = queryFactory
+                .select(
+                        new QSampleResponseDTO(
+                                sample.sampleSn
+                                , sample.title
+                                , sample.content
+                        )
+                )
+                .from(sample)
+                .where(sample.sampleSn.eq(dto.getSampleSn()))
+                .fetchOne();
+
+        return result;
+    }
+
+    /**
      * Sample 목록 조회
      * @param dto
      * @return
      */
     public List<SampleResponseDTO> getSampleList(SampleListRequestDTO dto) {
+        List<SampleResponseDTO> resultList;
 
-        List<SampleResponseDTO> resultList = queryFactory
+        resultList = queryFactory
                 .select(
                         new QSampleResponseDTO(
                                 sample.sampleSn
@@ -45,28 +69,6 @@ public class SampleRepositoryCustom {
                 .fetch();
 
         return resultList;
-    }
-
-    /**
-     * Sample 단건 조회
-     * @param dto
-     * @return
-     */
-    public SampleResponseDTO getSample(SampleDetailRequestDTO dto) {
-
-        SampleResponseDTO result = queryFactory
-                .select(
-                        new QSampleResponseDTO(
-                                sample.sampleSn
-                                , sample.title
-                                , sample.content
-                        )
-                )
-                .from(sample)
-                .where(sample.sampleSn.eq(dto.getSampleSn()))
-                .fetchOne();
-
-        return result;
     }
 
     /* ******************* 동적 쿼리를 위한 BooleanExpression *******************/

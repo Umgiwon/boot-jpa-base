@@ -37,70 +37,11 @@ public class SampleController {
     private final SampleServiceTx sampleServiceTx;
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = SampleResponseDTO.class))),
-            @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
-    })
-    @Operation(summary = "샘플 목록 조회", description = "샘플 목록 조회 API (제목, 내용이 없을 경우 전체목록 조회)")
-    @GetMapping("sampleList")
-    public BaseResponse getSampleList(
-            @Parameter(name = "title", description = "샘플 제목", example = "title1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) @ValidTitle String title,
-            @Parameter(name = "content", description = "샘플 내용", example = "content1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) @ValidContent String content
-    ) throws Exception {
-        BaseResponse baseResponse;
-
-        // 조회용 dto set
-        SampleListRequestDTO dto = SampleListRequestDTO.builder()
-                .title(ObjectUtils.isEmpty(title) ? null : title)
-                .content(ObjectUtils.isEmpty(content) ? null : content)
-                .build();
-
-        // Sample 목록 조회
-        List<SampleResponseDTO> resultList = sampleService.getSampleList(dto);
-
-        // response set
-        baseResponse = ObjectUtils.isEmpty(resultList)
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, SampleResponseDTO.builder().build())
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList);
-
-        return baseResponse;
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = SampleResponseDTO.class))),
-            @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
-    })
-    @Operation(summary = "샘플 단건 조회", description = "샘플 단건 조회 API")
-    @GetMapping("sample")
-    public BaseResponse getSample(
-            @Parameter(name = "sampleSn", description = "샘플 순번", example = "1", in = ParameterIn.QUERY, schema = @Schema(implementation = Long.class))
-            @RequestParam Long sampleSn
-    ) throws Exception {
-        BaseResponse baseResponse;
-
-        // 조회용 dto set
-        SampleDetailRequestDTO dto = SampleDetailRequestDTO.builder()
-                .sampleSn(sampleSn)
-                .build();
-
-        // Sample 단건 조회
-        SampleResponseDTO result = sampleService.getSample(dto);
-
-        // response set
-        baseResponse = ObjectUtils.isEmpty(result)
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, SampleResponseDTO.builder().build())
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, 1, result);
-
-        return baseResponse;
-    }
-
-    @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "저장 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
             @ApiResponse(responseCode = "204", description = "저장 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "샘플 단건 저장", description = "샘플 단건 저장 API")
-    @PostMapping("sample")
+    @PostMapping("")
     public BaseResponse saveSample(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = SampleSaveRequestDTO.class)))
@@ -112,11 +53,9 @@ public class SampleController {
         boolean result = sampleServiceTx.saveSample(dto);
 
         // response set
-        if(result) {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true);
-        } else {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
-        }
+        baseResponse = result
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true)
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
 
         return baseResponse;
     }
@@ -126,7 +65,7 @@ public class SampleController {
             @ApiResponse(responseCode = "204", description = "저장 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "샘플 다건 저장", description = "샘플 다건 저장 API")
-    @PostMapping("sampleList")
+    @PostMapping("list")
     public BaseResponse saveSampleList(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(
                     examples = {
@@ -152,11 +91,68 @@ public class SampleController {
         boolean result = sampleServiceTx.saveAllSample(dto);
 
         // response set
-        if(result) {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, dto.size(), true);
-        } else {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
-        }
+        baseResponse = result
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, dto.size(), true)
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
+
+        return baseResponse;
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = SampleResponseDTO.class))),
+            @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    @Operation(summary = "샘플 단건 조회", description = "샘플 단건 조회 API")
+    @GetMapping("")
+    public BaseResponse getSample(
+            @Parameter(name = "sampleSn", description = "샘플 순번", example = "1", in = ParameterIn.QUERY, schema = @Schema(implementation = Long.class))
+            @RequestParam Long sampleSn
+    ) throws Exception {
+        BaseResponse baseResponse;
+
+        // 조회용 dto set
+        SampleDetailRequestDTO dto = SampleDetailRequestDTO.builder()
+                .sampleSn(sampleSn)
+                .build();
+
+        // Sample 단건 조회
+        SampleResponseDTO result = sampleService.getSample(dto);
+
+        // response set
+        baseResponse = !ObjectUtils.isEmpty(result)
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, 1, result)
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, SampleResponseDTO.builder().build());
+
+        return baseResponse;
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = SampleResponseDTO.class))),
+            @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    @Operation(summary = "샘플 목록 조회", description = "샘플 목록 조회 API (제목, 내용이 없을 경우 전체목록 조회)")
+    @GetMapping("list")
+    public BaseResponse getSampleList(
+            @Parameter(name = "title", description = "샘플 제목", example = "title1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
+            @RequestParam(required = false) @ValidTitle String title,
+            @Parameter(name = "content", description = "샘플 내용", example = "content1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
+            @RequestParam(required = false) @ValidContent String content
+    ) throws Exception {
+        BaseResponse baseResponse;
+
+        // 조회용 dto set
+        SampleListRequestDTO dto = SampleListRequestDTO.builder()
+                .title(ObjectUtils.isEmpty(title) ? null : title)
+                .content(ObjectUtils.isEmpty(content) ? null : content)
+                .build();
+
+        // Sample 목록 조회
+        List<SampleResponseDTO> resultList = sampleService.getSampleList(dto);
+
+        // response set
+        baseResponse = !ObjectUtils.isEmpty(resultList)
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList)
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, SampleResponseDTO.builder().build());
 
         return baseResponse;
     }
@@ -166,7 +162,7 @@ public class SampleController {
             @ApiResponse(responseCode = "204", description = "수정 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "샘플 수정", description = "샘플 수정 API")
-    @PatchMapping("sample")
+    @PatchMapping("")
     public BaseResponse updateSample(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = SampleUpdateRequestDTO.class)))
@@ -178,11 +174,9 @@ public class SampleController {
         boolean result = sampleServiceTx.updateSample(dto);
 
         // response set
-        if(result) {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.UPDATE_SUCCESS, 1, true);
-        } else {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.UPDATE_FAIL, 0, false);
-        }
+        baseResponse = result
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.UPDATE_SUCCESS, 1, true)
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.UPDATE_FAIL, 0, false);
 
         return baseResponse;
     }
@@ -192,7 +186,7 @@ public class SampleController {
             @ApiResponse(responseCode = "204", description = "수정 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "샘플 삭제", description = "샘플 삭제 API")
-    @DeleteMapping("sample")
+    @DeleteMapping("")
     public BaseResponse deleteSample(
             @Parameter(name = "sampleSn", description = "샘플 순번", example = "1", in = ParameterIn.QUERY, schema = @Schema(implementation = Long.class))
             @RequestParam Long sampleSn
@@ -208,11 +202,9 @@ public class SampleController {
         boolean result = sampleServiceTx.deleteSample(dto);
 
         // response set
-        if(result) {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 1, true);
-        } else {
-            baseResponse = BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.DELETE_FAIL, 0, false);
-        }
+        baseResponse = result
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 1, true)
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.DELETE_FAIL, 0, false);
 
         return baseResponse;
     }

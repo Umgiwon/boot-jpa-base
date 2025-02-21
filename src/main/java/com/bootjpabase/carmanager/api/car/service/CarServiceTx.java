@@ -26,7 +26,6 @@ public class CarServiceTx {
      * @param dto
      */
     public boolean saveCar(CarSaveRequestDTO dto) {
-
         boolean result = false;
 
         // 저장할 entity 객체 생성
@@ -50,7 +49,6 @@ public class CarServiceTx {
      * @param dtoList
      */
     public boolean saveAllCar(List<CarSaveRequestDTO> dtoList) {
-
         boolean result = false;
 
         // 저장할 entity 목록 담을 array 초기화
@@ -81,7 +79,6 @@ public class CarServiceTx {
      * @param dto
      */
     public boolean updateCar(CarUpdateRequestDTO dto) {
-
         boolean result = false;
 
         // 수정할 entity 조회

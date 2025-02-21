@@ -27,8 +27,9 @@ public class CarRepositoryCustom {
      * @return
      */
     public List<CarResponseDTO> getCarList(CarListRequestDTO dto) {
+        List<CarResponseDTO> resultList;
 
-        List<CarResponseDTO> resultList = queryFactory
+        resultList = queryFactory
                 .select(
                         new QCarResponseDTO(
                                 car.carSn
@@ -81,7 +82,6 @@ public class CarRepositoryCustom {
     private BooleanExpression eqModelName(String modelName) {
         return (!ObjectUtils.isEmpty(modelName)) ? car.modelName.contains(modelName) : null;
     }
-
 
     /**
      * Car 조회 시 생산년도 비교
