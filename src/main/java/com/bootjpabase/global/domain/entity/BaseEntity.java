@@ -6,7 +6,9 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -18,13 +20,23 @@ import java.time.LocalDateTime;
 @Getter
 public class BaseEntity {
 
+    @CreatedBy
+    @Column(name = "CREATED_USER", length = 20, updatable = false)
+    @Comment("등록자")
+    private String createdUser;
+
     @CreatedDate
-    @Column(updatable = false)
-    @Comment("생성일자")
-    private LocalDateTime createDate;
+    @Column(name = "CREATED_DATE", updatable = false)
+    @Comment("등록일")
+    private LocalDateTime createdDate;
+
+    @LastModifiedBy
+    @Column(name = "UPDATED_USER", length = 20, updatable = false)
+    @Comment("수정자")
+    private String updatedUser;
 
     @LastModifiedDate
-    @Column
-    @Comment("수정일자")
-    private LocalDateTime updateDate;
+    @Column(name = "UPDATED_DATE", updatable = false)
+    @Comment("수정일")
+    private LocalDateTime updatedDate;
 }

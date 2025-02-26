@@ -9,7 +9,7 @@ import java.util.*;
 
 @Getter
 @NoArgsConstructor
-public class SecurityManager implements UserDetails {
+public class SecurityUser implements UserDetails {
 
     private String id;
     private String password;
@@ -20,20 +20,10 @@ public class SecurityManager implements UserDetails {
     private boolean enabled = true;
     private Map<String, Object> information = new HashMap<>();
 
-    public SecurityManager(String id, String password, Map<String, Object> information) {
+    public SecurityUser(String id, String password, Map<String, Object> information) {
         this.id = id;
         this.password = password;
         this.information = information;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
-
-    @Override
-    public String getPassword() {
-        return "";
     }
 
     @Override
@@ -41,23 +31,4 @@ public class SecurityManager implements UserDetails {
         return "";
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
-    }
 }

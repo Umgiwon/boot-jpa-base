@@ -1,9 +1,9 @@
 package com.bootjpabase.global.config.jwt.component;
 
-import com.nangman.api.admin.system.manager.domain.entity.Manager;
-import com.nangman.global.config.jwt.domain.SecurityManager;
-import com.nangman.global.enums.common.ApiReturnCode;
-import com.nangman.global.exception.BusinessException;
+import com.bootjpabase.api.user.domain.entity.User;
+import com.bootjpabase.global.config.jwt.domain.SecurityUser;
+import com.bootjpabase.global.enums.common.ApiReturnCode;
+import com.bootjpabase.global.exception.BusinessException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -40,16 +40,16 @@ public class TokenProvider {
      * @param manager
      * @return
      */
-    public String createToken(Manager manager) {
+    public String createToken(User user) {
         Date date = new Date();
 
         return Jwts.builder()
-                .setSubject(manager.getId())
+                .setSubject(user.getUserId())
                 .setExpiration(new Date(date.getTime() + tokenProperties.getAccessTokenExpiration()))
                 .setIssuedAt(date)
-                .claim("id", manager.getId())
-                .claim("name", manager.getName())
-                .claim("roleCode", manager.getRoleCode())
+                .claim("userSn", user.getUserSn())
+                .claim("userId", user.getUserId())
+                .claim("userName", user.getUserName())
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -75,7 +75,7 @@ public class TokenProvider {
 
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
 
-        SecurityManager manager = new SecurityManager(this.getIdFromToken(token), "", claims);
+        SecurityUser manager = new SecurityUser(this.getIdFromToken(token), "", claims);
 
         return new UsernamePasswordAuthenticationToken(manager, token, authorities);
     }

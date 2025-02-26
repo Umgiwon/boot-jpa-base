@@ -1,13 +1,15 @@
-package com.bootjpabase.api.manager.controller;
+package com.bootjpabase.api.user.controller;
 
-import com.nangman.api.admin.system.manager.domain.dto.request.*;
-import com.nangman.api.admin.system.manager.domain.dto.response.ManagerDetailResponseDTO;
-import com.nangman.api.admin.system.manager.domain.dto.response.ManagerResponseDTO;
-import com.nangman.api.admin.system.manager.service.ManagerService;
-import com.nangman.api.admin.system.manager.service.ManagerServiceTx;
-import com.nangman.global.config.jwt.domain.dto.TokenResponseDTO;
-import com.nangman.global.constant.ResponseMessageConst;
-import com.nangman.global.domain.dto.BaseResponse;
+import com.bootjpabase.api.user.domain.dto.request.UserListRequestDTO;
+import com.bootjpabase.api.user.domain.dto.request.UserLoginRequestDTO;
+import com.bootjpabase.api.user.domain.dto.request.UserSaveRequestDTO;
+import com.bootjpabase.api.user.domain.dto.request.UserUpdateRequestDTO;
+import com.bootjpabase.api.user.domain.dto.response.UserResponseDTO;
+import com.bootjpabase.api.user.service.UserService;
+import com.bootjpabase.api.user.service.UserServiceTx;
+import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
+import com.bootjpabase.global.constant.ResponseMessageConst;
+import com.bootjpabase.global.domain.dto.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -28,31 +30,31 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Manager API", description = "관리자 API")
+@Tag(name = "사용자 API", description = "사용자 API 설명")
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping("/admin/system/manager/")
-public class ManagerController {
+@RequestMapping("/user/")
+public class UserController {
 
-    private final ManagerService managerService;
-    private final ManagerServiceTx managerServiceTx;
+    private final UserService userService;
+    private final UserServiceTx userServiceTx;
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "저장 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
             @ApiResponse(responseCode = "204", description = "저장 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    @Operation(summary = "관리자 저장", description = "관리자 저장 API")
+    @Operation(summary = "사용자 저장", description = "사용자 저장 API")
     @PostMapping("save")
-    public BaseResponse saveManager(
+    public BaseResponse saveUser(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
-                    content = @Content(schema = @Schema(implementation = ManagerSaveRequestDTO.class)))
-            @RequestBody @Valid ManagerSaveRequestDTO dto
+                    content = @Content(schema = @Schema(implementation = UserSaveRequestDTO.class)))
+            @RequestBody @Valid UserSaveRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 
-        // 관리자 저장
-        boolean result = managerServiceTx.saveManager(dto);
+        // 사용자 저장
+        boolean result = userServiceTx.saveUser(dto);
 
         // response set
         baseResponse = result
@@ -63,53 +65,30 @@ public class ManagerController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ManagerResponseDTO.class))),
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = UserResponseDTO.class))),
             @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    @Operation(summary = "관리자 목록 조회", description = "관리자 목록 조회 API")
+    @Operation(summary = "사용자 목록 조회", description = "사용자 목록 조회 API")
     @GetMapping("list")
-    public BaseResponse getManagerList(
-            @Parameter(name = "name", description = "이름", example = "고수일", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
+    public BaseResponse getUserList(
+            @Parameter(name = "name", description = "이름", example = "홍길동", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
             @RequestParam(required = false) String name,
             @PageableDefault(page = 0, size = 10, sort = "regDt", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
         BaseResponse baseResponse;
 
         // 조회용 dto set
-        ManagerListRequestDTO dto = ManagerListRequestDTO.builder()
-                .name(ObjectUtils.isEmpty(name) ? null : name)
+        UserListRequestDTO dto = UserListRequestDTO.builder()
+                .userName(ObjectUtils.isEmpty(name) ? null : name)
                 .build();
 
-        // 관리자 목록 조회
-        List<ManagerResponseDTO> resultList = managerService.getManagerList(dto, pageable);
+        // 사용자 목록 조회
+        List<UserResponseDTO> resultList = userService.getUserList(dto, pageable);
 
         // response set
         baseResponse = !ObjectUtils.isEmpty(resultList)
                 ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, ManagerResponseDTO.builder().build());
-
-        return baseResponse;
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ManagerDetailResponseDTO.class))),
-            @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
-    })
-    @Operation(summary = "관리자 상세 조회", description = "관리자 상세 조회 API")
-    @GetMapping("")
-    public BaseResponse getManager(
-            @Parameter(name = "id", description = "아이디", example = "admin", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String id
-    ) throws Exception {
-        BaseResponse baseResponse;
-
-        // 관리자 상세 조회
-        ManagerDetailResponseDTO result = managerService.getManager(id);
-
-        // response set
-        baseResponse = !ObjectUtils.isEmpty(result)
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, 1, result)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, ManagerDetailResponseDTO.builder().build());
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, UserResponseDTO.builder().build());
 
         return baseResponse;
     }
@@ -118,17 +97,17 @@ public class ManagerController {
             @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
             @ApiResponse(responseCode = "204", description = "수정 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    @Operation(summary = "관리자 수정", description = "관리자 수정 API")
+    @Operation(summary = "사용자 수정", description = "사용자 수정 API")
     @PatchMapping("update")
-    public BaseResponse updateManager(
+    public BaseResponse updateUser(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
-                    content = @Content(schema = @Schema(implementation = ManagerUpdateRequestDTO.class)))
-            @RequestBody @Valid ManagerUpdateRequestDTO dto
+                    content = @Content(schema = @Schema(implementation = UserUpdateRequestDTO.class)))
+            @RequestBody @Valid UserUpdateRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 
-        // 관리자 수정
-        boolean result = managerServiceTx.updateManager(dto);
+        // 사용자 수정
+        boolean result = userServiceTx.updateUser(dto);
 
         // response set
         baseResponse = result
@@ -142,16 +121,16 @@ public class ManagerController {
             @ApiResponse(responseCode = "200", description = "삭제 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
             @ApiResponse(responseCode = "204", description = "삭제 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    @Operation(summary = "관리자 삭제", description = "관리자 삭제 API")
+    @Operation(summary = "사용자 삭제", description = "사용자 삭제 API")
     @DeleteMapping("delete")
-    public BaseResponse deleteManager(
-            @Parameter(name = "id", description = "아이디", example = "admin", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam String id
+    public BaseResponse deleteUser(
+            @Parameter(name = "userSn", description = "사용자 순번", example = "1", in = ParameterIn.QUERY, schema = @Schema(implementation = Long.class))
+            @RequestParam Long userSn
     ) throws Exception {
         BaseResponse baseResponse;
 
-        // 관리자 삭제
-        boolean result = managerServiceTx.deleteManager(id);
+        // 사용자 삭제
+        boolean result = userServiceTx.deleteUser(userSn);
 
         baseResponse = result
                 ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 1, true)
@@ -164,23 +143,23 @@ public class ManagerController {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = TokenResponseDTO.class))),
             @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
-    @Operation(summary = "관리자 로그인", description = "관리자 로그인 API")
+    @Operation(summary = "사용자 로그인", description = "사용자 로그인 API")
     @GetMapping("login")
-    public BaseResponse managerLogin(
-            @Parameter(name = "id", description = "아이디", example = "admin", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam String id,
-            @Parameter(name = "password", description = "비밀번호", example = "admin!", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam String password
+    public BaseResponse userLogin(
+            @Parameter(name = "userId", description = "아이디", example = "user", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
+            @RequestParam String userId,
+            @Parameter(name = "userPassword", description = "비밀번호", example = "user!", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
+            @RequestParam String userPassword
     ) throws Exception {
         BaseResponse baseResponse;
 
         // 로그인용 dto set
-        ManagerLoginRequestDTO dto = ManagerLoginRequestDTO.builder()
-                .id(id)
-                .password(password)
+        UserLoginRequestDTO dto = UserLoginRequestDTO.builder()
+                .userId(userId)
+                .userPassword(userPassword)
                 .build();
 
-        TokenResponseDTO result = managerService.managerLogin(dto);
+        TokenResponseDTO result = userService.userLogin(dto);
 
         baseResponse = !ObjectUtils.isEmpty(result)
                 ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.LOGIN_SUCCESS, 1, result)
@@ -190,5 +169,4 @@ public class ManagerController {
     }
 
     // TODO 로그아웃 구현
-
 }

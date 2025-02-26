@@ -2,6 +2,7 @@ package com.bootjpabase.api.car.repository;
 
 import com.bootjpabase.api.car.domain.dto.request.CarListRequestDTO;
 import com.bootjpabase.api.car.domain.dto.response.CarResponseDTO;
+import com.bootjpabase.api.car.domain.dto.response.QCarResponseDTO;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.bootjpabase.api.car.domain.entity.QCar.car;
 
 
 @Repository

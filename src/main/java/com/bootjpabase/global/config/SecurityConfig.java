@@ -1,6 +1,6 @@
 package com.bootjpabase.global.config;
 
-import com.global.filter.TokenAuthenticationFilter;
+import com.bootjpabase.global.filter.TokenAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,8 +28,8 @@ public class SecurityConfig {
                             "/swagger-ui/**"
                             , "/swagger-ui.html"
                             , "/v3/api-docs/**"
-                            , "/admin/system/manager/save"
-                            , "/admin/system/manager/login"
+                            , "/user/save"
+                            , "/user/login"
                             , "/sample/**"
                     ).permitAll()
                     .anyRequest().authenticated()

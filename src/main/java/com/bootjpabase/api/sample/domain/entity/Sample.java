@@ -21,11 +21,11 @@ public class Sample extends BaseEntity {
     @Comment("샘플 순번")
     private Long sampleSn;
 
-    @Column(name = "TITLE", nullable = false)
+    @Column(name = "TITLE", length = 50, nullable = false)
     @Comment("샘플 제목")
     private String title;
 
-    @Column(name = "CONTENT", nullable = false)
+    @Column(name = "CONTENT", length = 100, nullable = false)
     @Comment("샘플 내용")
     private String content;
 }

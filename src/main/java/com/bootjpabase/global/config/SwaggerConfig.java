@@ -14,13 +14,13 @@ import java.util.Collections;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("Car Management API 문서")
+    @Value("${springdoc.title}")
     private String API_TITLE;
 
-    @Value("Car Management - 자동차 관리 API 문서")
+    @Value("${springdoc.description}")
     private String API_DECRIPTION;
 
-    @Value("1.0")
+    @Value("${springdoc.version}")
     private String API_VERSION;
 
     @Bean
