@@ -1,6 +1,5 @@
 package com.bootjpabase.api.sample.service;
 
-import com.bootjpabase.api.sample.domain.dto.request.SampleDetailRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.request.SampleListRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.response.SampleResponseDTO;
 import com.bootjpabase.api.sample.repository.SampleRepository;
@@ -21,11 +20,11 @@ public class SampleService {
 
     /**
      * Sample 단건 조회
-     * @param dto
+     * @param sampleSn
      * @return
      */
-    public SampleResponseDTO getSample(SampleDetailRequestDTO dto) {
-        return sampleRepositoryCustom.getSample(dto);
+    public SampleResponseDTO getSample(Long sampleSn) {
+        return sampleRepositoryCustom.getSample(sampleSn);
     }
 
     /**

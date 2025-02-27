@@ -110,13 +110,8 @@ public class SampleController {
     ) throws Exception {
         BaseResponse baseResponse;
 
-        // 조회용 dto set
-        SampleDetailRequestDTO dto = SampleDetailRequestDTO.builder()
-                .sampleSn(sampleSn)
-                .build();
-
         // Sample 단건 조회
-        SampleResponseDTO result = sampleService.getSample(dto);
+        SampleResponseDTO result = sampleService.getSample(sampleSn);
 
         // response set
         baseResponse = !ObjectUtils.isEmpty(result)
@@ -193,13 +188,8 @@ public class SampleController {
     ) throws Exception {
         BaseResponse baseResponse;
 
-        // 삭제용 dto set
-        SampleDeleteRequestDTO dto = SampleDeleteRequestDTO.builder()
-                .sampleSn(sampleSn)
-                .build();
-
         // Sample 삭제
-        boolean result = sampleServiceTx.deleteSample(dto);
+        boolean result = sampleServiceTx.deleteSample(sampleSn);
 
         // response set
         baseResponse = result

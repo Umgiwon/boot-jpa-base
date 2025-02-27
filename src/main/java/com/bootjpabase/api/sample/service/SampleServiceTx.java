@@ -1,6 +1,5 @@
 package com.bootjpabase.api.sample.service;
 
-import com.bootjpabase.api.sample.domain.dto.request.SampleDeleteRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.request.SampleSaveRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.request.SampleUpdateRequestDTO;
 import com.bootjpabase.api.sample.domain.entity.Sample;
@@ -100,11 +99,11 @@ public class SampleServiceTx {
      * Sample 삭제
      * @param dto
      */
-    public boolean deleteSample(SampleDeleteRequestDTO dto) {
+    public boolean deleteSample(Long sampleSn) {
         boolean result = false;
 
         // 삭제할 entity 조회
-        Sample deleteSample = sampleRepository.findById(dto.getSampleSn()).orElse(null);
+        Sample deleteSample = sampleRepository.findById(sampleSn).orElse(null);
 
         // 삭제
         if(!ObjectUtils.isEmpty(deleteSample)) {

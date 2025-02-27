@@ -1,6 +1,5 @@
 package com.bootjpabase.api.sample.repository;
 
-import com.bootjpabase.api.sample.domain.dto.request.SampleDetailRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.request.SampleListRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.response.QSampleResponseDTO;
 import com.bootjpabase.api.sample.domain.dto.response.SampleResponseDTO;
@@ -24,10 +23,10 @@ public class SampleRepositoryCustom {
 
     /**
      * Sample 단건 조회
-     * @param dto
+     * @param sampleSn
      * @return
      */
-    public SampleResponseDTO getSample(SampleDetailRequestDTO dto) {
+    public SampleResponseDTO getSample(Long sampleSn) {
         SampleResponseDTO result;
 
         result = queryFactory
@@ -39,7 +38,7 @@ public class SampleRepositoryCustom {
                         )
                 )
                 .from(sample)
-                .where(sample.sampleSn.eq(dto.getSampleSn()))
+                .where(sample.sampleSn.eq(sampleSn))
                 .fetchOne();
 
         return result;
