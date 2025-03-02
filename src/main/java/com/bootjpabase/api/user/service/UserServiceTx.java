@@ -69,15 +69,15 @@ public class UserServiceTx {
     public boolean updateUser(UserUpdateRequestDTO dto) {
         boolean result = false;
 
-        // userPhone 중복 체크
-        if(userRepository.existsByUserPhone(dto.getUserPhone())) {
-            throw new BusinessException(ApiReturnCode.PHONE_CONFLICT_ERROR);
-        }
-
-        // userEmail 중복 체크
-        if(userRepository.existsByUserEmail(dto.getUserEmail())) {
-            throw new BusinessException(ApiReturnCode.EMAIL_CONFLICT_ERROR);
-        }
+//        // userPhone 중복 체크
+//        if(userRepository.existsByUserPhone(dto.getUserPhone())) {
+//            throw new BusinessException(ApiReturnCode.PHONE_CONFLICT_ERROR);
+//        }
+//
+//        // userEmail 중복 체크
+//        if(userRepository.existsByUserEmail(dto.getUserEmail())) {
+//            throw new BusinessException(ApiReturnCode.EMAIL_CONFLICT_ERROR);
+//        }
 
         // 수정할 entity 조회
         User updateUser = userRepository.findById(dto.getUserSn()).orElse(null);

@@ -1,6 +1,8 @@
 package com.bootjpabase.api.sample.controller;
 
-import com.bootjpabase.api.sample.domain.dto.request.*;
+import com.bootjpabase.api.sample.domain.dto.request.SampleListRequestDTO;
+import com.bootjpabase.api.sample.domain.dto.request.SampleSaveRequestDTO;
+import com.bootjpabase.api.sample.domain.dto.request.SampleUpdateRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.response.SampleResponseDTO;
 import com.bootjpabase.api.sample.service.SampleService;
 import com.bootjpabase.api.sample.service.SampleServiceTx;
@@ -24,6 +26,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "Sample API", description = "Sample API 설명")
@@ -147,7 +150,7 @@ public class SampleController {
         // response set
         baseResponse = !ObjectUtils.isEmpty(resultList)
                 ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, SampleResponseDTO.builder().build());
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, new ArrayList<>());
 
         return baseResponse;
     }

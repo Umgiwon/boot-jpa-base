@@ -26,6 +26,7 @@ public class UserRepositoryCustom {
     /**
      * 관리자 목록 조회
      * @param dto
+     * @param pageable
      * @return
      */
     public List<UserResponseDTO> getUserList(UserListRequestDTO dto, Pageable pageable) {

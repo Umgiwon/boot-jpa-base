@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum ApiReturnCode {
 
+    /************** 2XX **************/
+    NO_DATA("데이터가 없습니다.", 204),
+
     /************** 4XX **************/
 
     /* token */
