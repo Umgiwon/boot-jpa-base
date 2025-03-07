@@ -7,7 +7,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +31,7 @@ public class UserRepositoryCustom {
      * @param pageable
      * @return
      */
-    public List<UserResponseDTO> getUserList(UserListRequestDTO dto, Pageable pageable) {
+    public Page<UserResponseDTO> getUserList(UserListRequestDTO dto, Pageable pageable) {
         List<UserResponseDTO> resultList;
 
         resultList = queryFactory
@@ -51,7 +53,7 @@ public class UserRepositoryCustom {
                 .orderBy(user.createdDate.desc())
                 .fetch();
 
-        return resultList;
+        return PageableExecutionUtils.getPage(resultList, pageable, resultList::size);
     }
 
     /* ******************* 동적 쿼리를 위한 BooleanExpression *******************/

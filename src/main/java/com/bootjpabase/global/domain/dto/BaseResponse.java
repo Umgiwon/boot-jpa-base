@@ -26,6 +26,9 @@ public class BaseResponse {
     @Schema(description = "Data")
     private Object data;
 
+    @Schema(description = "Pagination")
+    private Pagination pagination;
+
     public static BaseResponse getBaseResponseBuilder(int httpCode, String message, int dataSize, Object data) {
         return BaseResponse.builder()
                 .timeStamp(LocalDateTime.now())
@@ -36,4 +39,14 @@ public class BaseResponse {
                 .build();
     }
 
+    public static BaseResponse getBaseResponseBuilder(int httpCode, String message, int dataSize, Object data, Pagination pagination) {
+        return BaseResponse.builder()
+                .timeStamp(LocalDateTime.now())
+                .httpCode(httpCode)
+                .message(message)
+                .dataSize(dataSize)
+                .data(data)
+                .pagination(pagination)
+                .build();
+    }
 }

@@ -5,6 +5,8 @@ import com.bootjpabase.api.sample.domain.dto.response.SampleResponseDTO;
 import com.bootjpabase.api.sample.repository.SampleRepository;
 import com.bootjpabase.api.sample.repository.SampleRepositoryCustom;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +34,7 @@ public class SampleService {
      * @param dto
      * @return
      */
-    public List<SampleResponseDTO> getSampleList(SampleListRequestDTO dto) {
-        return sampleRepositoryCustom.getSampleList(dto);
+    public Page<SampleResponseDTO> getSampleList(SampleListRequestDTO dto, Pageable pageable) {
+        return sampleRepositoryCustom.getSampleList(dto, pageable);
     }
 }

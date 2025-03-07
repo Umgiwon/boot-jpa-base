@@ -12,12 +12,11 @@ import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +34,7 @@ public class UserService {
      * @param pageable
      * @return
      */
-    public List<UserResponseDTO> getUserList(UserListRequestDTO dto, Pageable pageable) {
+    public Page<UserResponseDTO> getUserList(UserListRequestDTO dto, Pageable pageable) {
         return userRepositoryCustom.getUserList(dto, pageable);
     }
 

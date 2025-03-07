@@ -10,6 +10,7 @@ import com.bootjpabase.global.annotation.sample.ValidContent;
 import com.bootjpabase.global.annotation.sample.ValidTitle;
 import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
+import com.bootjpabase.global.domain.dto.Pagination;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -21,6 +22,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
@@ -134,7 +139,8 @@ public class SampleController {
             @Parameter(name = "title", description = "샘플 제목", example = "title1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
             @RequestParam(required = false) @ValidTitle String title,
             @Parameter(name = "content", description = "샘플 내용", example = "content1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) @ValidContent String content
+            @RequestParam(required = false) @ValidContent String content,
+            @PageableDefault(page = 0, size = 10, sort = "regDt", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -145,11 +151,12 @@ public class SampleController {
                 .build();
 
         // Sample 목록 조회
-        List<SampleResponseDTO> resultList = sampleService.getSampleList(dto);
+        Page<SampleResponseDTO> resultPaging = sampleService.getSampleList(dto, pageable);
+        List<SampleResponseDTO> resultList = resultPaging.getContent();
 
         // response set
         baseResponse = !ObjectUtils.isEmpty(resultList)
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList)
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList, new Pagination(resultPaging))
                 : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, new ArrayList<>());
 
         return baseResponse;

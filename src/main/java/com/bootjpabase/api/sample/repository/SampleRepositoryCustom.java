@@ -7,6 +7,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,7 +52,7 @@ public class SampleRepositoryCustom {
      * @param dto
      * @return
      */
-    public List<SampleResponseDTO> getSampleList(SampleListRequestDTO dto) {
+    public Page<SampleResponseDTO> getSampleList(SampleListRequestDTO dto, Pageable pageable) {
         List<SampleResponseDTO> resultList;
 
         resultList = queryFactory
@@ -64,10 +67,12 @@ public class SampleRepositoryCustom {
                 .where(eqTitle(dto.getTitle())
                         , eqContent(dto.getContent())
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .orderBy(sample.sampleSn.asc())
                 .fetch();
 
-        return resultList;
+        return PageableExecutionUtils.getPage(resultList, pageable, resultList::size);
     }
 
     /* ******************* 동적 쿼리를 위한 BooleanExpression *******************/

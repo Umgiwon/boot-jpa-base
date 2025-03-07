@@ -11,7 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,40 @@ public class UserServiceTx {
      * @return
      */
     public boolean saveUser(UserSaveRequestDTO dto) {
-        boolean result = false;
+
+        // 저장할 entity 객체 생성
+        User saveUser = createUserEntity(dto);
+
+        // 사용자 저장
+        userRepository.save(saveUser);
+
+        return true;
+    }
+
+    /**
+     * user entity 생성 (저장시)
+     * @param dto
+     * @return
+     */
+    public User createUserEntity(UserSaveRequestDTO dto) {
+
+        // validate
+        validateUser(dto);
+
+        return User.builder()
+                .userId(dto.getUserId())
+                .userName(dto.getUserName())
+                .userPassword(encoder.encode(dto.getUserPassword()))
+                .userPhone(dto.getUserPhone())
+                .userEmail(dto.getUserEmail())
+                .build();
+    }
+
+    /**
+     * user validate (저장시)
+     * @param dto
+     */
+    public void validateUser(UserSaveRequestDTO dto) {
 
         // userId 중복 체크
         if(userRepository.existsByUserId(dto.getUserId())) {
@@ -44,21 +78,6 @@ public class UserServiceTx {
         if(userRepository.existsByUserEmail(dto.getUserEmail())) {
             throw new BusinessException(ApiReturnCode.EMAIL_CONFLICT_ERROR);
         }
-
-        // 저장할 entity 객체 생성
-        User saveUser = User.builder()
-                .userId(dto.getUserId())
-                .userName(dto.getUserName())
-                .userPassword(encoder.encode(dto.getUserPassword()))
-                .userPhone(dto.getUserPhone())
-                .userEmail(dto.getUserEmail())
-                .build();
-
-        // 사용자 저장
-        userRepository.save(saveUser);
-        result = true;
-
-        return result;
     }
 
     /**
@@ -67,7 +86,6 @@ public class UserServiceTx {
      * @return
      */
     public boolean updateUser(UserUpdateRequestDTO dto) {
-        boolean result = false;
 
 //        // userPhone 중복 체크
 //        if(userRepository.existsByUserPhone(dto.getUserPhone())) {
@@ -80,27 +98,25 @@ public class UserServiceTx {
 //        }
 
         // 수정할 entity 조회
-        User updateUser = userRepository.findById(dto.getUserSn()).orElse(null);
+        User updateUser = userRepository.findById(dto.getUserSn())
+                .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_DATA_ERROR));
 
-        if(!ObjectUtils.isEmpty(updateUser)) {
+        // entity 영속성 컨텍스트 수정
+        updateUser(updateUser, dto);
 
-            // entity 영속성 컨텍스트 수정
-            if(!ObjectUtils.isEmpty(encoder.encode(dto.getUserPassword()))) {
-                updateUser.setUserPassword(dto.getUserPassword());
-            }
+        return true;
+    }
 
-            if(!ObjectUtils.isEmpty(dto.getUserPhone())) {
-                updateUser.setUserPhone(dto.getUserPhone());
-            }
+    /**
+     * user 수정 (수정할 값이 있는 데이타만 수정)
+     * @param user
+     * @param dto
+     */
+    public void updateUser(User user, UserUpdateRequestDTO dto) {
 
-            if(!ObjectUtils.isEmpty(dto.getUserEmail())) {
-                updateUser.setUserEmail(dto.getUserEmail());
-            }
-
-            result = true;
-        }
-
-        return result;
+        Optional.ofNullable(dto.getUserPassword()).ifPresent(user::setUserPassword);
+        Optional.ofNullable(dto.getUserPhone()).ifPresent(user::setUserPhone);
+        Optional.ofNullable(dto.getUserEmail()).ifPresent(user::setUserEmail);
     }
 
     /**
@@ -109,17 +125,14 @@ public class UserServiceTx {
      * @return
      */
     public boolean deleteUser(Long userSn) {
-        boolean result = false;
 
         // 삭제할 entity 조회
-        User deleteUser = userRepository.findById(userSn).orElse(null);
+        User deleteUser = userRepository.findById(userSn)
+                .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_DATA_ERROR));
 
         // 삭제
-        if(!ObjectUtils.isEmpty(deleteUser)) {
-            userRepository.delete(deleteUser);
-            result = true;
-        }
+        userRepository.delete(deleteUser);
 
-        return result;
+        return true;
     }
 }

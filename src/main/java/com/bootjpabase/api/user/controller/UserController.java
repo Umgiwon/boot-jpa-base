@@ -10,6 +10,7 @@ import com.bootjpabase.api.user.service.UserServiceTx;
 import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
 import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
+import com.bootjpabase.global.domain.dto.Pagination;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -20,6 +21,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -84,11 +86,12 @@ public class UserController {
                 .build();
 
         // 사용자 목록 조회
-        List<UserResponseDTO> resultList = userService.getUserList(dto, pageable);
+        Page<UserResponseDTO> resultPaging = userService.getUserList(dto, pageable);
+        List<UserResponseDTO> resultList = resultPaging.getContent();
 
         // response set
         baseResponse = !ObjectUtils.isEmpty(resultList)
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList)
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList, new Pagination(resultPaging))
                 : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, new ArrayList<>());
 
         return baseResponse;

@@ -11,6 +11,7 @@ public enum ApiReturnCode {
     NO_DATA("데이터가 없습니다.", 204),
 
     /************** 4XX **************/
+    NO_DATA_ERROR("데이터가 없습니다.", 404),
 
     /* token */
     EXPIRED_TOKEN_ERROR("만료된 토큰입니다.", 401),
