@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -75,7 +76,7 @@ public class TokenProvider {
 
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
 
-        SecurityUser manager = new SecurityUser(this.getIdFromToken(token), "", claims);
+        SecurityUser manager = new SecurityUser(this.getIdFromToken(token), (String) this.getClaims(token).get("name"), "", claims);
 
         return new UsernamePasswordAuthenticationToken(manager, token, authorities);
     }
@@ -108,6 +109,20 @@ public class TokenProvider {
     }
 
     /**
+     * 토근에서 name 추출
+     * @param token
+     * @return
+     */
+    public String getNameFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    /**
      * 토큰 검증
      * @param token
      * @return
@@ -126,4 +141,13 @@ public class TokenProvider {
         }
     }
 
+    /**
+     * 토큰의 로그인 정보
+     * @return
+     */
+    public SecurityUser getUserLoginInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return (SecurityUser) authentication.getPrincipal();
+    }
 }

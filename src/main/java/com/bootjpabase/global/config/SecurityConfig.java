@@ -37,6 +37,7 @@ public class SecurityConfig {
                             , "/user/login"
                             , "/sample/**"
                     ).permitAll()
+//                    .requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             )
             .exceptionHandling(exception -> exception

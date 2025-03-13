@@ -6,12 +6,18 @@ import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.api.user.repository.UserRepository;
 import com.bootjpabase.api.user.repository.UserRepositoryCustom;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
+import com.bootjpabase.global.enums.file.UploadFileType;
 import com.bootjpabase.global.exception.BusinessException;
+import com.bootjpabase.global.file.domain.entity.File;
+import com.bootjpabase.global.file.service.FileServiceTx;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -22,16 +28,17 @@ public class UserServiceTx {
     private final UserRepository userRepository;
     private final UserRepositoryCustom userRepositoryCustom;
     private final BCryptPasswordEncoder encoder;
+    private final FileServiceTx fileServiceTx;
 
     /**
      * 사용자 저장
      * @param dto
      * @return
      */
-    public boolean saveUser(UserSaveRequestDTO dto) {
+    public boolean saveUser(UserSaveRequestDTO dto, MultipartFile profileImgFile) throws IOException {
 
         // 저장할 entity 객체 생성
-        User saveUser = createUserEntity(dto);
+        User saveUser = createUserEntity(dto, profileImgFile);
 
         // 사용자 저장
         userRepository.save(saveUser);
@@ -44,10 +51,13 @@ public class UserServiceTx {
      * @param dto
      * @return
      */
-    public User createUserEntity(UserSaveRequestDTO dto) {
+    public User createUserEntity(UserSaveRequestDTO dto, MultipartFile profileImgFile) throws IOException {
 
         // validate
         validateUser(dto);
+
+        // 프로필 이미지 파일 저장
+        File saveProfileImgFile = fileServiceTx.saveFile(profileImgFile, UploadFileType.USER);
 
         return User.builder()
                 .userId(dto.getUserId())
@@ -55,6 +65,7 @@ public class UserServiceTx {
                 .userPassword(encoder.encode(dto.getUserPassword()))
                 .userPhone(dto.getUserPhone())
                 .userEmail(dto.getUserEmail())
+                .profileImgFileSn(saveProfileImgFile.getFileSn())
                 .build();
     }
 
@@ -85,7 +96,7 @@ public class UserServiceTx {
      * @param dto
      * @return
      */
-    public boolean updateUser(UserUpdateRequestDTO dto) {
+    public boolean updateUser(UserUpdateRequestDTO dto, MultipartFile profileImgFile) throws IOException {
 
 //        // userPhone 중복 체크
 //        if(userRepository.existsByUserPhone(dto.getUserPhone())) {
@@ -102,7 +113,7 @@ public class UserServiceTx {
                 .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_DATA_ERROR));
 
         // entity 영속성 컨텍스트 수정
-        updateUser(updateUser, dto);
+        updateUser(updateUser, dto, profileImgFile);
 
         return true;
     }
@@ -112,11 +123,16 @@ public class UserServiceTx {
      * @param user
      * @param dto
      */
-    public void updateUser(User user, UserUpdateRequestDTO dto) {
+    public void updateUser(User user, UserUpdateRequestDTO dto, MultipartFile profileImgFile) throws IOException {
 
         Optional.ofNullable(dto.getUserPassword()).ifPresent(user::setUserPassword);
         Optional.ofNullable(dto.getUserPhone()).ifPresent(user::setUserPhone);
         Optional.ofNullable(dto.getUserEmail()).ifPresent(user::setUserEmail);
+
+        if(!ObjectUtils.isEmpty(profileImgFile)) {
+            File saveProfileImgFile = fileServiceTx.saveFile(profileImgFile, UploadFileType.USER);
+            user.setProfileImgFileSn(saveProfileImgFile.getFileSn());
+        }
     }
 
     /**
@@ -130,7 +146,12 @@ public class UserServiceTx {
         User deleteUser = userRepository.findById(userSn)
                 .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_DATA_ERROR));
 
-        // 삭제
+        // 사용자 프로필 이미지 파일 삭제
+        if(deleteUser.getProfileImgFileSn() != null) {
+            fileServiceTx.deleteFile(deleteUser.getProfileImgFileSn());
+        }
+
+        // 사용자 삭제
         userRepository.delete(deleteUser);
 
         return true;

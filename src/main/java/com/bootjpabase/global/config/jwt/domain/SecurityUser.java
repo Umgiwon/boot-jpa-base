@@ -12,6 +12,7 @@ import java.util.*;
 public class SecurityUser implements UserDetails {
 
     private String id;
+    private String userName;
     private String password;
     private Set<GrantedAuthority> authorities = new HashSet<>();
     private boolean accountNonExpired = true;
@@ -20,8 +21,9 @@ public class SecurityUser implements UserDetails {
     private boolean enabled = true;
     private Map<String, Object> information = new HashMap<>();
 
-    public SecurityUser(String id, String password, Map<String, Object> information) {
+    public SecurityUser(String id, String userName, String password, Map<String, Object> information) {
         this.id = id;
+        this.userName = userName;
         this.password = password;
         this.information = information;
     }

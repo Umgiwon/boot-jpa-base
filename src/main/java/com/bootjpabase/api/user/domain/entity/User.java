@@ -40,4 +40,8 @@ public class User extends BaseEntity {
     @Column(name = "USER_EMAIL", length = 200, nullable = false)
     @Comment("사용자 이메일")
     private String userEmail;
+
+    @Column(name = "PROFILE_IMG_FILE_SN", nullable = false)
+    @Comment("프로필 파일순번")
+    private Long profileImgFileSn;
 }

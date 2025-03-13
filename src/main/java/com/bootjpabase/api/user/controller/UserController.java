@@ -26,9 +26,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,16 +50,15 @@ public class UserController {
             @ApiResponse(responseCode = "204", description = "저장 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "사용자 저장", description = "사용자 저장 API")
-    @PostMapping("save")
+    @PostMapping(value = "save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public BaseResponse saveUser(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
-                    content = @Content(schema = @Schema(implementation = UserSaveRequestDTO.class)))
-            @RequestBody @Valid UserSaveRequestDTO dto
+            @Valid @RequestPart UserSaveRequestDTO dto,
+            @RequestPart(name = "profileImgFile") MultipartFile profileImgFile
     ) throws Exception {
         BaseResponse baseResponse;
 
         // 사용자 저장
-        boolean result = userServiceTx.saveUser(dto);
+        boolean result = userServiceTx.saveUser(dto, profileImgFile);
 
         // response set
         baseResponse = result
@@ -104,14 +105,13 @@ public class UserController {
     @Operation(summary = "사용자 수정", description = "사용자 수정 API")
     @PatchMapping("update")
     public BaseResponse updateUser(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
-                    content = @Content(schema = @Schema(implementation = UserUpdateRequestDTO.class)))
-            @RequestBody @Valid UserUpdateRequestDTO dto
+            @Valid @RequestBody UserUpdateRequestDTO dto,
+            @RequestPart(required = false, name = "profileImgFile") MultipartFile profileImgFile
     ) throws Exception {
         BaseResponse baseResponse;
 
         // 사용자 수정
-        boolean result = userServiceTx.updateUser(dto);
+        boolean result = userServiceTx.updateUser(dto, profileImgFile);
 
         // response set
         baseResponse = result
