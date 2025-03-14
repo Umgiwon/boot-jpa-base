@@ -3,10 +3,15 @@ package com.bootjpabase.api.car.repository;
 import com.bootjpabase.api.car.domain.dto.request.CarListRequestDTO;
 import com.bootjpabase.api.car.domain.dto.response.CarResponseDTO;
 import com.bootjpabase.api.car.domain.dto.response.QCarResponseDTO;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +32,7 @@ public class CarRepositoryCustom {
      * @param dto
      * @return
      */
-    public List<CarResponseDTO> getCarList(CarListRequestDTO dto) {
+    public Page<CarResponseDTO> getCarList(CarListRequestDTO dto, Pageable pageable) {
         List<CarResponseDTO> resultList;
 
         resultList = queryFactory
@@ -43,19 +48,53 @@ public class CarRepositoryCustom {
                         )
                 )
                 .from(car)
-                .where(eqCategory(dto.getCategory())
-                        , eqManufacturer(dto.getManufacturer())
-                        , eqModelName(dto.getModelName())
-                        , eqProductionYear(dto.getProductionYear())
-                        , eqRentalYn(dto.getRentalYn())
-                )
+                .where(pagingCondition(dto))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .orderBy(car.carSn.asc())
                 .fetch();
 
-        return resultList;
+        // 전체 데이터 카운트
+        JPAQuery<Long> countQuery = queryFactory
+                .select(car.count())
+                .from(car)
+                .where(pagingCondition(dto));
+
+        return PageableExecutionUtils.getPage(resultList, pageable, countQuery::fetchOne);
     }
 
     /* ******************* 동적 쿼리를 위한 BooleanExpression *******************/
+
+    /**
+     * 페이징 처리시 조건절
+     * @param dto
+     * @return
+     */
+    private BooleanBuilder pagingCondition(CarListRequestDTO dto) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if(dto.getCategory() != null) {
+            builder.and(eqCategory(dto.getCategory()));
+        }
+
+        if(dto.getManufacturer() != null) {
+            builder.and(eqManufacturer(dto.getManufacturer()));
+        }
+
+        if(dto.getModelName() != null) {
+            builder.and(eqModelName(dto.getModelName()));
+        }
+
+        if(dto.getProductionYear() != null) {
+            builder.and(eqProductionYear(dto.getProductionYear()));
+        }
+
+        if(dto.getRentalYn() != null) {
+            builder.and(eqRentalYn(dto.getRentalYn()));
+        }
+
+        return builder;
+    }
 
     /**
      * Car 조회 시 카테고리 비교

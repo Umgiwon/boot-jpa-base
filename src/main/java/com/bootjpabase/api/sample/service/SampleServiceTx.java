@@ -94,7 +94,7 @@ public class SampleServiceTx {
      * @param dto
      * @return
      */
-    public void updateSample(Sample sample, SampleUpdateRequestDTO dto) {
+    private void updateSample(Sample sample, SampleUpdateRequestDTO dto) {
 
         Optional.ofNullable(dto.getTitle()).ifPresent(sample::setTitle); // 제목
         Optional.ofNullable(dto.getContent()).ifPresent(sample::setContent); // 내용

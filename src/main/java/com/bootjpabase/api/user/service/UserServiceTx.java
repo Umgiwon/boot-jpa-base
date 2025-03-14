@@ -123,7 +123,7 @@ public class UserServiceTx {
      * @param user
      * @param dto
      */
-    public void updateUser(User user, UserUpdateRequestDTO dto, MultipartFile profileImgFile) throws IOException {
+    private void updateUser(User user, UserUpdateRequestDTO dto, MultipartFile profileImgFile) throws IOException {
 
         Optional.ofNullable(dto.getUserPassword()).ifPresent(user::setUserPassword);
         Optional.ofNullable(dto.getUserPhone()).ifPresent(user::setUserPhone);

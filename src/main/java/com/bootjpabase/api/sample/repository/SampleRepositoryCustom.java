@@ -3,7 +3,9 @@ package com.bootjpabase.api.sample.repository;
 import com.bootjpabase.api.sample.domain.dto.request.SampleListRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.response.QSampleResponseDTO;
 import com.bootjpabase.api.sample.domain.dto.response.SampleResponseDTO;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -64,18 +66,41 @@ public class SampleRepositoryCustom {
                         )
                 )
                 .from(sample)
-                .where(eqTitle(dto.getTitle())
-                        , eqContent(dto.getContent())
-                )
+                .where(pagingCondition(dto))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(sample.sampleSn.asc())
                 .fetch();
 
-        return PageableExecutionUtils.getPage(resultList, pageable, resultList::size);
+        // 전체 데이터 카운트
+        JPAQuery<Long> countQuery = queryFactory
+                .select(sample.count())
+                .from(sample)
+                .where(pagingCondition(dto));
+
+        return PageableExecutionUtils.getPage(resultList, pageable, countQuery::fetchOne);
     }
 
     /* ******************* 동적 쿼리를 위한 BooleanExpression *******************/
+
+    /**
+     * 페이징 처리시 조건절
+     * @param dto
+     * @return
+     */
+    private BooleanBuilder pagingCondition(SampleListRequestDTO dto) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if(dto.getTitle() != null) {
+            eqTitle(dto.getTitle());
+        }
+
+        if(dto.getContent() != null) {
+            eqContent(dto.getContent());
+        }
+
+        return builder;
+    }
 
     /**
      * Sample 조회 시 제목 비교

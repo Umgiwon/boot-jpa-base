@@ -5,10 +5,10 @@ import com.bootjpabase.api.car.domain.dto.response.CarResponseDTO;
 import com.bootjpabase.api.car.repository.CarRepository;
 import com.bootjpabase.api.car.repository.CarRepositoryCustom;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class CarService {
      * @param dto
      * @return
      */
-    public List<CarResponseDTO> getCarList(CarListRequestDTO dto) {
-        return carRepositoryCustom.getCarList(dto);
+    public Page<CarResponseDTO> getCarList(CarListRequestDTO dto, Pageable pageable) {
+        return carRepositoryCustom.getCarList(dto, pageable);
     }
 }
