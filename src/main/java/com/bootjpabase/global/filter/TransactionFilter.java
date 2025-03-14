@@ -6,8 +6,6 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -18,7 +16,6 @@ import java.util.Set;
 
 @Slf4j
 @Service
-@Order(Ordered.LOWEST_PRECEDENCE - 1)
 public class TransactionFilter implements Filter {
 
     private final ReadOnlyTx readOnlyTx;
