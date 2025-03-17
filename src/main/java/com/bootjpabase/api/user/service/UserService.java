@@ -11,7 +11,6 @@ import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -47,12 +46,8 @@ public class UserService {
         TokenResponseDTO tokenDto;
 
         // 해당 계정 조회
-        User user = userRepository.findByUserId(dto.getUserId()).orElse(null);
-
-        // 해당 아이디 없을 경우
-        if(ObjectUtils.isEmpty(user)) {
-            throw new BusinessException(ApiReturnCode.LOGIN_ID_FAIL_ERROR);
-        }
+        User user = userRepository.findByUserId(dto.getUserId())
+                .orElseThrow(() -> new BusinessException(ApiReturnCode.LOGIN_ID_FAIL_ERROR));
 
         // 비밀번호 체크
         if(!encoder.matches(dto.getUserPassword(), user.getUserPassword())) {
