@@ -3,6 +3,9 @@ package com.bootjpabase;
 import com.bootjpabase.api.car.domain.dto.request.CarUpdateRequestDTO;
 import com.bootjpabase.api.car.domain.entity.Car;
 import com.bootjpabase.api.car.repository.CarRepository;
+import com.bootjpabase.api.user.domain.entity.User;
+import com.bootjpabase.api.user.repository.UserRepository;
+import com.bootjpabase.global.config.jwt.component.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,11 +39,43 @@ class APITest {
     @Autowired
     private CarRepository carRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TokenProvider tokenProvider;
+
+
+    private final BCryptPasswordEncoder encoder;
+
+    private String token;
+
+    @Autowired
+    public APITest(BCryptPasswordEncoder encoder) {
+        this.encoder = encoder;
+    }
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
 
         // 테스트 실행 전 데이터 초기화
         carRepository.deleteAll();
+        userRepository.deleteAll();
+
+        // 테스트 유저 생성
+        User testUser = User.builder()
+                .userId("user")
+                .userName("홍길동")
+                .userPassword(encoder.encode("user1"))
+                .userPhone("01011112222")
+                .userEmail("test@test.com")
+                .build();
+
+        // 테스트 유저 저장
+        userRepository.save(testUser);
+
+        // 토큰 발급
+        token = tokenProvider.createToken(testUser);
 
         // 테스트 초기 데이터 생성
         List<Car> cars = List.of(
@@ -85,8 +121,9 @@ class APITest {
                 .build();
 
         // When & Then
-        mockMvc.perform(post("/cars/car")
+        mockMvc.perform(post("/api/car")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)
                         .content(objectMapper.writeValueAsString(testSaveCar)))
                 .andExpect(status().isOk()) // API 응답 상태가 200인지 확인
                 .andExpect(jsonPath("$.httpCode").value(200))
@@ -101,7 +138,8 @@ class APITest {
         Car car = carRepository.findAll().get(0);
 
         // When & Then
-        mockMvc.perform(get("/cars/carList"))
+        mockMvc.perform(get("/api/car")
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[0].category").value(car.getCategory()))
                 .andExpect(jsonPath("$.data[0].manufacturer").value(car.getManufacturer()))
@@ -119,7 +157,9 @@ class APITest {
         Car car = carRepository.findAll().get(0);
 
         // When & Then
-        mockMvc.perform(get("/cars/carList").param("rentalYn", car.getRentalYn()))
+        mockMvc.perform(get("/api/car")
+                        .header("Authorization", "Bearer " + token)
+                        .param("rentalYn", car.getRentalYn()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[0].category").value(car.getCategory()))
                 .andExpect(jsonPath("$.data[0].manufacturer").value(car.getManufacturer()))
@@ -137,7 +177,9 @@ class APITest {
         Car car = carRepository.findAll().get(0);
 
         // When & Then
-        mockMvc.perform(get("/cars/carList").param("category", car.getCategory()))
+        mockMvc.perform(get("/api/car")
+                        .header("Authorization", "Bearer " + token)
+                        .param("category", car.getCategory()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[0].category").value(car.getCategory()))
                 .andExpect(jsonPath("$.data[0].manufacturer").value(car.getManufacturer()))
@@ -155,7 +197,8 @@ class APITest {
         Car car = carRepository.findAll().get(0);
 
         // When & Then
-        mockMvc.perform(get("/cars/carList")
+        mockMvc.perform(get("/api/car")
+                        .header("Authorization", "Bearer " + token)
                         .param("manufacturer", car.getManufacturer())
                         .param("modelName", car.getModelName())
                         .param("productionYear", String.valueOf(car.getProductionYear())))
@@ -183,7 +226,8 @@ class APITest {
                 .build();
 
         // When & Then
-        mockMvc.perform(patch("/cars/car")
+        mockMvc.perform(patch("/api/car/{carSn}", car.getCarSn())
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateDto)))
                 .andExpect(status().isOk()) // API 응답 상태가 200인지 확인

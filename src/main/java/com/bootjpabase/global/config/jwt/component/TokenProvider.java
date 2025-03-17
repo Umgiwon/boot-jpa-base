@@ -38,7 +38,7 @@ public class TokenProvider {
 
     /**
      * 토큰 생성
-     * @param manager
+     * @param user
      * @return
      */
     public String createToken(User user) {
