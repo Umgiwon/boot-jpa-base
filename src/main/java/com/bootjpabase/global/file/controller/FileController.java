@@ -5,8 +5,6 @@ import com.bootjpabase.global.domain.dto.BaseResponse;
 import com.bootjpabase.global.file.service.FileService;
 import com.bootjpabase.global.file.service.FileServiceTx;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -16,15 +14,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "File API", description = "첨부파일 API")
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping("/file/")
+@RequestMapping("/api/file")
 public class FileController {
 
     private final FileService fileService;
@@ -35,10 +33,9 @@ public class FileController {
             @ApiResponse(responseCode = "204", description = "삭제 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "첨부파일 삭제", description = "첨부파일 삭제 API")
-    @DeleteMapping("delete")
+    @DeleteMapping("/{fileSn}")
     public BaseResponse deleteFile(
-            @Parameter(name = "fileSn", description = "첨부파일 순번", example = "1", in = ParameterIn.QUERY, schema = @Schema(implementation = Long.class))
-            @RequestParam Long fileSn
+            @PathVariable("fileSn") Long fileSn
     ) throws Exception {
         BaseResponse baseResponse;
 

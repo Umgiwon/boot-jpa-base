@@ -96,7 +96,7 @@ public class UserServiceTx {
      * @param dto
      * @return
      */
-    public boolean updateUser(UserUpdateRequestDTO dto, MultipartFile profileImgFile) throws IOException {
+    public boolean updateUser(Long userSn, UserUpdateRequestDTO dto, MultipartFile profileImgFile) throws IOException {
 
 //        // userPhone 중복 체크
 //        if(userRepository.existsByUserPhone(dto.getUserPhone())) {
@@ -109,7 +109,7 @@ public class UserServiceTx {
 //        }
 
         // 수정할 entity 조회
-        User updateUser = userRepository.findById(dto.getUserSn())
+        User updateUser = userRepository.findById(userSn)
                 .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_DATA_ERROR));
 
         // entity 영속성 컨텍스트 수정

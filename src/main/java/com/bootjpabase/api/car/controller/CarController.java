@@ -34,7 +34,7 @@ import java.util.List;
 @Tag(name = "자동차 관리 API", description = "Car Management - 자동차 관리 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cars/")
+@RequestMapping("/api/car")
 public class CarController {
 
     private final CarService carService;
@@ -45,7 +45,7 @@ public class CarController {
             @ApiResponse(responseCode = "204", description = "저장 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "자동차 단건 저장", description = "자동차 단건 저장 API")
-    @PostMapping("car")
+    @PostMapping("")
     public BaseResponse saveCar(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = CarSaveRequestDTO.class)))
@@ -69,7 +69,7 @@ public class CarController {
             @ApiResponse(responseCode = "204", description = "저장 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "자동차 다건 저장", description = "자동차 다건 저장 API")
-    @PostMapping("carList")
+    @PostMapping("/list")
     public BaseResponse saveCarList(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(
                     examples = {
@@ -111,7 +111,7 @@ public class CarController {
             @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "자동차 목록 조회", description = "자동차 목록 조회 API (검색 조건이 없을 경우 전체목록 조회)")
-    @GetMapping("carList")
+    @GetMapping("")
     public BaseResponse getCarList(
             @Parameter(name = "category", description = "카테고리", example = "미니 SUV", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
             @RequestParam(required = false) String category,
@@ -153,16 +153,17 @@ public class CarController {
             @ApiResponse(responseCode = "204", description = "수정 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "자동차 수정", description = "자동차 수정 API")
-    @PatchMapping("car")
+    @PatchMapping("/{carSn}")
     public BaseResponse updateCar(
+            @PathVariable("carSn") Long carSn,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = CarUpdateRequestDTO.class)))
-            @RequestBody @Valid CarUpdateRequestDTO dto
+            @Valid @RequestBody CarUpdateRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 
         // Car 수정
-        boolean result = carServiceTx.updateCar(dto);
+        boolean result = carServiceTx.updateCar(carSn, dto);
 
         // response set
         baseResponse = result

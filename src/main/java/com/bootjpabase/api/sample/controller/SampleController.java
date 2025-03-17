@@ -38,7 +38,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping("/sample/")
+@RequestMapping("/api/sample")
 public class SampleController {
 
     private final SampleService sampleService;
@@ -51,9 +51,23 @@ public class SampleController {
     @Operation(summary = "샘플 단건 저장", description = "샘플 단건 저장 API")
     @PostMapping("")
     public BaseResponse saveSample(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
-                    content = @Content(schema = @Schema(implementation = SampleSaveRequestDTO.class)))
-            @RequestBody @Valid SampleSaveRequestDTO dto
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(
+                    examples = {
+                            @ExampleObject(name = "저장 예제1", value = """
+                                      {
+                                          "title": "샘플 제목1",
+                                          "content": "샘플 내용1"
+                                      }
+                            """),
+                            @ExampleObject(name = "저장 예제2", value = """
+                                      {
+                                         "title": "샘플 제목2",
+                                          "content": "샘플 내용2"
+                                      }
+                            """)
+                    }
+            ))
+            @Valid @RequestBody SampleSaveRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -73,11 +87,11 @@ public class SampleController {
             @ApiResponse(responseCode = "204", description = "저장 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "샘플 다건 저장", description = "샘플 다건 저장 API")
-    @PostMapping("list")
+    @PostMapping("/list")
     public BaseResponse saveSampleList(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(
                     examples = {
-                            @ExampleObject(name = "예제1", value = """
+                            @ExampleObject(name = "예제 1", value = """
                                             [
                                                 {
                                                     "title": "title11",
@@ -91,7 +105,7 @@ public class SampleController {
                                     """)
                     }
             ))
-            @RequestBody @Valid List<SampleSaveRequestDTO> dto
+            @Valid @RequestBody List<SampleSaveRequestDTO> dto
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -111,10 +125,9 @@ public class SampleController {
             @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "샘플 단건 조회", description = "샘플 단건 조회 API")
-    @GetMapping("")
+    @GetMapping("/{sampleSn}")
     public BaseResponse getSample(
-            @Parameter(name = "sampleSn", description = "샘플 순번", example = "1", in = ParameterIn.QUERY, schema = @Schema(implementation = Long.class))
-            @RequestParam Long sampleSn
+            @PathVariable("sampleSn") Long sampleSn
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -134,7 +147,7 @@ public class SampleController {
             @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "샘플 목록 조회", description = "샘플 목록 조회 API (제목, 내용이 없을 경우 전체목록 조회)")
-    @GetMapping("list")
+    @GetMapping("")
     public BaseResponse getSampleList(
             @Parameter(name = "title", description = "샘플 제목", example = "title1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
             @RequestParam(required = false) @ValidTitle String title,
@@ -167,16 +180,31 @@ public class SampleController {
             @ApiResponse(responseCode = "204", description = "수정 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "샘플 수정", description = "샘플 수정 API")
-    @PatchMapping("")
+    @PatchMapping("/{sampleSn}")
     public BaseResponse updateSample(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
-                    content = @Content(schema = @Schema(implementation = SampleUpdateRequestDTO.class)))
+            @PathVariable("sampleSn") Long sampleSn,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(
+                    examples = {
+                            @ExampleObject(name = "수정 예제1", value = """
+                                      {
+                                          "title": "샘플 제목 수정1",
+                                          "content": "샘플 내용 수정1"
+                                      }
+                            """),
+                            @ExampleObject(name = "수정 예제2", value = """
+                                      {
+                                         "title": "샘플 제목 수정2",
+                                          "content": "샘플 내용 수정 2"
+                                      }
+                            """)
+                    }
+            ))
             @RequestBody @Valid SampleUpdateRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 
         // Sample 수정
-        boolean result = sampleServiceTx.updateSample(dto);
+        boolean result = sampleServiceTx.updateSample(sampleSn, dto);
 
         // response set
         baseResponse = result
@@ -191,10 +219,9 @@ public class SampleController {
             @ApiResponse(responseCode = "204", description = "수정 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "샘플 삭제", description = "샘플 삭제 API")
-    @DeleteMapping("")
+    @DeleteMapping("/{sampleSn}")
     public BaseResponse deleteSample(
-            @Parameter(name = "sampleSn", description = "샘플 순번", example = "1", in = ParameterIn.QUERY, schema = @Schema(implementation = Long.class))
-            @RequestParam Long sampleSn
+            @PathVariable("sampleSn") Long sampleSn
     ) throws Exception {
         BaseResponse baseResponse;
 

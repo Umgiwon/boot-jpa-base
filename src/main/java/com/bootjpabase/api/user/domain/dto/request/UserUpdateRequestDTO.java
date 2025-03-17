@@ -2,12 +2,10 @@ package com.bootjpabase.api.user.domain.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Comment;
 import org.hibernate.validator.constraints.Length;
 
 @Schema(description = "사용자 수정 요청 DTO")
@@ -17,10 +15,6 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true) // json 데이터를 java 객체로 역직렬화 할 때 매핑되지 않은 필드를 무시
 public class UserUpdateRequestDTO {
-
-    @NotNull(message = "사용자 순번은 필수입니다")
-    @Comment("사용자 순번")
-    private Long userSn;
 
     @Length(max = 30, message = "비밀번호는 30자 이하로 입력해야 합니다.")
     @Schema(description = "비밀번호", example = "user!")

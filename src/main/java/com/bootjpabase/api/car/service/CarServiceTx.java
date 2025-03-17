@@ -79,10 +79,10 @@ public class CarServiceTx {
      * Car 수정
      * @param dto
      */
-    public boolean updateCar(CarUpdateRequestDTO dto) {
+    public boolean updateCar(Long carSn, CarUpdateRequestDTO dto) {
 
         // 수정할 entity 조회
-        Car updateCar = carRepository.findById(dto.getCarSn())
+        Car updateCar = carRepository.findById(carSn)
                 .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_DATA_ERROR));
 
         // entity 영속성 컨텍스트 수정

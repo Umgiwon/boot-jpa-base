@@ -39,7 +39,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping("/user/")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
@@ -50,7 +50,7 @@ public class UserController {
             @ApiResponse(responseCode = "204", description = "저장 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "사용자 저장", description = "사용자 저장 API")
-    @PostMapping(value = "save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public BaseResponse saveUser(
             @Valid @RequestPart UserSaveRequestDTO dto,
             @RequestPart(name = "profileImgFile") MultipartFile profileImgFile
@@ -73,7 +73,7 @@ public class UserController {
             @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "사용자 목록 조회", description = "사용자 목록 조회 API")
-    @GetMapping("list")
+    @GetMapping("")
     public BaseResponse getUserList(
             @Parameter(name = "name", description = "이름", example = "홍길동", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
             @RequestParam(required = false) String name,
@@ -103,15 +103,16 @@ public class UserController {
             @ApiResponse(responseCode = "204", description = "수정 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "사용자 수정", description = "사용자 수정 API")
-    @PatchMapping("update")
+    @PatchMapping("/{userSn}")
     public BaseResponse updateUser(
+            @PathVariable("userSn") Long userSn,
             @Valid @RequestBody UserUpdateRequestDTO dto,
             @RequestPart(required = false, name = "profileImgFile") MultipartFile profileImgFile
     ) throws Exception {
         BaseResponse baseResponse;
 
         // 사용자 수정
-        boolean result = userServiceTx.updateUser(dto, profileImgFile);
+        boolean result = userServiceTx.updateUser(userSn, dto, profileImgFile);
 
         // response set
         baseResponse = result
@@ -126,10 +127,9 @@ public class UserController {
             @ApiResponse(responseCode = "204", description = "삭제 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "사용자 삭제", description = "사용자 삭제 API")
-    @DeleteMapping("delete")
+    @DeleteMapping("/{userSn}")
     public BaseResponse deleteUser(
-            @Parameter(name = "userSn", description = "사용자 순번", example = "1", in = ParameterIn.QUERY, schema = @Schema(implementation = Long.class))
-            @RequestParam Long userSn
+            @PathVariable("userSn") Long userSn
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -148,7 +148,7 @@ public class UserController {
             @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "사용자 로그인", description = "사용자 로그인 API")
-    @GetMapping("login")
+    @GetMapping("/login")
     public BaseResponse userLogin(
             @Parameter(name = "userId", description = "아이디", example = "user", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
             @RequestParam String userId,
