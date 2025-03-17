@@ -45,7 +45,6 @@ class APITest {
     @Autowired
     private TokenProvider tokenProvider;
 
-
     private final BCryptPasswordEncoder encoder;
 
     private String token;
