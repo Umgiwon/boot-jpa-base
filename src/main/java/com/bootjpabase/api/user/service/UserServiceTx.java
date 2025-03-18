@@ -125,10 +125,15 @@ public class UserServiceTx {
      */
     private void updateUser(User user, UserUpdateRequestDTO dto, MultipartFile profileImgFile) throws IOException {
 
-        Optional.ofNullable(dto.getUserPassword()).ifPresent(user::setUserPassword);
-        Optional.ofNullable(dto.getUserPhone()).ifPresent(user::setUserPhone);
-        Optional.ofNullable(dto.getUserEmail()).ifPresent(user::setUserEmail);
+        // 비밃번호
+        if(!ObjectUtils.isEmpty(dto.getUserPassword())) {
+            user.setUserPassword(encoder.encode(dto.getUserPassword()));
+        }
 
+        Optional.ofNullable(dto.getUserPhone()).ifPresent(user::setUserPhone); // 전화번호
+        Optional.ofNullable(dto.getUserEmail()).ifPresent(user::setUserEmail); // 이메일
+
+        // 프로필 사진
         if(!ObjectUtils.isEmpty(profileImgFile)) {
             File saveProfileImgFile = fileServiceTx.saveFile(profileImgFile, UploadFileType.USER);
             user.setProfileImgFileSn(saveProfileImgFile.getFileSn());
