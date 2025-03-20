@@ -20,4 +20,10 @@ public class TokenProperties {
 
     @Value("${jwt.access-token-expiration}")
     private Long accessTokenExpiration;
+
+    @Value("${jwt.refresh-token-secret-key}")
+    private String refreshTokenSecretKey;
+
+    @Value("${jwt.refresh-token-expiration}")
+    private Long refreshTokenExpiration;
 }

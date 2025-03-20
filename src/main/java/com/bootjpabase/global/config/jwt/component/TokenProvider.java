@@ -2,6 +2,7 @@ package com.bootjpabase.global.config.jwt.component;
 
 import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.global.config.jwt.domain.SecurityUser;
+import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.exception.BusinessException;
 import io.jsonwebtoken.Claims;
@@ -29,6 +30,8 @@ public class TokenProvider {
     private final TokenProperties tokenProperties;
     private Key key;
 
+    private static final String ACCESS = "access";
+    private static final String REFRESH = "refresh";
     private static final String BEARER_PREFIX = "Bearer ";
 
     @PostConstruct
@@ -37,16 +40,32 @@ public class TokenProvider {
     }
 
     /**
+     * access & refresh 토큰 생성하여 dto return
+     * @param user
+     * @return
+     */
+    public TokenResponseDTO createAllToken(User user) {
+        return TokenResponseDTO.builder()
+                .accessToken(createToken(user, ACCESS))
+                .refreshToken(createToken(user, REFRESH))
+                .build();
+    }
+
+    /**
      * 토큰 생성
      * @param user
      * @return
      */
-    public String createToken(User user) {
+    public String createToken(User user, String tokenType) {
         Date date = new Date();
+
+        long expiration = ACCESS.equals(tokenType)
+                ? tokenProperties.getAccessTokenExpiration()
+                : tokenProperties.getRefreshTokenExpiration();
 
         return Jwts.builder()
                 .setSubject(user.getUserId())
-                .setExpiration(new Date(date.getTime() + tokenProperties.getAccessTokenExpiration()))
+                .setExpiration(new Date(date.getTime() + expiration))
                 .setIssuedAt(date)
                 .claim("userSn", user.getUserSn())
                 .claim("userId", user.getUserId())

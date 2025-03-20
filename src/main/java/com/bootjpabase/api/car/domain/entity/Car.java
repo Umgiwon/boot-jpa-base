@@ -39,7 +39,8 @@ public class Car extends BaseEntity {
 
     @Column(name = "RENTAL_YN", nullable = false)
     @Comment("대여 가능 여부(N: 불가능, Y: 가능)")
-    private String rentalYn;
+    @Builder.Default
+    private String rentalYn = "Y";
 
     @Column(name = "RENTAL_DESCRIPTION")
     @Comment("대여 상세 내용")

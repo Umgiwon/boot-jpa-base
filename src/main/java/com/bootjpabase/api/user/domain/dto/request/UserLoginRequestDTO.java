@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-@Schema(description = "사용자 목록 조회 요청 DTO")
+@Schema(description = "사용자 로그인 요청 DTO")
 @Builder
 @Data
 @NoArgsConstructor

@@ -7,6 +7,7 @@ import com.bootjpabase.global.file.domain.entity.File;
 import com.bootjpabase.global.file.properties.FileUploadProperties;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.UUID;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class FileUtils {
@@ -46,8 +48,11 @@ public class FileUtils {
         // 파일 validate
         validateFile(file, uploadFileType);
 
+        // 서버에 파일 저장시 uuid 값으로 변경
+        String saveFileName = getFileNameWithUUID(file.getOriginalFilename());
+
         // 저장 경로 설정
-        Path filePath = Paths.get(ROOT_PATH, uploadFileType.getCode(), getFileNameWithUUID(file.getOriginalFilename()));
+        Path filePath = Paths.get(ROOT_PATH, uploadFileType.getCode(), saveFileName);
 
         // 디렉토리 없을 경우 생성
         Files.createDirectories(filePath.getParent());
@@ -55,10 +60,13 @@ public class FileUtils {
         // 파일 저장(중복시 덮어쓰기)
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
+        log.info("파일 저장 경로: {}", filePath.toAbsolutePath());
+        log.info("파일 저장 경로에  파일 존재 여부: {}", Files.exists(filePath));
+
         // 파일정보 반환
         return File.builder()
                 .realFileNm(file.getOriginalFilename())
-                .saveFileNm(getFileNameWithUUID(file.getOriginalFilename()))
+                .saveFileNm(saveFileName)
                 .filePath(filePath.toString())
                 .fileSize(file.getSize())
                 .build();
@@ -110,7 +118,7 @@ public class FileUtils {
      * @return
      */
     public static boolean deleteFile(File file) {
-        java.io.File deleteFile = new java.io.File(file.getSaveFileNm());
+        java.io.File deleteFile = new java.io.File(file.getFilePath());
         if(!deleteFile.exists()) {
             throw new BusinessException(ApiReturnCode.NO_FILE_DATA_ERROR);
         }

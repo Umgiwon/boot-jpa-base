@@ -1,5 +1,6 @@
 package com.bootjpabase;
 
+import com.bootjpabase.api.car.domain.dto.request.CarSaveRequestDTO;
 import com.bootjpabase.api.car.domain.dto.request.CarUpdateRequestDTO;
 import com.bootjpabase.api.car.domain.entity.Car;
 import com.bootjpabase.api.car.repository.CarRepository;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -74,7 +76,7 @@ class APITest {
         userRepository.save(testUser);
 
         // 토큰 발급
-        token = tokenProvider.createToken(testUser);
+        token = tokenProvider.createToken(testUser, "access");
 
         // 테스트 초기 데이터 생성
         List<Car> cars = List.of(
@@ -110,23 +112,29 @@ class APITest {
     @Test
     void saveCarTest() throws Exception {
 
-        // Given (저장할 테스트 자동차 entity 생성)
-        Car testSaveCar = Car.builder()
+        // given : 저장할 테스트 자동차 entity 생성
+        CarSaveRequestDTO saveDto = CarSaveRequestDTO.builder()
                 .category("중형 트럭")
                 .manufacturer("현대")
                 .modelName("포터")
                 .productionYear(2024)
-                .rentalYn("Y")
                 .build();
 
-        // When & Then
+        // When : API 호출
         mockMvc.perform(post("/api/car")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + token)
-                        .content(objectMapper.writeValueAsString(testSaveCar)))
+                        .content(objectMapper.writeValueAsString(saveDto)))
                 .andExpect(status().isOk()) // API 응답 상태가 200인지 확인
-                .andExpect(jsonPath("$.httpCode").value(200))
                 .andDo(print()); // 요청/응답 출력
+
+        // then : 저장된 데이터 검증
+        Car savedCar = carRepository.findByModelName(saveDto.getModelName());
+        assertThat(savedCar).isNotNull();
+        assertThat(savedCar.getCategory()).isEqualTo(saveDto.getCategory());
+        assertThat(savedCar.getManufacturer()).isEqualTo(saveDto.getManufacturer());
+        assertThat(savedCar.getModelName()).isEqualTo(saveDto.getModelName());
+        assertThat(savedCar.getProductionYear()).isEqualTo(saveDto.getProductionYear());
     }
 
     @DisplayName("자동차 전체 목록 조회 API 테스트")
@@ -224,13 +232,18 @@ class APITest {
                 .rentalDescription("수리로 인한 대여 중단")
                 .build();
 
-        // When & Then
+        // When : API 호출 (자동차 수정)
         mockMvc.perform(patch("/api/car/{carSn}", car.getCarSn())
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateDto)))
                 .andExpect(status().isOk()) // API 응답 상태가 200인지 확인
-                .andExpect(jsonPath("$.httpCode").value(200))
                 .andDo(print()); // 요청/응답 출력
+
+        // then : 수정된 데이터 검증
+        Car updatedCar = carRepository.findAll().get(0);
+        assertThat(updatedCar).isNotNull();
+        assertThat(updatedCar.getRentalYn()).isEqualTo(updateDto.getRentalYn());
+        assertThat(updatedCar.getRentalDescription()).isEqualTo(updateDto.getRentalDescription());
     }
 }

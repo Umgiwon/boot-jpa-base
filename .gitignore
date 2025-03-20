@@ -34,5 +34,12 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### secret ###
 /src/main/resources/application-secret.yml
+
+### Sample pakage ###
 /src/main/java/com/bootjpabase/global/pakage/
+
+### local file path ###
+/tmp/

@@ -1,10 +1,16 @@
 package com.bootjpabase.api.user.service;
 
+import com.bootjpabase.api.user.domain.dto.request.UserLoginRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserSaveRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserUpdateRequestDTO;
 import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.api.user.repository.UserRepository;
 import com.bootjpabase.api.user.repository.UserRepositoryCustom;
+import com.bootjpabase.global.config.jwt.component.TokenProvider;
+import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
+import com.bootjpabase.global.config.jwt.domain.entity.RefreshToken;
+import com.bootjpabase.global.config.jwt.repository.TokenRepository;
+import com.bootjpabase.global.config.jwt.service.TokenServiceTx;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.enums.file.UploadFileType;
 import com.bootjpabase.global.exception.BusinessException;
@@ -29,6 +35,9 @@ public class UserServiceTx {
     private final UserRepositoryCustom userRepositoryCustom;
     private final BCryptPasswordEncoder encoder;
     private final FileServiceTx fileServiceTx;
+    private final TokenProvider tokenProvider;
+    private final TokenRepository tokenRepository;
+    private final TokenServiceTx tokenServiceTx;
 
     /**
      * 사용자 저장
@@ -38,7 +47,13 @@ public class UserServiceTx {
     public boolean saveUser(UserSaveRequestDTO dto, MultipartFile profileImgFile) throws IOException {
 
         // 저장할 entity 객체 생성
-        User saveUser = createUserEntity(dto, profileImgFile);
+        User saveUser = createUserEntity(dto);
+
+        // 프로필 이미지 파일이 있을 경우 저장
+        if(!ObjectUtils.isEmpty(profileImgFile)) {
+            File saveProfileImgFile = fileServiceTx.saveFile(profileImgFile, UploadFileType.USER);
+            saveUser.setProfileImgFileSn(saveProfileImgFile.getFileSn());
+        }
 
         // 사용자 저장
         userRepository.save(saveUser);
@@ -51,13 +66,10 @@ public class UserServiceTx {
      * @param dto
      * @return
      */
-    public User createUserEntity(UserSaveRequestDTO dto, MultipartFile profileImgFile) throws IOException {
+    public User createUserEntity(UserSaveRequestDTO dto) throws IOException {
 
         // validate
         validateUser(dto);
-
-        // 프로필 이미지 파일 저장
-        File saveProfileImgFile = fileServiceTx.saveFile(profileImgFile, UploadFileType.USER);
 
         return User.builder()
                 .userId(dto.getUserId())
@@ -65,7 +77,6 @@ public class UserServiceTx {
                 .userPassword(encoder.encode(dto.getUserPassword()))
                 .userPhone(dto.getUserPhone())
                 .userEmail(dto.getUserEmail())
-                .profileImgFileSn(saveProfileImgFile.getFileSn())
                 .build();
     }
 
@@ -158,6 +169,70 @@ public class UserServiceTx {
 
         // 사용자 삭제
         userRepository.delete(deleteUser);
+
+        return true;
+    }
+
+    /**
+     * 사용자 로그인
+     * @param dto
+     * @return
+     */
+    public TokenResponseDTO userLogin(UserLoginRequestDTO dto) {
+        TokenResponseDTO tokenDto;
+
+        // 해당 계정 조회
+        User user = userRepository.findByUserId(dto.getUserId())
+                .orElseThrow(() -> new BusinessException(ApiReturnCode.LOGIN_ID_FAIL_ERROR));
+
+        // 비밀번호 체크
+        if(!encoder.matches(dto.getUserPassword(), user.getUserPassword())) {
+            throw new BusinessException(ApiReturnCode.LOGIN_PWD_FAIL_ERROR);
+        }
+
+        // access & refresh token 발급
+        tokenDto = tokenProvider.createAllToken(user);
+
+        // DB에 저장된 refresh token 조회
+        RefreshToken savedToken = tokenRepository.findByUser(user);
+
+        // 있으면 token 업데이트, 없으면 새로 저장
+        if(!org.apache.commons.lang3.ObjectUtils.isEmpty(savedToken)) {
+            savedToken.setToken(tokenDto.getRefreshToken());
+        } else {
+            tokenServiceTx.saveRefreshToken(tokenDto.getRefreshToken(), user);
+        }
+
+        return tokenDto;
+    }
+
+    /**
+     * 로그아웃 (refresh 토큰 삭제)
+     * @param token
+     * @return
+     */
+    public boolean logoutManager(String token) {
+
+        String accessToken = token.replace("Bearer ", "");
+
+        // access token 유효성 검사
+        if(!tokenProvider.validateToken(accessToken)) {
+            throw new BusinessException(ApiReturnCode.UNAUTHORIZED_TOKEN_ERROR);
+        }
+
+        // access 토큰에서 사용자 아이디 추출
+        String id = tokenProvider.getIdFromToken(accessToken);
+
+        // 아이디로 사용자 entity 조회
+        User user = userRepository.findByUserId(id)
+                .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_DATA_ERROR));
+
+        // 삭제할 refresh 토큰 entity 조회
+        RefreshToken savedToken = Optional.ofNullable(tokenRepository.findByUser(user))
+                .orElseThrow(() -> new BusinessException(ApiReturnCode.UNAUTHORIZED_TOKEN_ERROR));
+
+        // refresh 토큰 삭제
+        tokenRepository.delete(savedToken);
 
         return true;
     }

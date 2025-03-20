@@ -35,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "사용자 API", description = "사용자 API 설명")
+@Tag(name = "User API", description = "사용자 API")
 @RestController
 @RequiredArgsConstructor
 @Validated
@@ -53,7 +53,7 @@ public class UserController {
     @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public BaseResponse saveUser(
             @Valid @RequestPart UserSaveRequestDTO dto,
-            @RequestPart(name = "profileImgFile") MultipartFile profileImgFile
+            @RequestPart(required = false, name = "profileImgFile") MultipartFile profileImgFile
     ) throws Exception {
         BaseResponse baseResponse;
 
@@ -148,22 +148,15 @@ public class UserController {
             @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "사용자 로그인", description = "사용자 로그인 API")
-    @GetMapping("/login")
+    @PostMapping("/login")
     public BaseResponse userLogin(
-            @Parameter(name = "userId", description = "아이디", example = "user", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam String userId,
-            @Parameter(name = "userPassword", description = "비밀번호", example = "user!", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam String userPassword
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
+                    content = @Content(schema = @Schema(implementation = UserLoginRequestDTO.class)))
+            @RequestBody @Valid UserLoginRequestDTO dto
     ) throws Exception {
         BaseResponse baseResponse;
 
-        // 로그인용 dto set
-        UserLoginRequestDTO dto = UserLoginRequestDTO.builder()
-                .userId(userId)
-                .userPassword(userPassword)
-                .build();
-
-        TokenResponseDTO result = userService.userLogin(dto);
+        TokenResponseDTO result = userServiceTx.userLogin(dto);
 
         baseResponse = !ObjectUtils.isEmpty(result)
                 ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.LOGIN_SUCCESS, 1, result)
@@ -172,5 +165,23 @@ public class UserController {
         return baseResponse;
     }
 
-    // TODO 로그아웃 구현
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "204", description = "실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    @Operation(summary = "로그아웃", description = "로그아웃 API - refresh token 삭제")
+    @PostMapping("logout")
+    public BaseResponse logoutManager(@RequestHeader(value = "Authorization", required = false) String token) throws Exception {
+        BaseResponse baseResponse;
+
+        // 관리자 로그아웃
+        boolean result = userServiceTx.logoutManager(token);
+
+        // response set
+        baseResponse = result
+                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.LOGOUT_SUCCESS, 1 , true)
+                : BaseResponse.getBaseResponseBuilder(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.LOGOUT_FAIL, 0, false);
+
+        return baseResponse;
+    }
 }

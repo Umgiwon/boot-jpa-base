@@ -4,10 +4,12 @@ import com.bootjpabase.global.filter.TokenAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -34,15 +36,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
             .cors(Customizer.withDefaults())
+            .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(request -> request
                     .requestMatchers(
                             "/swagger-ui/**"
                             , "/swagger-ui.html"
                             , "/v3/api-docs/**"
-                            , "/user/save"
-                            , "/user/login"
-                            , "/sample/**"
+                    ).permitAll()
+                    .requestMatchers(HttpMethod.GET
+                            , "/api/sample/**"
+                    ).permitAll()
+                    .requestMatchers(HttpMethod.POST
+                            , "/api/user"
+                            , "/api/user/login"
+                            , "/api/token/refresh"
                     ).permitAll()
 //                    .requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()

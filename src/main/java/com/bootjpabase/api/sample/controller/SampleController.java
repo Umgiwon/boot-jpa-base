@@ -6,8 +6,6 @@ import com.bootjpabase.api.sample.domain.dto.request.SampleUpdateRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.response.SampleResponseDTO;
 import com.bootjpabase.api.sample.service.SampleService;
 import com.bootjpabase.api.sample.service.SampleServiceTx;
-import com.bootjpabase.global.annotation.sample.ValidContent;
-import com.bootjpabase.global.annotation.sample.ValidTitle;
 import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
 import com.bootjpabase.global.domain.dto.Pagination;
@@ -34,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "Sample API", description = "Sample API 설명")
+@Tag(name = "Sample API", description = "샘플 API")
 @RestController
 @RequiredArgsConstructor
 @Validated
@@ -150,9 +148,9 @@ public class SampleController {
     @GetMapping("")
     public BaseResponse getSampleList(
             @Parameter(name = "title", description = "샘플 제목", example = "title1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) @ValidTitle String title,
+            @RequestParam(required = false) String title,
             @Parameter(name = "content", description = "샘플 내용", example = "content1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) @ValidContent String content,
+            @RequestParam(required = false) String content,
             @PageableDefault(page = 0, size = 10, sort = "regDt", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
         BaseResponse baseResponse;

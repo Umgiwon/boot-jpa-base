@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "자동차 관리 API", description = "Car Management - 자동차 관리 API")
+@Tag(name = "Car 관리 API", description = "자동차 관리 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/car")
