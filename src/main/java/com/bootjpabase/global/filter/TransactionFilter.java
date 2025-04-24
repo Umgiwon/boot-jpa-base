@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,39 +17,31 @@ import java.util.Map;
 import java.util.Set;
 
 @Slf4j
-@Service
+@Component
+@RequiredArgsConstructor
 public class TransactionFilter implements Filter {
 
     private final ReadOnlyTx readOnlyTx;
-    private final Set<String> readOnlyMap = new HashSet<>();
-
-    public TransactionFilter(ReadOnlyTx readOnlyTx) {
-        this.readOnlyTx = readOnlyTx;
-    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+
         HttpServletRequest httpReq = (HttpServletRequest) request;
         HttpServletResponse httpRes = (HttpServletResponse) response;
 
+        String method = httpReq.getMethod();
+
         try {
-            if (readOnlyRequest(httpReq)) {
+            if ("GET".equalsIgnoreCase(method)) { // GET 요청에 대해서 readOnly
                 readOnlyTx.doInReadOnly(() -> chain.doFilter(request, response));
             } else {
-                chain.doFilter(request, response);
+                readOnlyTx.doInWrite(() -> chain.doFilter(request, response));
             }
         } catch (ServletException | IOException e) {
-            log.error("Error processing request", e);
+            log.error("Error processing request [{} {}]", method, httpReq.getRequestURI(), e);
             handleException(httpReq, httpRes, e);
         }
-    }
-
-    private boolean readOnlyRequest(HttpServletRequest httpReq) {
-        String method = httpReq.getMethod();
-        String uri = httpReq.getRequestURI();
-        String key = method + " " + uri;
-        return readOnlyMap.contains(key) || key.equals("GET /test/transaction");
     }
 
     private void handleException(HttpServletRequest httpReq, HttpServletResponse httpRes, Exception e) throws IOException {
@@ -61,15 +55,5 @@ public class TransactionFilter implements Filter {
         httpRes.setContentType("application/json");
         httpRes.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         new ObjectMapper().writeValue(httpRes.getOutputStream(), mapBodyException);
-    }
-
-    @Override
-    public void init(FilterConfig filterConfig) {
-        // No initialization needed
-    }
-
-    @Override
-    public void destroy() {
-        // No cleanup needed
     }
 }

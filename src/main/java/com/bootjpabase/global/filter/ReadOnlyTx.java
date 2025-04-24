@@ -19,7 +19,8 @@ public class ReadOnlyTx {
         runnable.run();
     }
 
-    interface ExRunnable {
+    @FunctionalInterface
+    public interface ExRunnable {
         void run() throws IOException, ServletException;
     }
 }
