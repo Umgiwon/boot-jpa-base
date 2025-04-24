@@ -77,7 +77,7 @@ public class UserController {
     public BaseResponse getUserList(
             @Parameter(name = "name", description = "이름", example = "홍길동", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
             @RequestParam(required = false) String name,
-            @PageableDefault(page = 0, size = 10, sort = "regDt", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
         BaseResponse baseResponse;
 

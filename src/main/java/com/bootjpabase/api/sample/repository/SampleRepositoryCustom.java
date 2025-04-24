@@ -3,6 +3,8 @@ package com.bootjpabase.api.sample.repository;
 import com.bootjpabase.api.sample.domain.dto.request.SampleListRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.response.QSampleResponseDTO;
 import com.bootjpabase.api.sample.domain.dto.response.SampleResponseDTO;
+import com.bootjpabase.api.sample.domain.entity.Sample;
+import com.bootjpabase.global.util.QueryDslUtils;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -70,6 +72,7 @@ public class SampleRepositoryCustom {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(sample.sampleSn.asc())
+//                .orderBy(QueryDslUtils.getOrderSpecifiers2(pageable, Sample.class, "sample"))
                 .fetch();
 
         // 전체 데이터 카운트

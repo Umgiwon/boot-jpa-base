@@ -123,7 +123,7 @@ public class CarController {
             @RequestParam(required = false) Integer productionYear,
             @Parameter(name = "rentalYn", description = "대여 가능 여부(N: 불가능, Y: 가능)", example = "Y", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
             @RequestParam(required = false) String rentalYn,
-            @PageableDefault(page = 0, size = 10, sort = "regDt", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
         BaseResponse baseResponse;
 
