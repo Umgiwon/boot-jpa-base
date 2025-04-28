@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    private final String ERROR_PATH = "/error";
-
     /* Collection valid를 위한 로직 추가 (해당 로직이 없어도 @Valid 어노테이션이 정상 작동 하는것으로 확인되어 주석처리(2025.01.24)
     protected final LocalValidatorFactoryBean validator;
 
@@ -56,11 +54,10 @@ public class GlobalExceptionHandler {
                 .path(request.getRequestURI())
                 .timestamp(LocalDateTime.now())
                 .errorCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-//                .errorMessage(ApiReturnCode.SERVER_ERROR.getMessage())
                 .errorMessage(String.format("%s [%s]", ApiReturnCode.SERVER_ERROR.getMessage(), ex.getMessage()))
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionMsg);
     }
 
     /**
@@ -80,7 +77,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ex.getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 
     /**
@@ -103,7 +100,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(errorMessage)
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 
     /**
@@ -124,7 +121,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(", ")))
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 
     /**
@@ -146,7 +143,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(errorMessage)
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 
     /**
@@ -165,7 +162,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ex.getParameterName() + " 파라미터는 필수값입니다.")
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 
     /**
@@ -184,7 +181,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ex.getApiReturnCode().getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionMsg);
     }
 
     /**
@@ -204,7 +201,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ApiReturnCode.NO_URL_ERROR.getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionMsg);
     }
 
     /**
@@ -225,7 +222,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ApiReturnCode.METHOD_NOT_ALLOWED.getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.METHOD_NOT_ALLOWED);
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(exceptionMsg);
     }
 
     /**
@@ -246,7 +243,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ApiReturnCode.REQUIRED_FILE_ERROR.getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 
     /**
@@ -268,7 +265,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ApiReturnCode.BAD_REQUEST_TEXT.getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 
     /**
@@ -290,7 +287,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ApiReturnCode.UNSUPPORTED_MEDIA_TYPE.getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(exceptionMsg);
     }
 
     /**
@@ -312,7 +309,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ApiReturnCode.FORBIDDEN_ERROR.getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.FORBIDDEN);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exceptionMsg);
     }
 
     /**
@@ -340,6 +337,6 @@ public class GlobalExceptionHandler {
                 .errorMessage(errorMessage)
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(exceptionMsg);
     }
 }
