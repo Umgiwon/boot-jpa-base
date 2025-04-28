@@ -106,7 +106,7 @@ public class UserController {
     @PatchMapping("/{userSn}")
     public BaseResponse updateUser(
             @PathVariable("userSn") Long userSn,
-            @Valid @RequestBody UserUpdateRequestDTO dto,
+            @Valid @RequestPart UserUpdateRequestDTO dto,
             @RequestPart(required = false, name = "profileImgFile") MultipartFile profileImgFile
     ) throws Exception {
         BaseResponse baseResponse;
