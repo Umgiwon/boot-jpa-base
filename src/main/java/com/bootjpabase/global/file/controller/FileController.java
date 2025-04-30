@@ -43,8 +43,8 @@ public class FileController {
         boolean result = fileServiceTx.deleteFile(fileSn);
 
         baseResponse = result
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 1, true)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.DELETE_FAIL, 0, false);
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 1, true)
+                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.DELETE_FAIL, 0, false);
 
         return baseResponse;
     }

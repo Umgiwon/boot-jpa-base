@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL) // 객체를 json 으로 직렬화할 때 null 값인 필드를 무시
-public class BaseResponse {
+public class BaseResponse<T> {
 
     @Schema(description = "TimeStamp")
     private LocalDateTime timeStamp;
@@ -26,13 +26,13 @@ public class BaseResponse {
     private int dataSize;
 
     @Schema(description = "Data")
-    private Object data;
+    private T data;
 
     @Schema(description = "Pagination")
     private Pagination pagination;
 
-    public static BaseResponse getBaseResponseBuilder(int httpCode, String message, int dataSize, Object data) {
-        return BaseResponse.builder()
+    public static <T> BaseResponse<T> of(int httpCode, String message, int dataSize, T data) {
+        return BaseResponse.<T>builder()
                 .timeStamp(LocalDateTime.now())
                 .httpCode(httpCode)
                 .message(message)
@@ -41,8 +41,8 @@ public class BaseResponse {
                 .build();
     }
 
-    public static BaseResponse getBaseResponseBuilder(int httpCode, String message, int dataSize, Object data, Pagination pagination) {
-        return BaseResponse.builder()
+    public static <T> BaseResponse<T> of(int httpCode, String message, int dataSize, T data, Pagination pagination) {
+        return BaseResponse.<T>builder()
                 .timeStamp(LocalDateTime.now())
                 .httpCode(httpCode)
                 .message(message)

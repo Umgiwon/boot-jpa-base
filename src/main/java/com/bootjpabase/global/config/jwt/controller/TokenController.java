@@ -44,8 +44,8 @@ public class TokenController {
 
         // response set
         baseResponse = !ObjectUtils.isEmpty(result)
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.ACCESS_TOKEN_SUCCESS, 1, result)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.ACCESS_TOKEN_FAIL, 0, TokenResponseDTO.builder().build());
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.ACCESS_TOKEN_SUCCESS, 1, result)
+                : BaseResponse.of(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.ACCESS_TOKEN_FAIL, 0, TokenResponseDTO.builder().build());
 
         return baseResponse;
     }

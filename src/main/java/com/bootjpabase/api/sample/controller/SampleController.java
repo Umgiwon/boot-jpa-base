@@ -75,8 +75,8 @@ public class SampleController {
 
         // response set
         baseResponse = result
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true)
+                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
 
         return baseResponse;
     }
@@ -113,8 +113,8 @@ public class SampleController {
 
         // response set
         baseResponse = result
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, dto.size(), true)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, dto.size(), true)
+                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
 
         return baseResponse;
     }
@@ -135,8 +135,8 @@ public class SampleController {
 
         // response set
         baseResponse = !ObjectUtils.isEmpty(result)
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, 1, result)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, SampleResponseDTO.builder().build());
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, 1, result)
+                : BaseResponse.of(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, SampleResponseDTO.builder().build());
 
         return baseResponse;
     }
@@ -159,8 +159,8 @@ public class SampleController {
 
         // response set
         baseResponse = !ObjectUtils.isEmpty(resultList)
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList, new Pagination(resultPaging))
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, new ArrayList<>());
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList, new Pagination(resultPaging))
+                : BaseResponse.of(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, new ArrayList<>());
 
         return baseResponse;
     }
@@ -198,8 +198,8 @@ public class SampleController {
 
         // response set
         baseResponse = result
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.UPDATE_SUCCESS, 1, true)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.UPDATE_FAIL, 0, false);
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.UPDATE_SUCCESS, 1, true)
+                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.UPDATE_FAIL, 0, false);
 
         return baseResponse;
     }
@@ -220,8 +220,8 @@ public class SampleController {
 
         // response set
         baseResponse = result
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 1, true)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.DELETE_FAIL, 0, false);
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 1, true)
+                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.DELETE_FAIL, 0, false);
 
         return baseResponse;
     }

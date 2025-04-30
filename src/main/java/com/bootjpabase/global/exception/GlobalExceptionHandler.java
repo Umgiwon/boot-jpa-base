@@ -181,7 +181,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ex.getApiReturnCode().getMessage())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionMsg);
+        return ResponseEntity.status(ex.getApiReturnCode().getCode()).body(exceptionMsg);
     }
 
     /**

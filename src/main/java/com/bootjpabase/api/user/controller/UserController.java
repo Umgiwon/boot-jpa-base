@@ -63,19 +63,19 @@ public class UserController {
 
         // response set
         baseResponse = result
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true)
+                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
 
         return baseResponse;
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = UserResponseDTO.class))),
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
             @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @Operation(summary = "사용자 목록 조회", description = "사용자 목록 조회 API")
     @GetMapping("")
-    public BaseResponse getUserList(
+    public BaseResponse<?> getUserList(
             @ParameterObject UserListRequestDTO dto,
             @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
@@ -87,8 +87,8 @@ public class UserController {
 
         // response set
         baseResponse = !ObjectUtils.isEmpty(resultList)
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList, new Pagination(resultPaging))
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, new ArrayList<>());
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList, new Pagination(resultPaging))
+                : BaseResponse.of(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, new ArrayList<>());
 
         return baseResponse;
     }
@@ -111,8 +111,8 @@ public class UserController {
 
         // response set
         baseResponse = result
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true)
+                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
 
         return baseResponse;
     }
@@ -132,8 +132,8 @@ public class UserController {
         boolean result = userServiceTx.deleteUser(userSn);
 
         baseResponse = result
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 1, true)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.DELETE_FAIL, 0, false);
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 1, true)
+                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.DELETE_FAIL, 0, false);
 
         return baseResponse;
     }
@@ -154,8 +154,8 @@ public class UserController {
         TokenResponseDTO result = userServiceTx.userLogin(dto);
 
         baseResponse = !ObjectUtils.isEmpty(result)
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.LOGIN_SUCCESS, 1, result)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.LOGIN_FAIL, 0, TokenResponseDTO.builder().build());
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.LOGIN_SUCCESS, 1, result)
+                : BaseResponse.of(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.LOGIN_FAIL, 0, TokenResponseDTO.builder().build());
 
         return baseResponse;
     }
@@ -174,8 +174,8 @@ public class UserController {
 
         // response set
         baseResponse = result
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.LOGOUT_SUCCESS, 1 , true)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.LOGOUT_FAIL, 0, false);
+                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.LOGOUT_SUCCESS, 1 , true)
+                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.LOGOUT_FAIL, 0, false);
 
         return baseResponse;
     }
