@@ -148,19 +148,10 @@ public class SampleController {
     @Operation(summary = "샘플 목록 조회", description = "샘플 목록 조회 API (제목, 내용이 없을 경우 전체목록 조회)")
     @GetMapping("")
     public BaseResponse getSampleList(
-            @Parameter(name = "title", description = "샘플 제목", example = "title1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String title,
-            @Parameter(name = "content", description = "샘플 내용", example = "content1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String content,
+            @ParameterObject SampleListRequestDTO dto,
             @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
         BaseResponse baseResponse;
-
-        // 조회용 dto set
-        SampleListRequestDTO dto = SampleListRequestDTO.builder()
-                .title(ObjectUtils.isEmpty(title) ? null : title)
-                .content(ObjectUtils.isEmpty(content) ? null : content)
-                .build();
 
         // Sample 목록 조회
         Page<SampleResponseDTO> resultPaging = sampleService.getSampleList(dto, pageable);

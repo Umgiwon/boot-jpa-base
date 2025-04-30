@@ -3,8 +3,6 @@ package com.bootjpabase.api.sample.repository;
 import com.bootjpabase.api.sample.domain.dto.request.SampleListRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.response.QSampleResponseDTO;
 import com.bootjpabase.api.sample.domain.dto.response.SampleResponseDTO;
-import com.bootjpabase.api.sample.domain.entity.Sample;
-import com.bootjpabase.global.util.QueryDslUtils;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -94,11 +92,11 @@ public class SampleRepositoryCustom {
         BooleanBuilder builder = new BooleanBuilder();
 
         if(dto.getTitle() != null) {
-            eqTitle(dto.getTitle());
+            builder.and(eqTitle(dto.getTitle()));
         }
 
         if(dto.getContent() != null) {
-            eqContent(dto.getContent());
+            builder.and(eqContent(dto.getContent()));
         }
 
         return builder;
@@ -110,7 +108,7 @@ public class SampleRepositoryCustom {
      * @return
      */
     private BooleanExpression eqTitle(String title) {
-        return (!StringUtils.isEmpty(title)) ? sample.title.eq(title) : null;
+        return (!StringUtils.isEmpty(title)) ? sample.title.contains(title) : null;
     }
 
     /**
@@ -119,6 +117,6 @@ public class SampleRepositoryCustom {
      * @return
      */
     private BooleanExpression eqContent(String content) {
-        return (!StringUtils.isEmpty(content)) ? sample.content.eq(content) : null;
+        return (!StringUtils.isEmpty(content)) ? sample.content.contains(content) : null;
     }
 }
