@@ -12,9 +12,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 /**
- * HttpServletRequest 안의 requestBody 내용을 캐싱하기 위한 클래스
- * request body는 inputStream에 의해 기본적으로 한 번만 읽을 수 있기 때문에
- * 해당 클래스를 통해 요청 내용을 메모리에 저장하고 재사용 가능하게 한다.
+ * * HttpServletRequest 안의 requestBody 내용을 캐싱하기 위한 클래스
+ * * request body는 inputStream에 의해 기본적으로 한 번만 읽을 수 있기 때문에
+ * * 해당 클래스를 통해 요청 내용을 메모리에 저장하고 재사용 가능하게 한다.
  */
 public class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
 

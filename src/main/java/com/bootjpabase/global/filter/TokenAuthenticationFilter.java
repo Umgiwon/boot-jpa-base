@@ -13,6 +13,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * * 토큰 관련 - filter
+ */
 @Component
 @RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {

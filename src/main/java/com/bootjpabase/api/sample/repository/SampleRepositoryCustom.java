@@ -72,7 +72,6 @@ public class SampleRepositoryCustom {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(sample.sampleSn.asc())
-//                .orderBy(QueryDslUtils.getOrderSpecifiers2(pageable, Sample.class, "sample"))
                 .fetch();
 
         // 전체 데이터 카운트

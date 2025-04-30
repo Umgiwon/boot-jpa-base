@@ -153,7 +153,6 @@ public class SampleController {
             @Parameter(name = "content", description = "샘플 내용", example = "content1", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
             @RequestParam(required = false) String content,
             @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
-//            @ParameterObject Pageable pageable
     ) throws Exception {
         BaseResponse baseResponse;
 

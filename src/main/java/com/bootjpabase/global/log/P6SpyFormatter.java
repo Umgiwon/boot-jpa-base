@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Locale;
 
+/**
+ * * Query Logging formatter를 설정하는 파일
+ */
 @Configuration
 public class P6SpyFormatter implements MessageFormattingStrategy {
 
