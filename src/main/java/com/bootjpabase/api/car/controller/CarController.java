@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "Car 관리 API", description = "자동차 관리 API")
+@Tag(name = "Car Management API", description = "자동차 관리 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/car")
@@ -113,28 +114,10 @@ public class CarController {
     @Operation(summary = "자동차 목록 조회", description = "자동차 목록 조회 API (검색 조건이 없을 경우 전체목록 조회)")
     @GetMapping("")
     public BaseResponse getCarList(
-            @Parameter(name = "category", description = "카테고리", example = "미니 SUV", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String category,
-            @Parameter(name = "manufacturer", description = "제조사", example = "현대", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String manufacturer,
-            @Parameter(name = "modelName", description = "모델명", example = "코나", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String modelName,
-            @Parameter(name = "productionYear", description = "생산년도", example = "2024", in = ParameterIn.QUERY, schema = @Schema(implementation = Integer.class))
-            @RequestParam(required = false) Integer productionYear,
-            @Parameter(name = "rentalYn", description = "대여 가능 여부(N: 불가능, Y: 가능)", example = "Y", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String rentalYn,
+            @ParameterObject CarListRequestDTO dto,
             @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
         BaseResponse baseResponse;
-
-        // 조회용 dto set
-        CarListRequestDTO dto = CarListRequestDTO.builder()
-                .category(ObjectUtils.isEmpty(category) ? null : category)
-                .manufacturer(ObjectUtils.isEmpty(manufacturer) ? null : manufacturer)
-                .modelName(ObjectUtils.isEmpty(modelName) ? null : modelName)
-                .productionYear(ObjectUtils.isEmpty(productionYear) ? null : productionYear)
-                .rentalYn(ObjectUtils.isEmpty(rentalYn) ? null : rentalYn)
-                .build();
 
         // Car 목록 조회
         Page<CarResponseDTO> resultPaging = carService.getCarList(dto, pageable);

@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -75,16 +76,10 @@ public class UserController {
     @Operation(summary = "사용자 목록 조회", description = "사용자 목록 조회 API")
     @GetMapping("")
     public BaseResponse getUserList(
-            @Parameter(name = "name", description = "이름", example = "홍길동", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String name,
+            @ParameterObject UserListRequestDTO dto,
             @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
         BaseResponse baseResponse;
-
-        // 조회용 dto set
-        UserListRequestDTO dto = UserListRequestDTO.builder()
-                .userName(ObjectUtils.isEmpty(name) ? null : name)
-                .build();
 
         // 사용자 목록 조회
         Page<UserResponseDTO> resultPaging = userService.getUserList(dto, pageable);

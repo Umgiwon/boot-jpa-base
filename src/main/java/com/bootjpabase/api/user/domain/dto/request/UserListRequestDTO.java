@@ -19,5 +19,4 @@ public class UserListRequestDTO {
     @Length(max = 50, message = "이름은 50자 이하로 입력해야 합니다.")
     @Schema(description = "이름", example = "홍길동")
     private String userName;
-
 }
