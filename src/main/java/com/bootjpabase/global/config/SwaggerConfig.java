@@ -14,13 +14,13 @@ import java.util.Collections;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("${springdoc.title}")
+    @Value("${springdoc.info.title}")
     private String API_TITLE;
 
-    @Value("${springdoc.description}")
+    @Value("${springdoc.info.description}")
     private String API_DESCRIPTION;
 
-    @Value("${springdoc.version}")
+    @Value("${springdoc.info.version}")
     private String API_VERSION;
 
     @Bean
