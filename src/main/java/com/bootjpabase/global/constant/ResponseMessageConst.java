@@ -20,13 +20,13 @@ public final class ResponseMessageConst {
     public static final String DELETE_SUCCESS = "삭제에 성공했습니다.";
     public static final String DELETE_FAIL = "삭제에 실패했습니다.";
 
-    public static final String SELECT_SUCCESS = "조회에 성공했습니다.";
+    public static final String SELECT_SUCCESS = "정상적으로 조회되었습니다.";
 
     /* 공통 로그인 응답 */
     public static final String LOGIN_SUCCESS = "로그인 성공";
     public static final String LOGIN_FAIL = "로그인 실패";
     public static final String LOGOUT_SUCCESS = "로그아웃 성공";
     public static final String LOGOUT_FAIL = "로그아웃 실패";
-    public static final String ACCESS_TOKEN_SUCCESS = "access token 재발급 성공";
-    public static final String ACCESS_TOKEN_FAIL = "access token 재발급 실패";
+    public static final String LOGIN_ACCESS_TOKEN_SUCCESS = "access token 재발급 성공";
+    public static final String LOGIN_ACCESS_TOKEN_FAIL = "access token 재발급 실패";
 }

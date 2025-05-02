@@ -5,6 +5,7 @@ import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
 import com.bootjpabase.global.config.jwt.service.TokenService;
 import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
+import com.bootjpabase.global.domain.dto.BaseResponseFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,8 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -36,18 +35,7 @@ public class TokenController {
     })
     @Operation(summary = "리프레쉬 토큰 검증 후 엑세스 토큰 발급", description = "리프레쉬 토큰 검증 후 엑세스 토큰 발급 API")
     @PostMapping("refresh")
-    public BaseResponse saveManager(@RequestHeader("Authorization") String token) throws Exception {
-        BaseResponse baseResponse;
-
-        // refresh 토큰 검증 후 access 토큰 재발급
-        TokenResponseDTO result = tokenService.refreshAccessToken(token);
-
-        // response set
-        baseResponse = !ObjectUtils.isEmpty(result)
-                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.ACCESS_TOKEN_SUCCESS, 1, result)
-                : BaseResponse.of(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.ACCESS_TOKEN_FAIL, 0, TokenResponseDTO.builder().build());
-
-        return baseResponse;
+    public BaseResponse<TokenResponseDTO> saveManager(@RequestHeader("Authorization") String token) throws Exception {
+        return BaseResponseFactory.successToken(tokenService.refreshAccessToken(token), ResponseMessageConst.LOGIN_ACCESS_TOKEN_SUCCESS);
     }
-
 }

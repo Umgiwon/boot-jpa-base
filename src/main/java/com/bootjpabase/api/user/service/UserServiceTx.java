@@ -3,6 +3,7 @@ package com.bootjpabase.api.user.service;
 import com.bootjpabase.api.user.domain.dto.request.UserLoginRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserSaveRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserUpdateRequestDTO;
+import com.bootjpabase.api.user.domain.dto.response.UserResponseDTO;
 import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.api.user.repository.UserRepository;
 import com.bootjpabase.api.user.repository.UserRepositoryCustom;
@@ -44,7 +45,7 @@ public class UserServiceTx {
      * @param dto
      * @return
      */
-    public boolean saveUser(UserSaveRequestDTO dto, MultipartFile profileImgFile) throws IOException {
+    public UserResponseDTO saveUser(UserSaveRequestDTO dto, MultipartFile profileImgFile) throws IOException {
 
         // 저장할 entity 객체 생성
         User saveUser = createUserEntity(dto);
@@ -55,10 +56,8 @@ public class UserServiceTx {
             saveUser.setProfileImgFileSn(saveProfileImgFile.getFileSn());
         }
 
-        // 사용자 저장
-        userRepository.save(saveUser);
-
-        return true;
+        // 사용자 저장 후 dto 반환
+        return userEntityToDto(userRepository.save(saveUser));
     }
 
     /**
@@ -107,7 +106,7 @@ public class UserServiceTx {
      * @param dto
      * @return
      */
-    public boolean updateUser(Long userSn, UserUpdateRequestDTO dto, MultipartFile profileImgFile) throws IOException {
+    public UserResponseDTO updateUser(Long userSn, UserUpdateRequestDTO dto, MultipartFile profileImgFile) throws IOException {
 
 //        // userPhone 중복 체크
 //        if(userRepository.existsByUserPhone(dto.getUserPhone())) {
@@ -126,7 +125,7 @@ public class UserServiceTx {
         // entity 영속성 컨텍스트 수정
         updateUser(updateUser, dto, profileImgFile);
 
-        return true;
+        return userEntityToDto(updateUser);
     }
 
     /**
@@ -156,7 +155,7 @@ public class UserServiceTx {
      * @param userSn
      * @return
      */
-    public boolean deleteUser(Long userSn) {
+    public UserResponseDTO deleteUser(Long userSn) {
 
         // 삭제할 entity 조회
         User deleteUser = userRepository.findById(userSn)
@@ -170,7 +169,7 @@ public class UserServiceTx {
         // 사용자 삭제
         userRepository.delete(deleteUser);
 
-        return true;
+        return userEntityToDto(deleteUser);
     }
 
     /**
@@ -235,5 +234,20 @@ public class UserServiceTx {
         tokenRepository.delete(savedToken);
 
         return true;
+    }
+
+    /**
+     * 사용자 entity를 dto로 변환
+     * @param user
+     * @return
+     */
+    private UserResponseDTO userEntityToDto(User user) {
+        return UserResponseDTO.builder()
+                .userSn(user.getUserSn())
+                .userId(user.getUserId())
+                .userName(user.getUserName())
+                .userPhone(user.getUserPhone())
+                .userEmail(user.getUserEmail())
+                .build();
     }
 }

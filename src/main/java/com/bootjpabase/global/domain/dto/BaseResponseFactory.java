@@ -42,6 +42,22 @@ public class BaseResponseFactory {
     }
 
     /**
+     * 성공 시 (token 관련)
+     * @param data
+     * @return
+     * @param <T>
+     */
+    public static <T> BaseResponse<T> successToken(T data, String message) {
+
+        // 내용 없을 경우 noContent
+        if(ObjectUtils.isEmpty(data)) {
+            return noContent();
+        }
+
+        return baseResponseBuilder(HttpStatus.OK.value(), message, getSize(data), data, null);
+    }
+
+    /**
      * 성공 시(Paging 처리)
      * @param page
      * @return

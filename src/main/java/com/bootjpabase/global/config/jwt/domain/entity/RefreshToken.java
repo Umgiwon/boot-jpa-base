@@ -24,7 +24,7 @@ public class RefreshToken {
     @Comment("토큰 값")
     private String token;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_SN", referencedColumnName = "USER_SN", nullable = false)
     @Comment("사용자")
     private User user;

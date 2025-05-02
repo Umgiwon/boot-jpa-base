@@ -1,6 +1,7 @@
 package com.bootjpabase.api.user.domain.entity;
 
 
+import com.bootjpabase.global.config.jwt.domain.entity.RefreshToken;
 import com.bootjpabase.global.domain.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,4 +45,7 @@ public class User extends BaseEntity {
     @Column(name = "PROFILE_IMG_FILE_SN")
     @Comment("프로필 파일순번")
     private Long profileImgFileSn;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private RefreshToken refreshToken;
 }
