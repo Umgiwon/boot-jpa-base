@@ -3,6 +3,7 @@ package com.bootjpabase.global.file.service;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.enums.file.UploadFileType;
 import com.bootjpabase.global.exception.BusinessException;
+import com.bootjpabase.global.file.domain.dto.response.FileResponseDTO;
 import com.bootjpabase.global.file.domain.entity.File;
 import com.bootjpabase.global.file.repository.FileRepository;
 import com.bootjpabase.global.file.repository.FileRepositoryCustom;
@@ -43,7 +44,7 @@ public class FileServiceTx {
      * @param fileSn
      * @return
      */
-    public boolean deleteFile(Long fileSn) {
+    public FileResponseDTO deleteFile(Long fileSn) {
 
         // DB에 저장된 삭제할 entity 조회
         File deleteFile = fileRepository.findById(fileSn)
@@ -55,6 +56,22 @@ public class FileServiceTx {
         // DB에 저장된 파일정보 삭제
         fileRepository.delete(deleteFile);
 
-        return true;
+        // 삭제 후 dto로 변환하여 반환
+        return fileEntityToDto(deleteFile);
+    }
+
+    /**
+     * 파일 entity를 dto로 변환
+     * @param file
+     * @return
+     */
+    private FileResponseDTO fileEntityToDto(File file) {
+        return FileResponseDTO.builder()
+                .fileSn(file.getFileSn())
+                .realFileNm(file.getRealFileNm())
+                .saveFileNm(file.getSaveFileNm())
+                .filePath(file.getFilePath())
+                .fileSize(file.getFileSize())
+                .build();
     }
 }

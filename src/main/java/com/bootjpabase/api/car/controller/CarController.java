@@ -6,12 +6,9 @@ import com.bootjpabase.api.car.domain.dto.request.CarUpdateRequestDTO;
 import com.bootjpabase.api.car.domain.dto.response.CarResponseDTO;
 import com.bootjpabase.api.car.service.CarService;
 import com.bootjpabase.api.car.service.CarServiceTx;
-import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
-import com.bootjpabase.global.domain.dto.Pagination;
+import com.bootjpabase.global.domain.dto.BaseResponseFactory;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,15 +18,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "Car Management API", description = "자동차 관리 API")
@@ -47,22 +40,12 @@ public class CarController {
     })
     @Operation(summary = "자동차 단건 저장", description = "자동차 단건 저장 API")
     @PostMapping("")
-    public BaseResponse saveCar(
+    public BaseResponse<CarResponseDTO> saveCar(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = CarSaveRequestDTO.class)))
             @RequestBody @Valid CarSaveRequestDTO dto
     ) throws Exception {
-        BaseResponse baseResponse;
-
-        // Car 단건 저장
-        boolean result = carServiceTx.saveCar(dto);
-
-        // response set
-        baseResponse = result
-                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true)
-                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
-
-        return baseResponse;
+        return BaseResponseFactory.success(carServiceTx.saveCar(dto));
     }
 
     @ApiResponses(value = {
@@ -71,7 +54,7 @@ public class CarController {
     })
     @Operation(summary = "자동차 다건 저장", description = "자동차 다건 저장 API")
     @PostMapping("/list")
-    public BaseResponse saveCarList(
+    public BaseResponse<List<CarResponseDTO>> saveCarList(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(
                     examples = {
                             @ExampleObject(name = "예제1", value = """
@@ -94,17 +77,7 @@ public class CarController {
             ))
             @RequestBody @Valid List<CarSaveRequestDTO> dto
     ) throws Exception {
-        BaseResponse baseResponse;
-
-        // Car 다건 저장
-        boolean result = carServiceTx.saveAllCar(dto);
-
-        // response set
-        baseResponse = result
-                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, dto.size(), true)
-                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
-
-        return baseResponse;
+        return BaseResponseFactory.success(carServiceTx.saveAllCar(dto));
     }
 
     @ApiResponses(value = {
@@ -113,22 +86,11 @@ public class CarController {
     })
     @Operation(summary = "자동차 목록 조회", description = "자동차 목록 조회 API (검색 조건이 없을 경우 전체목록 조회)")
     @GetMapping("")
-    public BaseResponse getCarList(
+    public BaseResponse<List<CarResponseDTO>> getCarList(
             @ParameterObject CarListRequestDTO dto,
             @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
-        BaseResponse baseResponse;
-
-        // Car 목록 조회
-        Page<CarResponseDTO> resultPaging = carService.getCarList(dto, pageable);
-        List<CarResponseDTO> resultList = resultPaging.getContent();
-
-        // response set
-        baseResponse = !ObjectUtils.isEmpty(resultList)
-                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList, new Pagination(resultPaging))
-                : BaseResponse.of(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, new ArrayList<>());
-
-        return baseResponse;
+        return BaseResponseFactory.successWithPagination(carService.getCarList(dto, pageable));
     }
 
     @ApiResponses(value = {
@@ -137,22 +99,12 @@ public class CarController {
     })
     @Operation(summary = "자동차 수정", description = "자동차 수정 API")
     @PatchMapping("/{carSn}")
-    public BaseResponse updateCar(
+    public BaseResponse<CarResponseDTO> updateCar(
             @PathVariable("carSn") Long carSn,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = CarUpdateRequestDTO.class)))
             @Valid @RequestBody CarUpdateRequestDTO dto
     ) throws Exception {
-        BaseResponse baseResponse;
-
-        // Car 수정
-        boolean result = carServiceTx.updateCar(carSn, dto);
-
-        // response set
-        baseResponse = result
-                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.UPDATE_SUCCESS, 1, true)
-                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.UPDATE_FAIL, 0, false);
-
-        return baseResponse;
+        return BaseResponseFactory.success(carServiceTx.updateCar(carSn, dto));
     }
 }

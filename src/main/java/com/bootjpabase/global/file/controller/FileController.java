@@ -1,7 +1,8 @@
 package com.bootjpabase.global.file.controller;
 
-import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
+import com.bootjpabase.global.domain.dto.BaseResponseFactory;
+import com.bootjpabase.global.file.domain.dto.response.FileResponseDTO;
 import com.bootjpabase.global.file.service.FileService;
 import com.bootjpabase.global.file.service.FileServiceTx;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,18 +34,19 @@ public class FileController {
     })
     @Operation(summary = "첨부파일 삭제", description = "첨부파일 삭제 API")
     @DeleteMapping("/{fileSn}")
-    public BaseResponse deleteFile(
+    public BaseResponse<FileResponseDTO> deleteFile(
             @PathVariable("fileSn") Long fileSn
     ) throws Exception {
-        BaseResponse baseResponse;
-
-        // 첨부파일 삭제
-        boolean result = fileServiceTx.deleteFile(fileSn);
-
-        baseResponse = result
-                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 1, true)
-                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.DELETE_FAIL, 0, false);
-
-        return baseResponse;
+//        BaseResponse baseResponse;
+//
+//        // 첨부파일 삭제
+//        boolean result = fileServiceTx.deleteFile(fileSn);
+//
+//        baseResponse = result
+//                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 1, true)
+//                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.DELETE_FAIL, 0, false);
+//
+//        return baseResponse;
+        return BaseResponseFactory.success(fileServiceTx.deleteFile(fileSn));
     }
 }

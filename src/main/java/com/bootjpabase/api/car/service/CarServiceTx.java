@@ -2,6 +2,7 @@ package com.bootjpabase.api.car.service;
 
 import com.bootjpabase.api.car.domain.dto.request.CarSaveRequestDTO;
 import com.bootjpabase.api.car.domain.dto.request.CarUpdateRequestDTO;
+import com.bootjpabase.api.car.domain.dto.response.CarResponseDTO;
 import com.bootjpabase.api.car.domain.entity.Car;
 import com.bootjpabase.api.car.repository.CarRepository;
 import com.bootjpabase.api.car.repository.CarRepositoryCustom;
@@ -27,22 +28,20 @@ public class CarServiceTx {
      * Car 단건 저장
      * @param dto
      */
-    public boolean saveCar(CarSaveRequestDTO dto) {
+    public CarResponseDTO saveCar(CarSaveRequestDTO dto) {
 
         // 저장할 자동차 entity 객체 생성
         Car saveCar = createCarEntity(dto);
 
-        // 단건 저장
-        carRepository.save(saveCar);
-
-        return true;
+        // 단건 저장 후 dto 반환
+        return carEntityToDto(carRepository.save(saveCar));
     }
 
     /**
      * Car 다건 저장
      * @param dtoList
      */
-    public boolean saveAllCar(List<CarSaveRequestDTO> dtoList) {
+    public List<CarResponseDTO> saveAllCar(List<CarSaveRequestDTO> dtoList) {
 
         // 저장할 entity 목록 담을 array 초기화
         List<Car> saveCarList = new ArrayList<>();
@@ -54,10 +53,14 @@ public class CarServiceTx {
             saveCarList.add(saveCar);
         });
 
-        // 담긴 저장목록 다건 저장
-        carRepository.saveAll(saveCarList);
+        // 저장된 entity를 dto로 변환하여 담을 array 초기화
+        List<CarResponseDTO> savedCarList = new ArrayList<>();
 
-        return true;
+        // 담긴 저장목록 다건 저장 후 dto 변환
+        carRepository.saveAll(saveCarList)
+                .forEach(savedCar -> savedCarList.add(carEntityToDto(savedCar)));
+
+        return savedCarList;
     }
 
     /**
@@ -79,7 +82,7 @@ public class CarServiceTx {
      * Car 수정
      * @param dto
      */
-    public boolean updateCar(Long carSn, CarUpdateRequestDTO dto) {
+    public CarResponseDTO updateCar(Long carSn, CarUpdateRequestDTO dto) {
 
         // 수정할 entity 조회
         Car updateCar = carRepository.findById(carSn)
@@ -88,7 +91,7 @@ public class CarServiceTx {
         // entity 영속성 컨텍스트 수정
         updateCar(updateCar, dto);
 
-        return true;
+        return carEntityToDto(updateCar);
     }
 
     /**
@@ -99,7 +102,24 @@ public class CarServiceTx {
     private void updateCar(Car car, CarUpdateRequestDTO dto) {
 
         Optional.ofNullable(dto.getCategory()).ifPresent(car::setCategory); // 카테고리
-        Optional.ofNullable(dto.getCategory()).ifPresent(car::setCategory); // 대여 가능 여부
-        Optional.ofNullable(dto.getCategory()).ifPresent(car::setCategory); // 대여 상세 정보
+        Optional.ofNullable(dto.getRentalYn()).ifPresent(car::setRentalYn); // 대여 가능 여부
+        Optional.ofNullable(dto.getRentalDescription()).ifPresent(car::setRentalDescription); // 대여 상세 정보
+    }
+
+    /**
+     * 자동차 entity를 dto로 변환
+     * @param savedCar
+     * @return
+     */
+    private CarResponseDTO carEntityToDto(Car savedCar) {
+        return CarResponseDTO.builder()
+                .carSn(savedCar.getCarSn())
+                .category(savedCar.getCategory())
+                .manufacturer(savedCar.getManufacturer())
+                .modelName(savedCar.getModelName())
+                .productionYear(savedCar.getProductionYear())
+                .rentalYn(savedCar.getRentalYn())
+                .rentalDescription(savedCar.getRentalDescription())
+                .build();
     }
 }
