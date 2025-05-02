@@ -6,12 +6,9 @@ import com.bootjpabase.api.sample.domain.dto.request.SampleUpdateRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.response.SampleResponseDTO;
 import com.bootjpabase.api.sample.service.SampleService;
 import com.bootjpabase.api.sample.service.SampleServiceTx;
-import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
-import com.bootjpabase.global.domain.dto.Pagination;
+import com.bootjpabase.global.domain.dto.BaseResponseFactory;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,16 +18,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "Sample API", description = "샘플 API")
@@ -49,7 +42,7 @@ public class SampleController {
     })
     @Operation(summary = "샘플 단건 저장", description = "샘플 단건 저장 API")
     @PostMapping("")
-    public BaseResponse saveSample(
+    public BaseResponse<SampleResponseDTO> saveSample(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(
                     examples = {
                             @ExampleObject(name = "저장 예제1", value = """
@@ -68,17 +61,7 @@ public class SampleController {
             ))
             @Valid @RequestBody SampleSaveRequestDTO dto
     ) throws Exception {
-        BaseResponse baseResponse;
-
-        // Sample 단건 저장
-        boolean result = sampleServiceTx.saveSample(dto);
-
-        // response set
-        baseResponse = result
-                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true)
-                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
-
-        return baseResponse;
+        return BaseResponseFactory.success(sampleServiceTx.saveSample(dto));
     }
 
     @ApiResponses(value = {
@@ -87,7 +70,7 @@ public class SampleController {
     })
     @Operation(summary = "샘플 다건 저장", description = "샘플 다건 저장 API")
     @PostMapping("/list")
-    public BaseResponse saveSampleList(
+    public BaseResponse<List<SampleResponseDTO>> saveSampleList(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(
                     examples = {
                             @ExampleObject(name = "예제 1", value = """
@@ -106,17 +89,7 @@ public class SampleController {
             ))
             @Valid @RequestBody List<SampleSaveRequestDTO> dto
     ) throws Exception {
-        BaseResponse baseResponse;
-
-        // Sample 다건 저장
-        boolean result = sampleServiceTx.saveAllSample(dto);
-
-        // response set
-        baseResponse = result
-                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, dto.size(), true)
-                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
-
-        return baseResponse;
+        return BaseResponseFactory.success(sampleServiceTx.saveAllSample(dto));
     }
 
     @ApiResponses(value = {
@@ -125,20 +98,8 @@ public class SampleController {
     })
     @Operation(summary = "샘플 단건 조회", description = "샘플 단건 조회 API")
     @GetMapping("/{sampleSn}")
-    public BaseResponse getSample(
-            @PathVariable("sampleSn") Long sampleSn
-    ) throws Exception {
-        BaseResponse baseResponse;
-
-        // Sample 단건 조회
-        SampleResponseDTO result = sampleService.getSample(sampleSn);
-
-        // response set
-        baseResponse = !ObjectUtils.isEmpty(result)
-                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, 1, result)
-                : BaseResponse.of(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, SampleResponseDTO.builder().build());
-
-        return baseResponse;
+    public BaseResponse<SampleResponseDTO> getSample(@PathVariable("sampleSn") Long sampleSn) throws Exception {
+        return BaseResponseFactory.success(sampleService.getSample(sampleSn));
     }
 
     @ApiResponses(value = {
@@ -147,22 +108,11 @@ public class SampleController {
     })
     @Operation(summary = "샘플 목록 조회", description = "샘플 목록 조회 API (제목, 내용이 없을 경우 전체목록 조회)")
     @GetMapping("")
-    public BaseResponse getSampleList(
+    public BaseResponse<List<SampleResponseDTO>> getSampleList(
             @ParameterObject SampleListRequestDTO dto,
             @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
-        BaseResponse baseResponse;
-
-        // Sample 목록 조회
-        Page<SampleResponseDTO> resultPaging = sampleService.getSampleList(dto, pageable);
-        List<SampleResponseDTO> resultList = resultPaging.getContent();
-
-        // response set
-        baseResponse = !ObjectUtils.isEmpty(resultList)
-                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList, new Pagination(resultPaging))
-                : BaseResponse.of(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, new ArrayList<>());
-
-        return baseResponse;
+        return BaseResponseFactory.successWithPagination(sampleService.getSampleList(dto, pageable));
     }
 
     @ApiResponses(value = {
@@ -171,7 +121,7 @@ public class SampleController {
     })
     @Operation(summary = "샘플 수정", description = "샘플 수정 API")
     @PatchMapping("/{sampleSn}")
-    public BaseResponse updateSample(
+    public BaseResponse<SampleResponseDTO> updateSample(
             @PathVariable("sampleSn") Long sampleSn,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(
                     examples = {
@@ -191,17 +141,7 @@ public class SampleController {
             ))
             @RequestBody @Valid SampleUpdateRequestDTO dto
     ) throws Exception {
-        BaseResponse baseResponse;
-
-        // Sample 수정
-        boolean result = sampleServiceTx.updateSample(sampleSn, dto);
-
-        // response set
-        baseResponse = result
-                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.UPDATE_SUCCESS, 1, true)
-                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.UPDATE_FAIL, 0, false);
-
-        return baseResponse;
+        return BaseResponseFactory.success(sampleServiceTx.updateSample(sampleSn, dto));
     }
 
     @ApiResponses(value = {
@@ -210,19 +150,7 @@ public class SampleController {
     })
     @Operation(summary = "샘플 삭제", description = "샘플 삭제 API")
     @DeleteMapping("/{sampleSn}")
-    public BaseResponse deleteSample(
-            @PathVariable("sampleSn") Long sampleSn
-    ) throws Exception {
-        BaseResponse baseResponse;
-
-        // Sample 삭제
-        boolean result = sampleServiceTx.deleteSample(sampleSn);
-
-        // response set
-        baseResponse = result
-                ? BaseResponse.of(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 1, true)
-                : BaseResponse.of(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.DELETE_FAIL, 0, false);
-
-        return baseResponse;
+    public BaseResponse<SampleResponseDTO> deleteSample(@PathVariable("sampleSn") Long sampleSn) throws Exception {
+        return BaseResponseFactory.success(sampleServiceTx.deleteSample(sampleSn));
     }
 }
