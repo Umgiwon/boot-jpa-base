@@ -30,25 +30,4 @@ public class BaseResponse<T> {
 
     @Schema(description = "Pagination")
     private Pagination pagination;
-
-    public static <T> BaseResponse<T> of(int httpCode, String message, int dataSize, T data) {
-        return BaseResponse.<T>builder()
-                .timeStamp(LocalDateTime.now())
-                .httpCode(httpCode)
-                .message(message)
-                .dataSize(dataSize)
-                .data(data)
-                .build();
-    }
-
-    public static <T> BaseResponse<T> of(int httpCode, String message, int dataSize, T data, Pagination pagination) {
-        return BaseResponse.<T>builder()
-                .timeStamp(LocalDateTime.now())
-                .httpCode(httpCode)
-                .message(message)
-                .dataSize(dataSize)
-                .data(data)
-                .pagination(pagination)
-                .build();
-    }
 }
