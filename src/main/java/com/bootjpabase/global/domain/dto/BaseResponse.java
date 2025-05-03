@@ -28,6 +28,6 @@ public class BaseResponse<T> {
     @Schema(description = "Data")
     private T data;
 
-    @Schema(description = "Pagination")
+    @Schema(description = "Pagination", hidden = true)
     private Pagination pagination;
 }
