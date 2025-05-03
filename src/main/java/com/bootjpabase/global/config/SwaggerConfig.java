@@ -23,12 +23,19 @@ public class SwaggerConfig {
     @Value("${springdoc.info.version}")
     private String API_VERSION;
 
+    /**
+     * Swagger OpenAPI 기본 설정 (JWT 보안 포함)
+     */
     @Bean
     public OpenAPI openAPI() {
 
         SecurityScheme securityScheme = new SecurityScheme()
-                .type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
-                .in(SecurityScheme.In.HEADER).name("Authorization");
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")
+                .in(SecurityScheme.In.HEADER)
+                .name("Authorization");
+
         SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
 
         return new OpenAPI()
@@ -38,7 +45,7 @@ public class SwaggerConfig {
     }
 
     /**
-     * swagger 정보
+     * Swagger 기본 정보
      * @return
      */
     private Info apiInfo() {

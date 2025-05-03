@@ -11,6 +11,7 @@ import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
 import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
 import com.bootjpabase.global.domain.dto.BaseResponseFactory;
+import com.bootjpabase.global.exception.ExceptionMsg;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -41,8 +42,9 @@ public class UserController {
     private final UserServiceTx userServiceTx;
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "저장 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
-            @ApiResponse(responseCode = "204", description = "저장 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "409", description = "데이터 중복", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
     })
     @Operation(summary = "사용자 저장", description = "사용자 저장 API")
     @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -54,8 +56,9 @@ public class UserController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
-            @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "404", description = "데이터 오류", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
     })
     @Operation(summary = "사용자 목록 조회", description = "사용자 목록 조회 API")
     @GetMapping("")
@@ -67,8 +70,9 @@ public class UserController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
-            @ApiResponse(responseCode = "204", description = "수정 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "409", description = "데이터 중복", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
     })
     @Operation(summary = "사용자 수정", description = "사용자 수정 API")
     @PatchMapping(value = "/{userSn}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -81,8 +85,9 @@ public class UserController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "삭제 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
-            @ApiResponse(responseCode = "204", description = "삭제 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "409", description = "데이터 중복", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
     })
     @Operation(summary = "사용자 삭제", description = "사용자 삭제 API")
     @DeleteMapping("/{userSn}")
@@ -93,8 +98,9 @@ public class UserController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = TokenResponseDTO.class))),
-            @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "404", description = "데이터 오류", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
     })
     @Operation(summary = "사용자 로그인", description = "사용자 로그인 API")
     @PostMapping("/login")
@@ -107,8 +113,9 @@ public class UserController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
-            @ApiResponse(responseCode = "204", description = "실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "404", description = "데이터 오류", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
     })
     @Operation(summary = "로그아웃", description = "로그아웃 API - refresh token 삭제")
     @PostMapping("/logout")

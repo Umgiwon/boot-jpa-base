@@ -6,6 +6,7 @@ import com.bootjpabase.global.config.jwt.service.TokenService;
 import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
 import com.bootjpabase.global.domain.dto.BaseResponseFactory;
+import com.bootjpabase.global.exception.ExceptionMsg;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,8 +31,9 @@ public class TokenController {
     private final TokenProvider tokenProvider;
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
-            @ApiResponse(responseCode = "204", description = "실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "404", description = "데이터 오류", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
     })
     @Operation(summary = "리프레쉬 토큰 검증 후 엑세스 토큰 발급", description = "리프레쉬 토큰 검증 후 엑세스 토큰 발급 API")
     @PostMapping("refresh")
