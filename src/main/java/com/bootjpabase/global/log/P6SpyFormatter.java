@@ -34,8 +34,8 @@ public class P6SpyFormatter implements MessageFormattingStrategy {
         if (Category.STATEMENT.getName().equals(category)) {
             String trimmedLowerSql = sql.trim().toLowerCase(Locale.ROOT);
             if (trimmedLowerSql.startsWith("create") ||
-                trimmedLowerSql.startsWith("alter") ||
-                trimmedLowerSql.startsWith("comment")) {
+                    trimmedLowerSql.startsWith("alter") ||
+                    trimmedLowerSql.startsWith("comment")) {
                 return FormatStyle.DDL.getFormatter().format(sql);
             } else {
                 return FormatStyle.BASIC.getFormatter().format(sql);

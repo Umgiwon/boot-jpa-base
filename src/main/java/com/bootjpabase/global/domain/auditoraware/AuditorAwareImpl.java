@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+/**
+ * BaseEntity의 등록자, 수정자에 대한 정보를 넣기 위한 컴포넌트
+ */
 @Component
 public class AuditorAwareImpl implements AuditorAware<String> {
 
