@@ -66,7 +66,7 @@ public class UserController {
             @ParameterObject UserListRequestDTO dto,
             @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
-        return BaseResponseFactory.successWithPagination(userService.getUserList(dto, pageable));
+        return BaseResponseFactory.success(userService.getUserList(dto, pageable));
     }
 
     @ApiResponses(value = {
