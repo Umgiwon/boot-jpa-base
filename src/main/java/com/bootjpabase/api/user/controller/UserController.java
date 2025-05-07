@@ -109,7 +109,7 @@ public class UserController {
                     content = @Content(schema = @Schema(implementation = UserLoginRequestDTO.class)))
             @RequestBody @Valid UserLoginRequestDTO dto
     ) throws Exception {
-        return BaseResponseFactory.successToken(userServiceTx.userLogin(dto), ResponseMessageConst.LOGIN_SUCCESS);
+        return BaseResponseFactory.successWithMessage(userServiceTx.userLogin(dto), ResponseMessageConst.LOGIN_SUCCESS);
     }
 
     @ApiResponses(value = {
@@ -120,6 +120,6 @@ public class UserController {
     @Operation(summary = "로그아웃", description = "로그아웃 API - refresh token 삭제")
     @PostMapping("/logout")
     public BaseResponse<Boolean> logoutManager(@RequestHeader(value = "Authorization", required = false) String token) throws Exception {
-        return BaseResponseFactory.successToken(userServiceTx.logoutManager(token), ResponseMessageConst.LOGOUT_SUCCESS);
+        return BaseResponseFactory.successWithMessage(userServiceTx.logoutManager(token), ResponseMessageConst.LOGOUT_SUCCESS);
     }
 }

@@ -47,7 +47,7 @@ public class BaseResponseFactory {
      * @return
      * @param <T>
      */
-    public static <T> BaseResponse<T> successToken(T data, String message) {
+    public static <T> BaseResponse<T> successWithMessage(T data, String message) {
 
         // 내용 없을 경우 noContent
         if(ObjectUtils.isEmpty(data)) {
