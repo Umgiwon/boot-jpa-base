@@ -38,6 +38,6 @@ public class TokenController {
     @Operation(summary = "리프레쉬 토큰 검증 후 엑세스 토큰 발급", description = "리프레쉬 토큰 검증 후 엑세스 토큰 발급 API")
     @PostMapping("refresh")
     public BaseResponse<TokenResponseDTO> saveManager(@RequestHeader("Authorization") String token) throws Exception {
-        return BaseResponseFactory.successToken(tokenService.refreshAccessToken(token), ResponseMessageConst.LOGIN_ACCESS_TOKEN_SUCCESS);
+        return BaseResponseFactory.successWithMessage(tokenService.refreshAccessToken(token), ResponseMessageConst.LOGIN_ACCESS_TOKEN_SUCCESS);
     }
 }

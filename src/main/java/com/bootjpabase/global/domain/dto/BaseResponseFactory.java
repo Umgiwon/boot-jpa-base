@@ -42,36 +42,34 @@ public class BaseResponseFactory {
     }
 
     /**
-     * 성공 시 (token 관련)
-     * @param data
-     * @return
-     * @param <T>
-     */
-    public static <T> BaseResponse<T> successToken(T data, String message) {
-
-        // 내용 없을 경우 noContent
-        if(ObjectUtils.isEmpty(data)) {
-            return noContent();
-        }
-
-        return baseResponseBuilder(HttpStatus.OK.value(), message, getSize(data), data, null);
-    }
-
-    /**
-     * 성공 시(Paging 처리)
+     * 성공 시 (Paging 처리)
      * @param page
      * @return
      * @param <T>
      */
-    public static <T> BaseResponse<List<T>> successWithPagination(Page<T> page) {
+    public static <T> BaseResponse<List<T>> success(Page<T> page) {
         List<T> content = page.getContent();
+
+        int httpStatusCode = HttpStatus.OK.value();
+        String responseMessage = ResponseMessageConst.SELECT_SUCCESS;
 
         // 내용 없을 경우 noContent
         if(ObjectUtils.isEmpty(content)) {
-            return noContent();
+            httpStatusCode = HttpStatus.NO_CONTENT.value();
+            responseMessage = ResponseMessageConst.NO_CONTENT;
         }
 
-        return baseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, content.size(), content, new Pagination(page));
+        return baseResponseBuilder(httpStatusCode, responseMessage, content.size(), content, new Pagination(page));
+    }
+
+    /**
+     * 성공 시 (메시지 추가)
+     * @param data
+     * @return
+     * @param <T>
+     */
+    public static <T> BaseResponse<T> successWithMessage(T data, String message) {
+        return baseResponseBuilder(HttpStatus.OK.value(), message, getSize(data), data, null);
     }
 
     /**
@@ -117,6 +115,7 @@ public class BaseResponseFactory {
         if(ObjectUtils.isEmpty(data)) return 0;
         if(data instanceof Collection<?>) return ((Collection<?>) data).size();
         if(data instanceof Page<?> page) return page.getContent().size();
+
         return 1;
     }
 

@@ -118,7 +118,7 @@ public class SampleController {
             @ParameterObject SampleListRequestDTO dto,
             @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
-        return BaseResponseFactory.successWithPagination(sampleService.getSampleList(dto, pageable));
+        return BaseResponseFactory.success(sampleService.getSampleList(dto, pageable));
     }
 
     @ApiResponses(value = {

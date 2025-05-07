@@ -94,7 +94,7 @@ public class CarController {
             @ParameterObject CarListRequestDTO dto,
             @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
-        return BaseResponseFactory.successWithPagination(carService.getCarList(dto, pageable));
+        return BaseResponseFactory.success(carService.getCarList(dto, pageable));
     }
 
     @ApiResponses(value = {
