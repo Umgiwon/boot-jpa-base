@@ -227,7 +227,6 @@ class APITest {
 
         // 수정할 데이터
         CarUpdateRequestDTO updateDto = CarUpdateRequestDTO.builder()
-                .carSn(car.getCarSn())
                 .rentalYn("N")
                 .rentalDescription("수리로 인한 대여 중단")
                 .build();
