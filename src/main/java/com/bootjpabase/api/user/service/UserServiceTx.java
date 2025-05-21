@@ -157,6 +157,12 @@ public class UserServiceTx {
      */
     public UserResponseDTO deleteUser(Long userSn) {
 
+        // 먼저 RefreshToken을 삭제
+        RefreshToken refreshToken = tokenRepository.findByUser_UserSn(userSn);
+        if (refreshToken != null) {
+            tokenRepository.delete(refreshToken);
+        }
+
         // 삭제할 entity 조회
         User deleteUser = userRepository.findById(userSn)
                 .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_DATA_ERROR));
