@@ -1,6 +1,6 @@
 package com.bootjpabase.api.car.domain.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.bootjpabase.api.car.domain.entity.Car;
 import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+/**
+ * DTO for {@link Car}
+ */
 @Schema(description = "자동차 응답 DTO")
 @Builder
-@Data
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true) // json 데이터를 java 객체로 역직렬화 할 때 매핑되지 않은 필드를 무시
+@Data
 public class CarResponseDTO implements Serializable {
 
     @Schema(description = "자동차 순번", example = "1")

@@ -6,18 +6,18 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 
 
-@Entity
-@Table(name = "TB_CAR")
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
+@Entity
+@Table(name = "TB_CAR")
 public class Car extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CAR_SN", updatable = false, nullable = false)
+    @Column(name = "CAR_SN", nullable = false, updatable = false)
     @Comment("자동차 순번")
     private Long carSn;
 
