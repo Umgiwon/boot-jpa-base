@@ -41,14 +41,14 @@ public class SampleController {
     @PostMapping("")
     public BaseResponse<List<SampleResponseDTO>> saveSampleList(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(examples = {
-                        @ExampleObject(name = "저장 예제1", value = SAMPLE_SAVE_EXAMPLE_1),
-                        @ExampleObject(name = "목록 저장 예제1", value = SAMPLE_SAVE_LIST_EXAMPLE_1)
+                    @ExampleObject(name = "저장 예제1", value = SAMPLE_SAVE_EXAMPLE_1),
+                    @ExampleObject(name = "목록 저장 예제1", value = SAMPLE_SAVE_LIST_EXAMPLE_1)
             }))
             @RequestBody @Valid List<SampleSaveRequestDTO> dto) {
         return BaseResponseFactory.success(sampleServiceTx.saveSample(dto));
     }
 
-    @Operation(summary = "샘플 단건 조회", description = "샘플 단건 조회 API")
+    @Operation(summary = "샘플 상세 조회", description = "샘플 상세 조회 API")
     @GetMapping("/{sampleSn}")
     public BaseResponse<SampleResponseDTO> getSample(@PathVariable("sampleSn") Long sampleSn) {
         return BaseResponseFactory.success(sampleService.getSample(sampleSn));
@@ -67,7 +67,7 @@ public class SampleController {
     public BaseResponse<SampleResponseDTO> updateSample(
             @PathVariable("sampleSn") Long sampleSn,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(examples = {
-                        @ExampleObject(name = "수정 예제1", value = SAMPLE_UPDATE_EXAMPLE_1)
+                    @ExampleObject(name = "수정 예제1", value = SAMPLE_UPDATE_EXAMPLE_1)
             }))
             @RequestBody @Valid SampleUpdateRequestDTO dto) {
         return BaseResponseFactory.success(sampleServiceTx.updateSample(sampleSn, dto));

@@ -21,7 +21,7 @@ public class SampleService {
     private final SampleRepositoryCustom sampleRepositoryCustom;
 
     /**
-     * Sample 단건 조회
+     * Sample 상세 조회
      *
      * @param sampleSn 조회할 Sample 순번
      * @return 조회된 Sample 응답 dto

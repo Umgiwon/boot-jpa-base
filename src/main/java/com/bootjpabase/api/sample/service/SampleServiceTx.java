@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,24 +30,15 @@ public class SampleServiceTx {
      */
     public List<SampleResponseDTO> saveSample(List<SampleSaveRequestDTO> dtoList) {
 
-        // 저장할 entity 목록 담을 array 초기화
-        List<Sample> saveSampleList = new ArrayList<>();
+        // 요청 dto를 entity로 변환
+        List<Sample> sampleEntities = dtoList.stream()
+                .map(sampleMapper::toSampleEntity)
+                .toList();
 
-        // dto 반복하며 entity 생성하여 저장목록에 담는다.
-        dtoList.forEach(dto -> {
-            Sample saveSample = sampleMapper.toSampleEntity(dto);
-
-            saveSampleList.add(saveSample);
-        });
-
-        // 저장된 dto 목록 담을 array 초기화
-        List<SampleResponseDTO> savedSampleList = new ArrayList<>();
-
-        // 담긴 저장목록 저장 후 DTO 반환
-        sampleRepository.saveAll(saveSampleList)
-                .forEach(savedSample -> savedSampleList.add(sampleMapper.toSampleResponseDTO(savedSample)));
-
-        return savedSampleList;
+        // entity 저장 후 dto로 변환 후 반환
+        return sampleRepository.saveAll(sampleEntities).stream()
+                .map(sampleMapper::toSampleResponseDTO)
+                .toList();
     }
 
     /**
