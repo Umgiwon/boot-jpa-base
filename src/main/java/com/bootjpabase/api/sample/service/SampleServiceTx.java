@@ -24,27 +24,12 @@ public class SampleServiceTx {
     private final SampleRepository sampleRepository;
 
     /**
-     * Sample 단건 저장
+     * Sample 저장 (단건 & 다건)
      *
-     * @param dto Sample 저장 요청 dto
-     * @return 저장된 Sample 응답 dto
-     */
-    public SampleResponseDTO saveSample(SampleSaveRequestDTO dto) {
-
-        // 저장할 Sample entity 객체 생성
-        Sample saveSample = sampleMapper.toSampleEntity(dto);
-
-        // 단건 저장 후 dto 반환
-        return sampleMapper.toSampleResponseDTO(sampleRepository.save(saveSample));
-    }
-
-    /**
-     * Sample 다건 저장
-     *
-     * @param dtoList Sample 다건 저장 요청 dto
+     * @param dtoList Sample 저장 요청 dto
      * @return 저장된 Sample 목록 응답 dto
      */
-    public List<SampleResponseDTO> saveAllSample(List<SampleSaveRequestDTO> dtoList) {
+    public List<SampleResponseDTO> saveSample(List<SampleSaveRequestDTO> dtoList) {
 
         // 저장할 entity 목록 담을 array 초기화
         List<Sample> saveSampleList = new ArrayList<>();
@@ -59,7 +44,7 @@ public class SampleServiceTx {
         // 저장된 dto 목록 담을 array 초기화
         List<SampleResponseDTO> savedSampleList = new ArrayList<>();
 
-        // 담긴 저장목록 다건 저장 후 DTO 반환
+        // 담긴 저장목록 저장 후 DTO 반환
         sampleRepository.saveAll(saveSampleList)
                 .forEach(savedSample -> savedSampleList.add(sampleMapper.toSampleResponseDTO(savedSample)));
 

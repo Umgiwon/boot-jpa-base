@@ -6,6 +6,7 @@ import com.bootjpabase.api.sample.domain.dto.request.SampleUpdateRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.response.SampleResponseDTO;
 import com.bootjpabase.api.sample.service.SampleService;
 import com.bootjpabase.api.sample.service.SampleServiceTx;
+import com.bootjpabase.global.annotation.common.CustomApiLogger;
 import com.bootjpabase.global.domain.dto.BaseResponse;
 import com.bootjpabase.global.domain.dto.BaseResponseFactory;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +27,7 @@ import java.util.List;
 import static com.bootjpabase.global.constant.SwaggerExampleConst.*;
 
 @Tag(name = "Sample API", description = "샘플 API")
+@CustomApiLogger
 @RestController
 @RequiredArgsConstructor
 @Validated
@@ -35,35 +37,15 @@ public class SampleController {
     private final SampleService sampleService; // 조회 전용
     private final SampleServiceTx sampleServiceTx; // 생성 | 수정 | 삭제 전용
 
-    @Operation(summary = "샘플 단건 저장", description = "샘플 단건 저장 API")
+    @Operation(summary = "샘플 저장", description = "샘플 저장 API <br>(단건 & 다건)")
     @PostMapping("")
-    public BaseResponse<SampleResponseDTO> saveSample(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "json",
-                content = @Content(
-                    examples = {
-                        @ExampleObject(name = "저장 예제1", value = SAMPLE_SAVE_EXAMPLE_1),
-                        @ExampleObject(name = "저장 예제2", value = SAMPLE_SAVE_EXAMPLE_2)
-                    }
-                )
-            )
-            @Valid @RequestBody SampleSaveRequestDTO dto) {
-        return BaseResponseFactory.success(sampleServiceTx.saveSample(dto));
-    }
-
-    @Operation(summary = "샘플 다건 저장", description = "샘플 다건 저장 API")
-    @PostMapping("/saveList")
     public BaseResponse<List<SampleResponseDTO>> saveSampleList(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "json",
-                content = @Content(
-                    examples = {
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(examples = {
+                        @ExampleObject(name = "저장 예제1", value = SAMPLE_SAVE_EXAMPLE_1),
                         @ExampleObject(name = "목록 저장 예제1", value = SAMPLE_SAVE_LIST_EXAMPLE_1)
-                    }
-                )
-            )
-            @Valid @RequestBody List<SampleSaveRequestDTO> dto) {
-        return BaseResponseFactory.success(sampleServiceTx.saveAllSample(dto));
+            }))
+            @RequestBody @Valid List<SampleSaveRequestDTO> dto) {
+        return BaseResponseFactory.success(sampleServiceTx.saveSample(dto));
     }
 
     @Operation(summary = "샘플 단건 조회", description = "샘플 단건 조회 API")
@@ -84,15 +66,9 @@ public class SampleController {
     @PatchMapping("/{sampleSn}")
     public BaseResponse<SampleResponseDTO> updateSample(
             @PathVariable("sampleSn") Long sampleSn,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "json",
-                content = @Content(
-                    examples = {
-                        @ExampleObject(name = "수정 예제1", value = SAMPLE_UPDATE_EXAMPLE_1),
-                        @ExampleObject(name = "수정 예제2", value = SAMPLE_UPDATE_EXAMPLE_2)
-                    }
-                )
-            )
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(examples = {
+                        @ExampleObject(name = "수정 예제1", value = SAMPLE_UPDATE_EXAMPLE_1)
+            }))
             @RequestBody @Valid SampleUpdateRequestDTO dto) {
         return BaseResponseFactory.success(sampleServiceTx.updateSample(sampleSn, dto));
     }

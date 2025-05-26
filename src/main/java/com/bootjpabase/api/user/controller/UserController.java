@@ -7,6 +7,7 @@ import com.bootjpabase.api.user.domain.dto.request.UserUpdateRequestDTO;
 import com.bootjpabase.api.user.domain.dto.response.UserResponseDTO;
 import com.bootjpabase.api.user.service.UserService;
 import com.bootjpabase.api.user.service.UserServiceTx;
+import com.bootjpabase.global.annotation.common.CustomApiLogger;
 import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
 import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
@@ -29,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Tag(name = "User API", description = "사용자 API")
+@CustomApiLogger
 @RestController
 @RequiredArgsConstructor
 @Validated

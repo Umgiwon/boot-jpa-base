@@ -11,17 +11,12 @@ public class SwaggerExampleConst {
 
     /* --- Sample --- */
     public static final String SAMPLE_SAVE_EXAMPLE_1 = """
-        {
-            "title": "샘플 제목1",
-            "content": "샘플 내용1"
-        }
-    """;
-
-    public static final String SAMPLE_SAVE_EXAMPLE_2 = """
-        {
-            "title": "샘플 제목2",
-            "content": "샘플 내용2"
-        }
+        [
+            {
+                "title": "title11",
+                "content": "content11"
+            }
+        ]
     """;
 
     public static final String SAMPLE_SAVE_LIST_EXAMPLE_1 = """
@@ -43,12 +38,4 @@ public class SwaggerExampleConst {
             "content": "수정된 내용1"
         }
     """;
-
-    public static final String SAMPLE_UPDATE_EXAMPLE_2 = """
-        {
-            "title": "수정된 제목2",
-            "content": "수정된 내용2"
-        }
-    """;
-
 }

@@ -6,6 +6,7 @@ import com.bootjpabase.api.car.domain.dto.request.CarUpdateRequestDTO;
 import com.bootjpabase.api.car.domain.dto.response.CarResponseDTO;
 import com.bootjpabase.api.car.service.CarService;
 import com.bootjpabase.api.car.service.CarServiceTx;
+import com.bootjpabase.global.annotation.common.CustomApiLogger;
 import com.bootjpabase.global.domain.dto.BaseResponse;
 import com.bootjpabase.global.domain.dto.BaseResponseFactory;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,13 +20,16 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Tag(name = "Car Management API", description = "자동차 관리 API")
+@CustomApiLogger
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/api/car")
 public class CarController {
 
@@ -40,7 +44,7 @@ public class CarController {
             @RequestBody @Valid CarSaveRequestDTO dto
     ) throws Exception {
         return BaseResponseFactory.success(carServiceTx.saveCar(dto));
-    }
+    }@CustomApiLogger
 
     @Operation(summary = "자동차 다건 저장", description = "자동차 다건 저장 API")
     @PostMapping("/list")
