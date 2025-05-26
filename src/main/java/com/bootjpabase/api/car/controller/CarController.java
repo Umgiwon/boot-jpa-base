@@ -41,10 +41,9 @@ public class CarController {
     public BaseResponse<CarResponseDTO> saveCar(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = CarSaveRequestDTO.class)))
-            @RequestBody @Valid CarSaveRequestDTO dto
-    ) throws Exception {
+            @RequestBody @Valid CarSaveRequestDTO dto) {
         return BaseResponseFactory.success(carServiceTx.saveCar(dto));
-    }@CustomApiLogger
+    }
 
     @Operation(summary = "자동차 다건 저장", description = "자동차 다건 저장 API")
     @PostMapping("/list")
@@ -69,8 +68,7 @@ public class CarController {
                                     """)
                     }
             ))
-            @RequestBody @Valid List<CarSaveRequestDTO> dto
-    ) throws Exception {
+            @RequestBody @Valid List<CarSaveRequestDTO> dto) {
         return BaseResponseFactory.success(carServiceTx.saveAllCar(dto));
     }
 
@@ -78,8 +76,7 @@ public class CarController {
     @GetMapping("")
     public BaseResponse<List<CarResponseDTO>> getCarList(
             @ParameterObject CarListRequestDTO dto,
-            @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
-    ) throws Exception {
+            @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return BaseResponseFactory.success(carService.getCarList(dto, pageable));
     }
 
@@ -89,8 +86,7 @@ public class CarController {
             @PathVariable("carSn") Long carSn,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = CarUpdateRequestDTO.class)))
-            @Valid @RequestBody CarUpdateRequestDTO dto
-    ) throws Exception {
+            @Valid @RequestBody CarUpdateRequestDTO dto) {
         return BaseResponseFactory.success(carServiceTx.updateCar(carSn, dto));
     }
 }

@@ -32,12 +32,12 @@ public class Sample extends BaseEntity {
 
     /**
      * 수정요청된 dto 값을 받아서 entity 영속성 컨텍스트를 수정한다.
-     *  - 수정할 값이 있는 데이터만 수정
+     * - 수정할 값이 있는 데이터만 수정
      *
      * @param dto 수정요청된 Sample dto
      */
     public void updateSampleInfo(SampleUpdateRequestDTO dto) {
-        if(StringUtils.isNotBlank(dto.getTitle())) this.title = dto.getTitle(); // 제목
-        if(StringUtils.isNotBlank(dto.getContent())) this.content = dto.getContent(); // 내용
+        if (StringUtils.isNotBlank(dto.getTitle())) this.title = dto.getTitle(); // 제목
+        if (StringUtils.isNotBlank(dto.getContent())) this.content = dto.getContent(); // 내용
     }
 }
