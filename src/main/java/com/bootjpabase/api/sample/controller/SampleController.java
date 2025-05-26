@@ -8,13 +8,9 @@ import com.bootjpabase.api.sample.service.SampleService;
 import com.bootjpabase.api.sample.service.SampleServiceTx;
 import com.bootjpabase.global.domain.dto.BaseResponse;
 import com.bootjpabase.global.domain.dto.BaseResponseFactory;
-import com.bootjpabase.global.exception.ExceptionMsg;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,13 +30,6 @@ import static com.bootjpabase.global.constant.SwaggerExampleConst.*;
 @RequiredArgsConstructor
 @Validated
 @RequestMapping("/api/sample")
-@ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
-        @ApiResponse(responseCode = "400", description = "입력값 유효성 검증 실패", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
-        @ApiResponse(responseCode = "404", description = "데이터 오류", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
-        @ApiResponse(responseCode = "409", description = "데이터 중복", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
-        @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
-})
 public class SampleController {
 
     private final SampleService sampleService; // 조회 전용

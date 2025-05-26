@@ -11,12 +11,9 @@ import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
 import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
 import com.bootjpabase.global.domain.dto.BaseResponseFactory;
-import com.bootjpabase.global.exception.ExceptionMsg;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +38,6 @@ public class UserController {
     private final UserService userService;
     private final UserServiceTx userServiceTx;
 
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
-            @ApiResponse(responseCode = "409", description = "데이터 중복", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
-            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
-    })
     @Operation(summary = "사용자 저장", description = "사용자 저장 API")
     @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public BaseResponse<UserResponseDTO> saveUser(
@@ -55,11 +47,6 @@ public class UserController {
         return BaseResponseFactory.success(userServiceTx.saveUser(dto, profileImgFile));
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
-            @ApiResponse(responseCode = "404", description = "데이터 오류", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
-            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
-    })
     @Operation(summary = "사용자 목록 조회", description = "사용자 목록 조회 API")
     @GetMapping("")
     public BaseResponse<List<UserResponseDTO>> getUserList(
@@ -69,11 +56,6 @@ public class UserController {
         return BaseResponseFactory.success(userService.getUserList(dto, pageable));
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
-            @ApiResponse(responseCode = "409", description = "데이터 중복", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
-            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
-    })
     @Operation(summary = "사용자 수정", description = "사용자 수정 API")
     @PatchMapping(value = "/{userSn}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public BaseResponse<UserResponseDTO> updateUser(
@@ -84,11 +66,6 @@ public class UserController {
         return BaseResponseFactory.success(userServiceTx.updateUser(userSn, dto, profileImgFile));
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
-            @ApiResponse(responseCode = "409", description = "데이터 중복", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
-            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
-    })
     @Operation(summary = "사용자 삭제", description = "사용자 삭제 API")
     @DeleteMapping("/{userSn}")
     public BaseResponse<UserResponseDTO> deleteUser(
@@ -97,11 +74,6 @@ public class UserController {
         return BaseResponseFactory.success(userServiceTx.deleteUser(userSn));
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
-            @ApiResponse(responseCode = "404", description = "데이터 오류", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
-            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
-    })
     @Operation(summary = "사용자 로그인", description = "사용자 로그인 API")
     @PostMapping("/login")
     public BaseResponse<TokenResponseDTO> userLogin(
@@ -112,11 +84,6 @@ public class UserController {
         return BaseResponseFactory.successWithMessage(userServiceTx.userLogin(dto), ResponseMessageConst.LOGIN_SUCCESS);
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
-            @ApiResponse(responseCode = "404", description = "데이터 오류", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
-            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
-    })
     @Operation(summary = "로그아웃", description = "로그아웃 API - refresh token 삭제")
     @PostMapping("/logout")
     public BaseResponse<Boolean> logoutManager(@RequestHeader(value = "Authorization", required = false) String token) throws Exception {
