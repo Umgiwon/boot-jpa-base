@@ -1,6 +1,5 @@
 package com.bootjpabase.api.sample.domain.dto.request;
 
-import com.bootjpabase.api.sample.domain.entity.Sample;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO for {@link Sample}
+ * DTO for {@link com.bootjpabase.api.sample.domain.entity.Sample}
  */
 @Schema(description = "샘플 목록 조회 요청 DTO")
 @Builder
