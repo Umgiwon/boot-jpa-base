@@ -1,6 +1,5 @@
 package com.bootjpabase.api.car.domain.dto.request;
 
-import com.bootjpabase.api.car.domain.entity.Car;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -11,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO for {@link Car}
+ * DTO for {@link com.bootjpabase.api.car.domain.entity.Car}
  */
 @Schema(description = "자동차 저장 요청 DTO")
 @Builder

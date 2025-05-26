@@ -1,6 +1,5 @@
 package com.bootjpabase.api.sample.domain.dto.response;
 
-import com.bootjpabase.api.sample.domain.entity.Sample;
 import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * DTO for {@link Sample}
+ * DTO for {@link com.bootjpabase.api.sample.domain.entity.Sample}
  */
 @Schema(description = "샘플 응답 DTO")
 @Builder

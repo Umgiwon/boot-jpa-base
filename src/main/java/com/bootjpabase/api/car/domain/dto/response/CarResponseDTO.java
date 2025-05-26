@@ -1,6 +1,5 @@
 package com.bootjpabase.api.car.domain.dto.response;
 
-import com.bootjpabase.api.car.domain.entity.Car;
 import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * DTO for {@link Car}
+ * DTO for {@link com.bootjpabase.api.car.domain.entity.Car}
  */
 @Schema(description = "자동차 응답 DTO")
 @Builder

@@ -1,6 +1,5 @@
 package com.bootjpabase.api.sample.domain.dto.request;
 
-import com.bootjpabase.api.sample.domain.entity.Sample;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 /**
- * DTO for {@link Sample}
+ * DTO for {@link com.bootjpabase.api.sample.domain.entity.Sample}
  */
 @Schema(description = "샘플 수정 요청 DTO")
 @Builder

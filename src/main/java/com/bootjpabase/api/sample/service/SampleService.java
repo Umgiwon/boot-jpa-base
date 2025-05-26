@@ -34,7 +34,7 @@ public class SampleService {
     /**
      * Sample 목록 조회
      *
-     * @param dto 조회할 Sample 조건 dto
+     * @param dto      조회할 Sample 조건 dto
      * @param pageable 페이징 조건
      * @return 조회된 Sample 목록 응답 dto
      */

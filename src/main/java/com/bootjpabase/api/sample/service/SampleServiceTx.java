@@ -45,7 +45,7 @@ public class SampleServiceTx {
      * Sample 수정
      *
      * @param sampleSn 수정할 Sample 순번
-     * @param dto Sample 수정 요청 dto
+     * @param dto      Sample 수정 요청 dto
      * @return 수정된 Sample 응답 dto
      */
     public SampleResponseDTO updateSample(Long sampleSn, SampleUpdateRequestDTO dto) {

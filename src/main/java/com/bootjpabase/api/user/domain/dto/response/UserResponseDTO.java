@@ -1,6 +1,5 @@
 package com.bootjpabase.api.user.domain.dto.response;
 
-import com.bootjpabase.api.user.domain.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -11,7 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * DTO for {@link User}
+ * DTO for {@link com.bootjpabase.api.user.domain.entity.User}
  */
 @Schema(description = "사용자 응답 DTO")
 @Builder
