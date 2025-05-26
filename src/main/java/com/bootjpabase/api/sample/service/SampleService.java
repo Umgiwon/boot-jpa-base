@@ -2,7 +2,6 @@ package com.bootjpabase.api.sample.service;
 
 import com.bootjpabase.api.sample.domain.dto.request.SampleListRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.response.SampleResponseDTO;
-import com.bootjpabase.api.sample.repository.SampleRepository;
 import com.bootjpabase.api.sample.repository.SampleRepositoryCustom;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.exception.BusinessException;
@@ -19,13 +18,13 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class SampleService {
 
-    private final SampleRepository sampleRepository;
     private final SampleRepositoryCustom sampleRepositoryCustom;
 
     /**
      * Sample 단건 조회
-     * @param sampleSn
-     * @return
+     *
+     * @param sampleSn 조회할 Sample 순번
+     * @return 조회된 Sample 응답 dto
      */
     public SampleResponseDTO getSample(Long sampleSn) {
         return Optional.ofNullable(sampleRepositoryCustom.getSample(sampleSn))
@@ -34,8 +33,10 @@ public class SampleService {
 
     /**
      * Sample 목록 조회
-     * @param dto
-     * @return
+     *
+     * @param dto 조회할 Sample 조건 dto
+     * @param pageable 페이징 조건
+     * @return 조회된 Sample 목록 응답 dto
      */
     public Page<SampleResponseDTO> getSampleList(SampleListRequestDTO dto, Pageable pageable) {
         return sampleRepositoryCustom.getSampleList(dto, pageable);

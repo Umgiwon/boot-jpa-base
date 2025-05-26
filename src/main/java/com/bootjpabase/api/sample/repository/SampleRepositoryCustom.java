@@ -28,8 +28,9 @@ public class SampleRepositoryCustom {
 
     /**
      * Sample 단건 조회
-     * @param sampleSn
-     * @return
+     *
+     * @param sampleSn 조회할 Sample 순번
+     * @return 조회된 Sample 응답 dto
      */
     public SampleResponseDTO getSample(Long sampleSn) {
         SampleResponseDTO result;
@@ -51,8 +52,10 @@ public class SampleRepositoryCustom {
 
     /**
      * Sample 목록 조회
-     * @param dto
-     * @return
+     *
+     * @param dto 조회할 Sample 조건 dto
+     * @param pageable 페이징 조건
+     * @return 조회된 Sample 목록 응답 dto
      */
     public Page<SampleResponseDTO> getSampleList(SampleListRequestDTO dto, Pageable pageable) {
         List<SampleResponseDTO> resultList;
@@ -85,8 +88,9 @@ public class SampleRepositoryCustom {
 
     /**
      * 페이징 처리시 조건절
-     * @param dto
-     * @return
+     *
+     * @param dto 조회할 Sample 조건 dto
+     * @return 페이징 처리시 조건절 builder
      */
     private BooleanBuilder pagingCondition(SampleListRequestDTO dto) {
         BooleanBuilder builder = new BooleanBuilder();
@@ -103,18 +107,20 @@ public class SampleRepositoryCustom {
     }
 
     /**
-     * Sample 조회 시 제목 비교
-     * @param title
-     * @return
+     * Sample 조회시 제목 비교
+     *
+     * @param title 조회할 제목
+     * @return 조회할 제목 조건절
      */
     private BooleanExpression eqTitle(String title) {
         return (!StringUtils.isEmpty(title)) ? sample.title.contains(title) : null;
     }
 
     /**
-     * Sample 조회 시 내용 비교
-     * @param content
-     * @return
+     * Sample 조회시 내용 비교
+     *
+     * @param content 조회할 내용
+     * @return 조회할 내용 조건절
      */
     private BooleanExpression eqContent(String content) {
         return (!StringUtils.isEmpty(content)) ? sample.content.contains(content) : null;
