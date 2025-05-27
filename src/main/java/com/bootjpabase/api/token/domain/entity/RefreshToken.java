@@ -1,4 +1,4 @@
-package com.bootjpabase.global.config.jwt.domain.entity;
+package com.bootjpabase.api.token.domain.entity;
 
 import com.bootjpabase.api.user.domain.entity.User;
 import jakarta.persistence.*;

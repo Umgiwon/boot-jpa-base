@@ -1,6 +1,6 @@
 package com.bootjpabase.api.user.service;
 
-import com.bootjpabase.api.sample.UserMapper;
+import com.bootjpabase.api.user.mapper.UserMapper;
 import com.bootjpabase.api.user.domain.dto.request.UserLoginRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserSaveRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserUpdateRequestDTO;
@@ -8,10 +8,10 @@ import com.bootjpabase.api.user.domain.dto.response.UserResponseDTO;
 import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.api.user.repository.UserRepository;
 import com.bootjpabase.global.config.jwt.component.TokenProvider;
-import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
-import com.bootjpabase.global.config.jwt.domain.entity.RefreshToken;
-import com.bootjpabase.global.config.jwt.repository.TokenRepository;
-import com.bootjpabase.global.config.jwt.service.TokenServiceTx;
+import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
+import com.bootjpabase.api.token.domain.entity.RefreshToken;
+import com.bootjpabase.api.token.repository.TokenRepository;
+import com.bootjpabase.api.token.service.TokenServiceTx;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.enums.file.UploadFileType;
 import com.bootjpabase.global.exception.BusinessException;

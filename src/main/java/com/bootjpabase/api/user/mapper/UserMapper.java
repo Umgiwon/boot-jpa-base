@@ -1,4 +1,4 @@
-package com.bootjpabase.api.sample;
+package com.bootjpabase.api.user.mapper;
 
 import com.bootjpabase.api.user.domain.dto.request.UserSaveRequestDTO;
 import com.bootjpabase.api.user.domain.dto.response.UserResponseDTO;

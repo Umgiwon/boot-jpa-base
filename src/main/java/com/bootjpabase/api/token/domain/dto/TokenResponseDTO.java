@@ -1,4 +1,4 @@
-package com.bootjpabase.global.config.jwt.domain.dto;
+package com.bootjpabase.api.token.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;

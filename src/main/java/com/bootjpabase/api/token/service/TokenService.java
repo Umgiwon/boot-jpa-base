@@ -1,10 +1,10 @@
-package com.bootjpabase.global.config.jwt.service;
+package com.bootjpabase.api.token.service;
 
 import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.global.config.jwt.component.TokenProvider;
-import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
-import com.bootjpabase.global.config.jwt.domain.entity.RefreshToken;
-import com.bootjpabase.global.config.jwt.repository.TokenRepository;
+import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
+import com.bootjpabase.api.token.domain.entity.RefreshToken;
+import com.bootjpabase.api.token.repository.TokenRepository;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.exception.BusinessException;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
-package com.bootjpabase.global.config.jwt.controller;
+package com.bootjpabase.api.token.controller;
 
 import com.bootjpabase.global.config.jwt.component.TokenProvider;
-import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
-import com.bootjpabase.global.config.jwt.service.TokenService;
+import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
+import com.bootjpabase.api.token.service.TokenService;
 import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
 import com.bootjpabase.global.domain.dto.BaseResponseFactory;
