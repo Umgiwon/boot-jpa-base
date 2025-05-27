@@ -23,8 +23,9 @@ public class TokenService {
 
     /**
      * 리프레쉬 토큰 정보 검증 후 엑세스 토큰 재발급
-     * @param token
-     * @return
+     *
+     * @param token 리프레쉬 토큰
+     * @return 토큰 dto
      */
     public TokenResponseDTO refreshAccessToken(String token) {
 

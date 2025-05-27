@@ -1,4 +1,4 @@
-package com.bootjpabase.global.file.domain.entity;
+package com.bootjpabase.api.file.domain.entity;
 
 import com.bootjpabase.global.domain.entity.BaseEntity;
 import jakarta.persistence.*;

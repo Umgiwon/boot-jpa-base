@@ -1,4 +1,4 @@
-package com.bootjpabase.global.file.properties;
+package com.bootjpabase.global.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 @Configuration
 @ConfigurationProperties(prefix = "bootjpabase.file.upload")
-public class FileUploadProperties {
+public class FileUploadConfig {
     private String rootPath;
     private long fileMaxSize;
 }

@@ -1,4 +1,4 @@
-package com.bootjpabase.global.file.domain.dto.response;
+package com.bootjpabase.api.file.domain.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.querydsl.core.annotations.QueryProjection;
