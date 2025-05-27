@@ -1,10 +1,9 @@
 package com.bootjpabase.api.file.controller;
 
+import com.bootjpabase.api.file.domain.dto.response.FileResponseDTO;
+import com.bootjpabase.api.file.service.FileServiceTx;
 import com.bootjpabase.global.domain.dto.BaseResponse;
 import com.bootjpabase.global.domain.dto.BaseResponseFactory;
-import com.bootjpabase.api.file.domain.dto.response.FileResponseDTO;
-import com.bootjpabase.api.file.service.FileService;
-import com.bootjpabase.api.file.service.FileServiceTx;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/file")
 public class FileController {
 
-    private final FileService fileService;
     private final FileServiceTx fileServiceTx;
 
     @Operation(summary = "첨부파일 삭제", description = "첨부파일 삭제 API")

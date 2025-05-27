@@ -51,14 +51,14 @@ public class User extends BaseEntity {
      * 수정요청된 dto 값을 받아서 entity 영속성 컨텍스트를 수정한다.
      * - 수정할 값이 있는 데이터만 수정
      *
-     * @param dto 수정요청된 User dto
-     * @param encodedPassword 인코딩 된 비밀번호
+     * @param dto              수정요청된 User dto
+     * @param encodedPassword  인코딩 된 비밀번호
      * @param profileImgFileSn 이미지 파일순번
      */
     public void updateUserInfo(UserUpdateRequestDTO dto, String encodedPassword, Long profileImgFileSn) {
-        if(StringUtils.isNotBlank(encodedPassword)) this.userPassword = encodedPassword; // 비밀번호(인코딩)
-        if(StringUtils.isNotBlank(dto.getUserPhone())) this.userPhone = dto.getUserPhone(); // 전화번호
-        if(StringUtils.isNotBlank(dto.getUserEmail())) this.userEmail = dto.getUserEmail(); // 이메일
-        if(profileImgFileSn != null) this.profileImgFileSn = profileImgFileSn; // 프로필 파일순번
+        if (StringUtils.isNotBlank(encodedPassword)) this.userPassword = encodedPassword; // 비밀번호(인코딩)
+        if (StringUtils.isNotBlank(dto.getUserPhone())) this.userPhone = dto.getUserPhone(); // 전화번호
+        if (StringUtils.isNotBlank(dto.getUserEmail())) this.userEmail = dto.getUserEmail(); // 이메일
+        if (profileImgFileSn != null) this.profileImgFileSn = profileImgFileSn; // 프로필 파일순번
     }
 }

@@ -21,7 +21,7 @@ public class UserService {
     /**
      * User 목록 조회
      *
-     * @param dto 조회할 User 조건 dto
+     * @param dto      조회할 User 조건 dto
      * @param pageable 페이징 조건
      * @return 조회된 User 응답 목록 dto
      */

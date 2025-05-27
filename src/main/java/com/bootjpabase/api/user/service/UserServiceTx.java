@@ -1,22 +1,22 @@
 package com.bootjpabase.api.user.service;
 
-import com.bootjpabase.api.user.mapper.UserMapper;
+import com.bootjpabase.api.file.domain.entity.File;
+import com.bootjpabase.api.file.service.FileServiceTx;
+import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
+import com.bootjpabase.api.token.domain.entity.RefreshToken;
+import com.bootjpabase.api.token.repository.TokenRepository;
+import com.bootjpabase.api.token.service.TokenServiceTx;
 import com.bootjpabase.api.user.domain.dto.request.UserLoginRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserSaveRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserUpdateRequestDTO;
 import com.bootjpabase.api.user.domain.dto.response.UserResponseDTO;
 import com.bootjpabase.api.user.domain.entity.User;
+import com.bootjpabase.api.user.mapper.UserMapper;
 import com.bootjpabase.api.user.repository.UserRepository;
 import com.bootjpabase.global.config.jwt.component.TokenProvider;
-import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
-import com.bootjpabase.api.token.domain.entity.RefreshToken;
-import com.bootjpabase.api.token.repository.TokenRepository;
-import com.bootjpabase.api.token.service.TokenServiceTx;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.enums.file.UploadFileType;
 import com.bootjpabase.global.exception.BusinessException;
-import com.bootjpabase.api.file.domain.entity.File;
-import com.bootjpabase.api.file.service.FileServiceTx;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class UserServiceTx {
     /**
      * User 저장
      *
-     * @param dto User 저장 요청 dto
+     * @param dto            User 저장 요청 dto
      * @param profileImgFile 프로필 사진
      * @return 저장된 User 응답 dto
      * @throws IOException IOException 처리
@@ -57,7 +57,7 @@ public class UserServiceTx {
         User user = userMapper.toUserEntity(dto);
 
         // 프로필 이미지 파일이 있을 경우 저장
-        if(!ObjectUtils.isEmpty(profileImgFile)) {
+        if (!ObjectUtils.isEmpty(profileImgFile)) {
             File saveProfileImgFile = fileServiceTx.saveFile(profileImgFile, UploadFileType.USER);
             user.setProfileImgFileSn(saveProfileImgFile.getFileSn());
         }
@@ -74,17 +74,17 @@ public class UserServiceTx {
     private void validateUser(UserSaveRequestDTO dto) {
 
         // userId 중복 체크
-        if(userRepository.existsByUserId(dto.getUserId())) {
+        if (userRepository.existsByUserId(dto.getUserId())) {
             throw new BusinessException(ApiReturnCode.ID_CONFLICT_ERROR);
         }
 
         // userPhone 중복 체크
-        if(userRepository.existsByUserPhone(dto.getUserPhone())) {
+        if (userRepository.existsByUserPhone(dto.getUserPhone())) {
             throw new BusinessException(ApiReturnCode.PHONE_CONFLICT_ERROR);
         }
 
         // userEmail 중복 체크
-        if(userRepository.existsByUserEmail(dto.getUserEmail())) {
+        if (userRepository.existsByUserEmail(dto.getUserEmail())) {
             throw new BusinessException(ApiReturnCode.EMAIL_CONFLICT_ERROR);
         }
     }
@@ -92,8 +92,8 @@ public class UserServiceTx {
     /**
      * User 수정
      *
-     * @param userSn 수정할 User 순번
-     * @param dto User 수정 요청 dto
+     * @param userSn         수정할 User 순번
+     * @param dto            User 수정 요청 dto
      * @param profileImgFile 프로필 사진
      * @return 수정된 User 응답 dto
      * @throws IOException IOException 처리
@@ -106,13 +106,13 @@ public class UserServiceTx {
 
         // 비밀번호 인코딩
         String encodedPassword = null;
-        if(!ObjectUtils.isEmpty(dto.getUserPassword())) {
+        if (!ObjectUtils.isEmpty(dto.getUserPassword())) {
             encodedPassword = encoder.encode(dto.getUserPassword());
         }
 
         // 프로필 사진
         Long profileImgFileSn = null;
-        if(!ObjectUtils.isEmpty(profileImgFile)) {
+        if (!ObjectUtils.isEmpty(profileImgFile)) {
             File savedProfileImgFile = fileServiceTx.saveFile(profileImgFile, UploadFileType.USER);
             profileImgFileSn = savedProfileImgFile.getFileSn();
         }
@@ -142,7 +142,7 @@ public class UserServiceTx {
                 .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_DATA_ERROR));
 
         // 사용자 프로필 이미지 파일 삭제
-        if(deleteUser.getProfileImgFileSn() != null) {
+        if (deleteUser.getProfileImgFileSn() != null) {
             fileServiceTx.deleteFile(deleteUser.getProfileImgFileSn());
         }
 
@@ -167,7 +167,7 @@ public class UserServiceTx {
                 .orElseThrow(() -> new BusinessException(ApiReturnCode.LOGIN_ID_FAIL_ERROR));
 
         // 비밀번호 체크
-        if(!encoder.matches(dto.getUserPassword(), user.getUserPassword())) {
+        if (!encoder.matches(dto.getUserPassword(), user.getUserPassword())) {
             throw new BusinessException(ApiReturnCode.LOGIN_PWD_FAIL_ERROR);
         }
 
@@ -178,7 +178,7 @@ public class UserServiceTx {
         RefreshToken savedToken = tokenRepository.findByUser(user);
 
         // 있으면 token 업데이트, 없으면 새로 저장
-        if(!org.apache.commons.lang3.ObjectUtils.isEmpty(savedToken)) {
+        if (!org.apache.commons.lang3.ObjectUtils.isEmpty(savedToken)) {
             savedToken.setToken(tokenDto.getRefreshToken());
         } else {
             tokenServiceTx.saveRefreshToken(tokenDto.getRefreshToken(), user);
@@ -198,7 +198,7 @@ public class UserServiceTx {
         String accessToken = token.replace("Bearer ", "");
 
         // access token 유효성 검사
-        if(!tokenProvider.validateToken(accessToken)) {
+        if (!tokenProvider.validateToken(accessToken)) {
             throw new BusinessException(ApiReturnCode.UNAUTHORIZED_TOKEN_ERROR);
         }
 

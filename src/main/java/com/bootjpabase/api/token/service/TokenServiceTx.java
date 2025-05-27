@@ -1,8 +1,8 @@
 package com.bootjpabase.api.token.service;
 
-import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.api.token.domain.entity.RefreshToken;
 import com.bootjpabase.api.token.repository.TokenRepository;
+import com.bootjpabase.api.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +16,7 @@ public class TokenServiceTx {
 
     /**
      * 토큰 저장
+     *
      * @param refreshToken
      * @param user
      */
@@ -30,6 +31,7 @@ public class TokenServiceTx {
 
     /**
      * 토큰 entity 생성
+     *
      * @param refreshToken
      * @param user
      * @return

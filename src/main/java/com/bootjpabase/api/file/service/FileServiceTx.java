@@ -1,11 +1,11 @@
 package com.bootjpabase.api.file.service;
 
-import com.bootjpabase.global.enums.common.ApiReturnCode;
-import com.bootjpabase.global.enums.file.UploadFileType;
-import com.bootjpabase.global.exception.BusinessException;
 import com.bootjpabase.api.file.domain.dto.response.FileResponseDTO;
 import com.bootjpabase.api.file.domain.entity.File;
 import com.bootjpabase.api.file.repository.FileRepository;
+import com.bootjpabase.global.enums.common.ApiReturnCode;
+import com.bootjpabase.global.enums.file.UploadFileType;
+import com.bootjpabase.global.exception.BusinessException;
 import com.bootjpabase.global.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,8 +22,9 @@ public class FileServiceTx {
     private final FileRepository fileRepository;
 
     /**
+     * 파일 저장
      *
-     * @param file 저장할 파일
+     * @param file           저장할 파일
      * @param uploadFileType 파일 타입
      * @return 파일
      * @throws IOException IOException 처리
@@ -40,8 +41,8 @@ public class FileServiceTx {
     /**
      * 파일 삭제
      *
-     * @param fileSn
-     * @return
+     * @param fileSn 삭제할 파일 순번
+     * @return 삭제된 파일 dto
      */
     public FileResponseDTO deleteFile(Long fileSn) {
 
