@@ -35,7 +35,7 @@ public class CarServiceTx {
                 .map(carMapper::toCarEntity)
                 .toList();
 
-        // entity 저장 후 dto로 변환 후 반환
+        // entity 저장 후 dto 반환
         return carRepository.saveAll(carEntities).stream()
                 .map(carMapper::toCarResponseDTO)
                 .toList();
@@ -57,7 +57,7 @@ public class CarServiceTx {
         // entity 영속성 컨텍스트 수정
         car.updateCarInfo(dto);
 
-        // entity 수정 후 dto로 변환 후 반환
+        // entity 수정 후 dto 반환
         return carMapper.toCarResponseDTO(car);
     }
 }

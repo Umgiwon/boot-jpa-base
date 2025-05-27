@@ -1,12 +1,12 @@
 package com.bootjpabase.api.user.service;
 
+import com.bootjpabase.api.sample.UserMapper;
 import com.bootjpabase.api.user.domain.dto.request.UserLoginRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserSaveRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserUpdateRequestDTO;
 import com.bootjpabase.api.user.domain.dto.response.UserResponseDTO;
 import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.api.user.repository.UserRepository;
-import com.bootjpabase.api.user.repository.UserRepositoryCustom;
 import com.bootjpabase.global.config.jwt.component.TokenProvider;
 import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
 import com.bootjpabase.global.config.jwt.domain.entity.RefreshToken;
@@ -32,8 +32,8 @@ import java.util.Optional;
 @Transactional
 public class UserServiceTx {
 
+    private final UserMapper userMapper;
     private final UserRepository userRepository;
-    private final UserRepositoryCustom userRepositoryCustom;
     private final BCryptPasswordEncoder encoder;
     private final FileServiceTx fileServiceTx;
     private final TokenProvider tokenProvider;
@@ -41,49 +41,37 @@ public class UserServiceTx {
     private final TokenServiceTx tokenServiceTx;
 
     /**
-     * 사용자 저장
-     * @param dto
-     * @return
+     * User 저장
+     *
+     * @param dto User 저장 요청 dto
+     * @param profileImgFile 프로필 사진
+     * @return 저장된 User 응답 dto
+     * @throws IOException IOException 처리
      */
     public UserResponseDTO saveUser(UserSaveRequestDTO dto, MultipartFile profileImgFile) throws IOException {
 
-        // 저장할 entity 객체 생성
-        User saveUser = createUserEntity(dto);
+        // 저장 전 data validate
+        validateUser(dto);
+
+        // 요청 dto를 entity로 변환
+        User user = userMapper.toUserEntity(dto);
 
         // 프로필 이미지 파일이 있을 경우 저장
         if(!ObjectUtils.isEmpty(profileImgFile)) {
             File saveProfileImgFile = fileServiceTx.saveFile(profileImgFile, UploadFileType.USER);
-            saveUser.setProfileImgFileSn(saveProfileImgFile.getFileSn());
+            user.setProfileImgFileSn(saveProfileImgFile.getFileSn());
         }
 
-        // 사용자 저장 후 dto 반환
-        return userEntityToDto(userRepository.save(saveUser));
+        // entity 저장 후 dto 반환
+        return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 
     /**
-     * user entity 생성 (저장시)
-     * @param dto
-     * @return
+     * User validate
+     *
+     * @param dto User 저장 요청 dto
      */
-    public User createUserEntity(UserSaveRequestDTO dto) throws IOException {
-
-        // validate
-        validateUser(dto);
-
-        return User.builder()
-                .userId(dto.getUserId())
-                .userName(dto.getUserName())
-                .userPassword(encoder.encode(dto.getUserPassword()))
-                .userPhone(dto.getUserPhone())
-                .userEmail(dto.getUserEmail())
-                .build();
-    }
-
-    /**
-     * user validate (저장시)
-     * @param dto
-     */
-    public void validateUser(UserSaveRequestDTO dto) {
+    private void validateUser(UserSaveRequestDTO dto) {
 
         // userId 중복 체크
         if(userRepository.existsByUserId(dto.getUserId())) {
@@ -102,58 +90,44 @@ public class UserServiceTx {
     }
 
     /**
-     * 사용자 수정
-     * @param dto
-     * @return
+     * User 수정
+     *
+     * @param userSn 수정할 User 순번
+     * @param dto User 수정 요청 dto
+     * @param profileImgFile 프로필 사진
+     * @return 수정된 User 응답 dto
+     * @throws IOException IOException 처리
      */
     public UserResponseDTO updateUser(Long userSn, UserUpdateRequestDTO dto, MultipartFile profileImgFile) throws IOException {
 
-//        // userPhone 중복 체크
-//        if(userRepository.existsByUserPhone(dto.getUserPhone())) {
-//            throw new BusinessException(ApiReturnCode.PHONE_CONFLICT_ERROR);
-//        }
-//
-//        // userEmail 중복 체크
-//        if(userRepository.existsByUserEmail(dto.getUserEmail())) {
-//            throw new BusinessException(ApiReturnCode.EMAIL_CONFLICT_ERROR);
-//        }
-
         // 수정할 entity 조회
-        User updateUser = userRepository.findById(userSn)
+        User user = userRepository.findById(userSn)
                 .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_DATA_ERROR));
 
-        // entity 영속성 컨텍스트 수정
-        updateUser(updateUser, dto, profileImgFile);
-
-        return userEntityToDto(updateUser);
-    }
-
-    /**
-     * user 수정 (수정할 값이 있는 데이타만 수정)
-     * @param user
-     * @param dto
-     */
-    private void updateUser(User user, UserUpdateRequestDTO dto, MultipartFile profileImgFile) throws IOException {
-
-        // 비밃번호
+        // 비밀번호 인코딩
+        String encodedPassword = null;
         if(!ObjectUtils.isEmpty(dto.getUserPassword())) {
-            user.setUserPassword(encoder.encode(dto.getUserPassword()));
+            encodedPassword = encoder.encode(dto.getUserPassword());
         }
-
-        Optional.ofNullable(dto.getUserPhone()).ifPresent(user::setUserPhone); // 전화번호
-        Optional.ofNullable(dto.getUserEmail()).ifPresent(user::setUserEmail); // 이메일
 
         // 프로필 사진
+        Long profileImgFileSn = null;
         if(!ObjectUtils.isEmpty(profileImgFile)) {
-            File saveProfileImgFile = fileServiceTx.saveFile(profileImgFile, UploadFileType.USER);
-            user.setProfileImgFileSn(saveProfileImgFile.getFileSn());
+            File savedProfileImgFile = fileServiceTx.saveFile(profileImgFile, UploadFileType.USER);
+            profileImgFileSn = savedProfileImgFile.getFileSn();
         }
+
+        // entity 영속성 컨텍스트 수정
+        user.updateUserInfo(dto, encodedPassword, profileImgFileSn);
+
+        return userMapper.toUserResponseDTO(user);
     }
 
     /**
-     * 사용자 삭제
-     * @param userSn
-     * @return
+     * User 삭제
+     *
+     * @param userSn 삭제할 User 순번
+     * @return 삭제된 User 응답 dto
      */
     public UserResponseDTO deleteUser(Long userSn) {
 
@@ -175,13 +149,15 @@ public class UserServiceTx {
         // 사용자 삭제
         userRepository.delete(deleteUser);
 
-        return userEntityToDto(deleteUser);
+        // 삭제 후 dto 반환
+        return userMapper.toUserResponseDTO(deleteUser);
     }
 
     /**
      * 사용자 로그인
-     * @param dto
-     * @return
+     *
+     * @param dto 로그인 요청 dto
+     * @return token 응답 dto
      */
     public TokenResponseDTO userLogin(UserLoginRequestDTO dto) {
         TokenResponseDTO tokenDto;
@@ -195,7 +171,7 @@ public class UserServiceTx {
             throw new BusinessException(ApiReturnCode.LOGIN_PWD_FAIL_ERROR);
         }
 
-        // access & refresh token 발급
+        // access and refresh token 발급
         tokenDto = tokenProvider.createAllToken(user);
 
         // DB에 저장된 refresh token 조회
@@ -213,8 +189,9 @@ public class UserServiceTx {
 
     /**
      * 로그아웃 (refresh 토큰 삭제)
-     * @param token
-     * @return
+     *
+     * @param token 토큰
+     * @return 삭제 결과
      */
     public boolean logoutManager(String token) {
 
@@ -240,20 +217,5 @@ public class UserServiceTx {
         tokenRepository.delete(savedToken);
 
         return true;
-    }
-
-    /**
-     * 사용자 entity를 dto로 변환
-     * @param user
-     * @return
-     */
-    private UserResponseDTO userEntityToDto(User user) {
-        return UserResponseDTO.builder()
-                .userSn(user.getUserSn())
-                .userId(user.getUserId())
-                .userName(user.getUserName())
-                .userPhone(user.getUserPhone())
-                .userEmail(user.getUserEmail())
-                .build();
     }
 }

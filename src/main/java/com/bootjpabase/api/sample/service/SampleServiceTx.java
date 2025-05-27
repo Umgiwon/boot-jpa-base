@@ -35,7 +35,7 @@ public class SampleServiceTx {
                 .map(sampleMapper::toSampleEntity)
                 .toList();
 
-        // entity 저장 후 dto로 변환 후 반환
+        // entity 저장 후 dto 반환
         return sampleRepository.saveAll(sampleEntities).stream()
                 .map(sampleMapper::toSampleResponseDTO)
                 .toList();
@@ -57,7 +57,7 @@ public class SampleServiceTx {
         // entity 영속성 컨텍스트 수정
         sample.updateSampleInfo(dto);
 
-        // entity 수정 후 dto로 변환 후 반환
+        // entity 수정 후 dto 반환
         return sampleMapper.toSampleResponseDTO(sample);
     }
 

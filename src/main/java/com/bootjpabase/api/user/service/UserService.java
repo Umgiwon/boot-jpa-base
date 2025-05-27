@@ -19,10 +19,11 @@ public class UserService {
     private final UserRepositoryCustom userRepositoryCustom;
 
     /**
-     * 사용자 목록 조회
-     * @param dto
-     * @param pageable
-     * @return
+     * User 목록 조회
+     *
+     * @param dto 조회할 User 조건 dto
+     * @param pageable 페이징 조건
+     * @return 조회된 User 응답 목록 dto
      */
     public Page<UserResponseDTO> getUserList(UserListRequestDTO dto, Pageable pageable) {
         return userRepositoryCustom.getUserList(dto, pageable);

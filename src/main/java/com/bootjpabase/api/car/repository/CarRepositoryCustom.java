@@ -73,11 +73,11 @@ public class CarRepositoryCustom {
      */
     private BooleanExpression pagingCondition(CarListRequestDTO dto) {
         return Stream.of(
-                        containsCategory(dto.getCategory()),
-                        containsManufacturer(dto.getManufacturer()),
-                        containsModelName(dto.getModelName()),
-                        eqProductionYear(dto.getProductionYear()),
-                        eqRentalYn(dto.getRentalYn())
+                        containsCategory(dto.getCategory()), // 카테고리
+                        containsManufacturer(dto.getManufacturer()), // 제조사
+                        containsModelName(dto.getModelName()), // 모델명
+                        eqProductionYear(dto.getProductionYear()), // 제조년도
+                        eqRentalYn(dto.getRentalYn()) // 대여가능여부
                 )
                 .filter(Objects::nonNull)
                 .reduce(BooleanExpression::and)

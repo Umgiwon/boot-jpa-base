@@ -85,8 +85,8 @@ public class SampleRepositoryCustom {
      */
     private BooleanExpression pagingCondition(SampleListRequestDTO dto) {
         return Stream.of(
-                        containsTitle(dto.getTitle()),
-                        containsContent(dto.getContent())
+                        containsTitle(dto.getTitle()), // 제목
+                        containsContent(dto.getContent()) // 내용
                 )
                 .filter(Objects::nonNull)
                 .reduce(BooleanExpression::and)
