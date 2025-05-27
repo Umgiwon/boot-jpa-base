@@ -1,5 +1,6 @@
 package com.bootjpabase.api.user.controller;
 
+import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserListRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserLoginRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserSaveRequestDTO;
@@ -8,7 +9,6 @@ import com.bootjpabase.api.user.domain.dto.response.UserResponseDTO;
 import com.bootjpabase.api.user.service.UserService;
 import com.bootjpabase.api.user.service.UserServiceTx;
 import com.bootjpabase.global.annotation.common.CustomApiLogger;
-import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
 import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
 import com.bootjpabase.global.domain.dto.BaseResponseFactory;
@@ -44,8 +44,7 @@ public class UserController {
     @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public BaseResponse<UserResponseDTO> saveUser(
             @Valid @RequestPart UserSaveRequestDTO dto,
-            @RequestPart(required = false, name = "profileImgFile") MultipartFile profileImgFile
-    ) throws Exception {
+            @RequestPart(required = false, name = "profileImgFile") MultipartFile profileImgFile) throws Exception {
         return BaseResponseFactory.success(userServiceTx.saveUser(dto, profileImgFile));
     }
 
@@ -53,8 +52,7 @@ public class UserController {
     @GetMapping("")
     public BaseResponse<List<UserResponseDTO>> getUserList(
             @ParameterObject UserListRequestDTO dto,
-            @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable
-    ) throws Exception {
+            @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return BaseResponseFactory.success(userService.getUserList(dto, pageable));
     }
 
@@ -63,16 +61,13 @@ public class UserController {
     public BaseResponse<UserResponseDTO> updateUser(
             @PathVariable("userSn") Long userSn,
             @Valid @RequestPart UserUpdateRequestDTO dto,
-            @RequestPart(required = false, name = "profileImgFile") MultipartFile profileImgFile
-    ) throws Exception {
+            @RequestPart(required = false, name = "profileImgFile") MultipartFile profileImgFile) throws Exception {
         return BaseResponseFactory.success(userServiceTx.updateUser(userSn, dto, profileImgFile));
     }
 
     @Operation(summary = "사용자 삭제", description = "사용자 삭제 API")
     @DeleteMapping("/{userSn}")
-    public BaseResponse<UserResponseDTO> deleteUser(
-            @PathVariable("userSn") Long userSn
-    ) throws Exception {
+    public BaseResponse<UserResponseDTO> deleteUser(@PathVariable("userSn") Long userSn) {
         return BaseResponseFactory.success(userServiceTx.deleteUser(userSn));
     }
 
@@ -81,8 +76,7 @@ public class UserController {
     public BaseResponse<TokenResponseDTO> userLogin(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json",
                     content = @Content(schema = @Schema(implementation = UserLoginRequestDTO.class)))
-            @RequestBody @Valid UserLoginRequestDTO dto
-    ) throws Exception {
+            @RequestBody @Valid UserLoginRequestDTO dto) {
         return BaseResponseFactory.successWithMessage(userServiceTx.userLogin(dto), ResponseMessageConst.LOGIN_SUCCESS);
     }
 

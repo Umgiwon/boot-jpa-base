@@ -3,10 +3,10 @@ package com.bootjpabase.api.car.repository;
 import com.bootjpabase.api.car.domain.dto.request.CarListRequestDTO;
 import com.bootjpabase.api.car.domain.dto.response.CarResponseDTO;
 import com.bootjpabase.api.car.domain.dto.response.QCarResponseDTO;
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
@@ -16,6 +16,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import static com.bootjpabase.api.car.domain.entity.QCar.car;
 
@@ -29,24 +31,22 @@ public class CarRepositoryCustom {
 
     /**
      * Car 목록 조회
-     * @param dto
-     * @return
+     *
+     * @param dto      조회할 Car 조건 dto
+     * @param pageable 페이징 조건
+     * @return 조회된 Car 목록 응답 dto
      */
     public Page<CarResponseDTO> getCarList(CarListRequestDTO dto, Pageable pageable) {
-        List<CarResponseDTO> resultList;
-
-        resultList = queryFactory
-                .select(
-                        new QCarResponseDTO(
-                                car.carSn
-                                , car.category
-                                , car.manufacturer
-                                , car.modelName
-                                , car.productionYear
-                                , car.rentalYn
-                                , car.rentalDescription
-                        )
-                )
+        List<CarResponseDTO> resultList = queryFactory
+                .select(new QCarResponseDTO(
+                        car.carSn
+                        , car.category
+                        , car.manufacturer
+                        , car.modelName
+                        , car.productionYear
+                        , car.rentalYn
+                        , car.rentalDescription
+                ))
                 .from(car)
                 .where(pagingCondition(dto))
                 .offset(pageable.getOffset())
@@ -67,77 +67,70 @@ public class CarRepositoryCustom {
 
     /**
      * 페이징 처리시 조건절
-     * @param dto
-     * @return
+     *
+     * @param dto 조회할 Car 조건 dto
+     * @return 페이징 처리시 조건절
      */
-    private BooleanBuilder pagingCondition(CarListRequestDTO dto) {
-        BooleanBuilder builder = new BooleanBuilder();
-
-        if(dto.getCategory() != null) {
-            builder.and(eqCategory(dto.getCategory()));
-        }
-
-        if(dto.getManufacturer() != null) {
-            builder.and(eqManufacturer(dto.getManufacturer()));
-        }
-
-        if(dto.getModelName() != null) {
-            builder.and(eqModelName(dto.getModelName()));
-        }
-
-        if(dto.getProductionYear() != null) {
-            builder.and(eqProductionYear(dto.getProductionYear()));
-        }
-
-        if(dto.getRentalYn() != null) {
-            builder.and(eqRentalYn(dto.getRentalYn()));
-        }
-
-        return builder;
+    private BooleanExpression pagingCondition(CarListRequestDTO dto) {
+        return Stream.of(
+                        containsCategory(dto.getCategory()), // 카테고리
+                        containsManufacturer(dto.getManufacturer()), // 제조사
+                        containsModelName(dto.getModelName()), // 모델명
+                        eqProductionYear(dto.getProductionYear()), // 제조년도
+                        eqRentalYn(dto.getRentalYn()) // 대여가능여부
+                )
+                .filter(Objects::nonNull)
+                .reduce(BooleanExpression::and)
+                .orElse(null);
     }
 
     /**
-     * Car 조회 시 카테고리 비교
-     * @param category
-     * @return
+     * Car 조회 시
+     *
+     * @param category 조회할 카테고리
+     * @return 조회할 카테고리 조건절
      */
-    private BooleanExpression eqCategory(String category) {
-        return (!ObjectUtils.isEmpty(category)) ? car.category.contains(category) : null;
+    private BooleanExpression containsCategory(String category) {
+        return StringUtils.isNotBlank(category) ? car.category.contains(category) : null;
     }
 
     /**
      * Car 조회 시 제조사 비교
-     * @param manufacturer
-     * @return
+     *
+     * @param manufacturer 조회할 제조사
+     * @return 조회할 제조사 조건절
      */
-    private BooleanExpression eqManufacturer(String manufacturer) {
-        return (!ObjectUtils.isEmpty(manufacturer)) ? car.manufacturer.contains(manufacturer) : null;
+    private BooleanExpression containsManufacturer(String manufacturer) {
+        return StringUtils.isNotBlank(manufacturer) ? car.manufacturer.contains(manufacturer) : null;
     }
 
     /**
      * Car 조회 시 모델명 비교
-     * @param modelName
-     * @return
+     *
+     * @param modelName 조회할 모델명
+     * @return 조회할 모델명 조건절
      */
-    private BooleanExpression eqModelName(String modelName) {
-        return (!ObjectUtils.isEmpty(modelName)) ? car.modelName.contains(modelName) : null;
+    private BooleanExpression containsModelName(String modelName) {
+        return StringUtils.isNotBlank(modelName) ? car.modelName.contains(modelName) : null;
     }
 
     /**
      * Car 조회 시 생산년도 비교
-     * @param productionYear
-     * @return
+     *
+     * @param productionYear 조회할 생산년도
+     * @return 조회할 생산년도 조건절
      */
     private BooleanExpression eqProductionYear(Integer productionYear) {
-        return (!ObjectUtils.isEmpty(productionYear)) ? car.productionYear.eq(productionYear) : null;
+        return !ObjectUtils.isEmpty(productionYear) ? car.productionYear.eq(productionYear) : null;
     }
 
     /**
      * Car 조회 시 대여 가능 여부 비교
-     * @param rentalYn
-     * @return
+     *
+     * @param rentalYn 조회할 대여 가능 여부
+     * @return 조회할 대여 가능 여부 조건절
      */
     private BooleanExpression eqRentalYn(String rentalYn) {
-        return (!ObjectUtils.isEmpty(rentalYn)) ? car.rentalYn.eq(rentalYn) : null;
+        return StringUtils.isNotBlank(rentalYn) ? car.rentalYn.eq(rentalYn) : null;
     }
 }

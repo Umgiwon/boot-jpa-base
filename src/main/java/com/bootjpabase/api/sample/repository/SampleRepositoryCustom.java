@@ -6,8 +6,8 @@ import com.bootjpabase.api.sample.domain.dto.response.SampleResponseDTO;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -85,8 +85,8 @@ public class SampleRepositoryCustom {
      */
     private BooleanExpression pagingCondition(SampleListRequestDTO dto) {
         return Stream.of(
-                        containsTitle(dto.getTitle()),
-                        containsContent(dto.getContent())
+                        containsTitle(dto.getTitle()), // 제목
+                        containsContent(dto.getContent()) // 내용
                 )
                 .filter(Objects::nonNull)
                 .reduce(BooleanExpression::and)
@@ -100,7 +100,7 @@ public class SampleRepositoryCustom {
      * @return 조회할 제목 조건절
      */
     private BooleanExpression containsTitle(String title) {
-        return (!ObjectUtils.isEmpty(title)) ? sample.title.contains(title) : null;
+        return (!StringUtils.isNotBlank(title)) ? sample.title.contains(title) : null;
     }
 
     /**
@@ -110,6 +110,6 @@ public class SampleRepositoryCustom {
      * @return 조회할 내용 조건절
      */
     private BooleanExpression containsContent(String content) {
-        return (!ObjectUtils.isEmpty(content)) ? sample.content.contains(content) : null;
+        return (!StringUtils.isNotBlank(content)) ? sample.content.contains(content) : null;
     }
 }

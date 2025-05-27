@@ -9,7 +9,7 @@ import org.mapstruct.ReportingPolicy;
 
 /**
  * MapStruct를 사용한 객체 매핑을 위한 인터페이스
- * 
+ *
  * @Mapper 어노테이션이 선언된 인터페이스는 자동으로 구현체(MapperImpl)가 생성된다.
  * 객체 변환 시 원본 객체를 'source', 대상 객체를 'target'이라고 한다.
  * <p>

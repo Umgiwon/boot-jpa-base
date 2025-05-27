@@ -2,7 +2,7 @@ package com.bootjpabase.global.config.jwt.component;
 
 import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.global.config.jwt.domain.SecurityUser;
-import com.bootjpabase.global.config.jwt.domain.dto.TokenResponseDTO;
+import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.exception.BusinessException;
 import io.jsonwebtoken.Claims;

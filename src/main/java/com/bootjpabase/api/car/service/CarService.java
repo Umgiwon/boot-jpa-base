@@ -21,8 +21,9 @@ public class CarService {
     /**
      * Car 목록 조회
      *
-     * @param dto
-     * @return
+     * @param dto      조회할 Car 조건 dto
+     * @param pageable 페이징 조건
+     * @return 조회된 Car 목록 응답 dto
      */
     public Page<CarResponseDTO> getCarList(CarListRequestDTO dto, Pageable pageable) {
         return carRepositoryCustom.getCarList(dto, pageable);

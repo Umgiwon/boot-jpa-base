@@ -3,8 +3,8 @@ package com.bootjpabase.global.util;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.enums.file.UploadFileType;
 import com.bootjpabase.global.exception.BusinessException;
-import com.bootjpabase.global.file.domain.entity.File;
-import com.bootjpabase.global.file.properties.FileUploadProperties;
+import com.bootjpabase.api.file.domain.entity.File;
+import com.bootjpabase.global.config.FileUploadConfig;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileUtils {
 
-    private final FileUploadProperties fileUploadProperties;
+    private final FileUploadConfig fileUploadProperties;
 
     private static String ROOT_PATH;
     private static long FILE_MAX_SIZE; // 10MB

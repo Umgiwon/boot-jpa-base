@@ -1,12 +1,11 @@
-package com.bootjpabase.global.file.service;
+package com.bootjpabase.api.file.service;
 
+import com.bootjpabase.api.file.domain.dto.response.FileResponseDTO;
+import com.bootjpabase.api.file.domain.entity.File;
+import com.bootjpabase.api.file.repository.FileRepository;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.enums.file.UploadFileType;
 import com.bootjpabase.global.exception.BusinessException;
-import com.bootjpabase.global.file.domain.dto.response.FileResponseDTO;
-import com.bootjpabase.global.file.domain.entity.File;
-import com.bootjpabase.global.file.repository.FileRepository;
-import com.bootjpabase.global.file.repository.FileRepositoryCustom;
 import com.bootjpabase.global.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,14 +20,14 @@ import java.io.IOException;
 public class FileServiceTx {
 
     private final FileRepository fileRepository;
-    private final FileRepositoryCustom fileRepositoryCustom;
 
     /**
      * 파일 저장
-     * @param uploadFileType
-     * @param file
-     * @return
-     * @throws IOException
+     *
+     * @param file           저장할 파일
+     * @param uploadFileType 파일 타입
+     * @return 파일
+     * @throws IOException IOException 처리
      */
     public File saveFile(MultipartFile file, UploadFileType uploadFileType) throws IOException {
 
@@ -41,8 +40,9 @@ public class FileServiceTx {
 
     /**
      * 파일 삭제
-     * @param fileSn
-     * @return
+     *
+     * @param fileSn 삭제할 파일 순번
+     * @return 삭제된 파일 dto
      */
     public FileResponseDTO deleteFile(Long fileSn) {
 
@@ -62,6 +62,7 @@ public class FileServiceTx {
 
     /**
      * 파일 entity를 dto로 변환
+     *
      * @param file
      * @return
      */
