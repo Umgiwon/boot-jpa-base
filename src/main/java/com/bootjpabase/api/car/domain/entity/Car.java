@@ -1,6 +1,8 @@
 package com.bootjpabase.api.car.domain.entity;
 
+import com.bootjpabase.api.car.domain.dto.request.CarUpdateRequestDTO;
 import com.bootjpabase.global.domain.entity.BaseEntity;
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -45,4 +47,17 @@ public class Car extends BaseEntity {
     @Column(name = "RENTAL_DESCRIPTION")
     @Comment("대여 상세 내용")
     private String rentalDescription;
+
+    /**
+     * 수정요청된 dto 값을 받아서 entity 영속성 컨텍스트를 수정한다.
+     * - 수정할 값이 있는 데이터만 수정
+     *
+     * @param dto 수정요청된 Car dto
+     */
+    public void updateCarInfo(CarUpdateRequestDTO dto) {
+        if (StringUtils.isNotBlank(dto.getCategory())) this.category = dto.getCategory(); // 카테고리
+        if (StringUtils.isNotBlank(dto.getRentalYn())) this.rentalYn = dto.getRentalYn(); // 대여 가능 여부
+        if (StringUtils.isNotBlank(dto.getRentalDescription()))
+            this.rentalDescription = dto.getRentalDescription(); // 대여 상세 내용
+    }
 }
