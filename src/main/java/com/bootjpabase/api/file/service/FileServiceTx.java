@@ -63,8 +63,8 @@ public class FileServiceTx {
     /**
      * 파일 entity를 dto로 변환
      *
-     * @param file
-     * @return
+     * @param file 파일
+     * @return 파일 응답 dto
      */
     private FileResponseDTO fileEntityToDto(File file) {
         return FileResponseDTO.builder()

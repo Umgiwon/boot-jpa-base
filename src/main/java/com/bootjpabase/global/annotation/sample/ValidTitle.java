@@ -13,6 +13,8 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = CustomTitleValidator.class)
 public @interface ValidTitle {
     String message() default "제목은 30글자 이하로 입력해야 합니다";
+
     Class[] groups() default {};
+
     Class[] payload() default {};
 }

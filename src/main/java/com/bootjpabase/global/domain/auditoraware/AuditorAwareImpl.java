@@ -20,7 +20,7 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
             return Optional.empty();
         }
 

@@ -31,6 +31,7 @@ public class SwaggerConfig {
 
     /**
      * Swagger 기본 정보
+     *
      * @return
      */
     private Info apiInfo() {

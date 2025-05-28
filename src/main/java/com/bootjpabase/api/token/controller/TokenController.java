@@ -2,7 +2,6 @@ package com.bootjpabase.api.token.controller;
 
 import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
 import com.bootjpabase.api.token.service.TokenService;
-import com.bootjpabase.global.config.jwt.component.TokenProvider;
 import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
 import com.bootjpabase.global.domain.dto.BaseResponseFactory;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TokenController {
 
     private final TokenService tokenService;
-    private final TokenProvider tokenProvider;
 
     @Operation(summary = "리프레쉬 토큰 검증 후 엑세스 토큰 발급", description = "리프레쉬 토큰 검증 후 엑세스 토큰 발급 API")
     @PostMapping("refresh")

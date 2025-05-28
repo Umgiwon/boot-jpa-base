@@ -37,8 +37,8 @@ import java.util.List;
 @RequestMapping("/api/user")
 public class UserController {
 
-    private final UserService userService;
-    private final UserServiceTx userServiceTx;
+    private final UserService userService; // 조회 전용
+    private final UserServiceTx userServiceTx; // 등록, 수정, 삭제 전용
 
     @Operation(summary = "사용자 저장", description = "사용자 저장 API")
     @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})

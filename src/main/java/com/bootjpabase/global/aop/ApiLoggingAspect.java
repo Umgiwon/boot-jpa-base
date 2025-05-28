@@ -18,7 +18,8 @@ import java.util.Arrays;
 public class ApiLoggingAspect {
 
     /**
-     * @ CustomApiLogger 애노테이션이 붙은 클래스 또는 메서드에 대해 AOP 적용
+     * CustomApiLogger 애노테이션이 붙은 클래스 또는 메서드에 대해 AOP 적용
+     *
      * @param joinPoint
      * @return
      * @throws Throwable
@@ -54,7 +55,11 @@ public class ApiLoggingAspect {
         return result;
     }
 
-    // 현재 요청(HttpServletRequest)을 가져오는 메서드
+    /**
+     * 현재 요청(HttpServletRequest)을 가져오는 메서드
+     *
+     * @return HttpServletRequest
+     */
     private HttpServletRequest getCurrentHttpRequest() {
         var attributes = RequestContextHolder.getRequestAttributes();
         if (attributes instanceof ServletRequestAttributes servletAttributes) {

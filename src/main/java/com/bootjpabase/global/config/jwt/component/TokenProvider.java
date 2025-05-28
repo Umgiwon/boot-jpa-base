@@ -1,8 +1,8 @@
 package com.bootjpabase.global.config.jwt.component;
 
+import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
 import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.global.config.jwt.domain.SecurityUser;
-import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.exception.BusinessException;
 import io.jsonwebtoken.Claims;
@@ -27,12 +27,11 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    private final TokenProperties tokenProperties;
-    private Key key;
-
     private static final String ACCESS = "access";
     private static final String REFRESH = "refresh";
     private static final String BEARER_PREFIX = "Bearer ";
+    private final TokenProperties tokenProperties;
+    private Key key;
 
     @PostConstruct
     private void init() {
@@ -41,6 +40,7 @@ public class TokenProvider {
 
     /**
      * access & refresh 토큰 생성하여 dto return
+     *
      * @param user
      * @return
      */
@@ -53,6 +53,7 @@ public class TokenProvider {
 
     /**
      * 토큰 생성
+     *
      * @param user
      * @return
      */
@@ -76,6 +77,7 @@ public class TokenProvider {
 
     /**
      * 헤더에서 토큰 추출
+     *
      * @param authorizationHeader
      * @return
      */
@@ -87,6 +89,7 @@ public class TokenProvider {
 
     /**
      * 토큰에서 authentication 추출
+     *
      * @param token
      * @return
      */
@@ -102,6 +105,7 @@ public class TokenProvider {
 
     /**
      * 토큰에서 claims 추출
+     *
      * @param token
      * @return
      */
@@ -115,6 +119,7 @@ public class TokenProvider {
 
     /**
      * 토근에서 id 추출
+     *
      * @param token
      * @return
      */
@@ -129,6 +134,7 @@ public class TokenProvider {
 
     /**
      * 토근에서 name 추출
+     *
      * @param token
      * @return
      */
@@ -143,6 +149,7 @@ public class TokenProvider {
 
     /**
      * 토큰 검증
+     *
      * @param token
      * @return
      */
@@ -162,6 +169,7 @@ public class TokenProvider {
 
     /**
      * 토큰의 로그인 정보
+     *
      * @return
      */
     public SecurityUser getUserLoginInfo() {

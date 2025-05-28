@@ -10,37 +10,63 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Locale;
 
 /**
- * * Query Logging formatter를 설정하는 파일
+ * P6Spy 쿼리 로그 포매터 설정 클래스
  */
 @Configuration
 public class P6SpyFormatter implements MessageFormattingStrategy {
 
+    private static final String DDL_CREATE = "create";
+    private static final String DDL_ALTER = "alter";
+    private static final String DDL_COMMENT = "comment";
+    private static final String LOG_FORMAT = "[%s] | %d ms | %s";
+    private static final String EMPTY_RESULT = "";
+
+
+    /**
+     * P6Spy가 해당 클래스의 포매팅 전략을 사용하도록 설정
+     */
     @PostConstruct
     public void init() {
         P6SpyOptions.getActiveInstance().setLogMessageFormat(this.getClass().getName());
     }
 
+    /**
+     * 로그 출력 형식 정의
+     */
     @Override
-    public String formatMessage(int connectionId, String now, long elapsed, String category, String prepared, String sql, String url) {
-        if (sql == null || sql.trim().isEmpty()) {
-            return "";
-        }
+    public String formatMessage(int connectionId, String now, long elapsed,
+                                String category, String prepared, String sql, String url) {
+        if (isBlank(sql)) return EMPTY_RESULT;
 
         String formattedSql = formatSql(category, sql);
-        return String.format("[%s] | %d ms | %s", category, elapsed, formattedSql);
+        return String.format(LOG_FORMAT, category, elapsed, formattedSql);
     }
 
+    /**
+     * SQL 구문 형식화 처리
+     */
     private String formatSql(String category, String sql) {
-        if (Category.STATEMENT.getName().equals(category)) {
-            String trimmedLowerSql = sql.trim().toLowerCase(Locale.ROOT);
-            if (trimmedLowerSql.startsWith("create") ||
-                    trimmedLowerSql.startsWith("alter") ||
-                    trimmedLowerSql.startsWith("comment")) {
-                return FormatStyle.DDL.getFormatter().format(sql);
-            } else {
-                return FormatStyle.BASIC.getFormatter().format(sql);
-            }
+        if (!Category.STATEMENT.getName().equals(category)) {
+            return sql;
         }
-        return sql;
+
+        String trimmedSql = sql.trim().toLowerCase(Locale.ROOT);
+        return isDdlStatement(trimmedSql)
+                ? FormatStyle.DDL.getFormatter().format(sql)
+                : FormatStyle.BASIC.getFormatter().format(sql);
+    }
+
+    /**
+     * DDL 문 여부 확인
+     */
+    private boolean isDdlStatement(String sql) {
+        return sql.startsWith(DDL_CREATE) || sql.startsWith(DDL_ALTER) || sql.startsWith(DDL_COMMENT);
+    }
+
+    /**
+     * null 또는 공백 문자열 검사
+     */
+    private boolean isBlank(String str) {
+        return str == null || str.trim().isEmpty();
     }
 }

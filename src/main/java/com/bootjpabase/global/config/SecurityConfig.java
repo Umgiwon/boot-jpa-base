@@ -35,30 +35,30 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-            .cors(Customizer.withDefaults())
-            .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(request -> request
-                    .requestMatchers(
-                            "/swagger-ui/**"
-                            , "/swagger-ui.html"
-                            , "/v3/api-docs/**"
-                    ).permitAll()
-                    .requestMatchers("/api/sample/**").permitAll()
-                    .requestMatchers(HttpMethod.POST
-                            , "/api/user"
-                            , "/api/user/login"
-                            , "/api/token/refresh"
-                    ).permitAll()
+                .cors(Customizer.withDefaults())
+                .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(request -> request
+                                .requestMatchers(
+                                        "/swagger-ui/**"
+                                        , "/swagger-ui.html"
+                                        , "/v3/api-docs/**"
+                                ).permitAll()
+                                .requestMatchers("/api/sample/**").permitAll()
+                                .requestMatchers(HttpMethod.POST
+                                        , "/api/user"
+                                        , "/api/user/login"
+                                        , "/api/token/refresh"
+                                ).permitAll()
 //                    .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .anyRequest().authenticated()
-            )
-            .exceptionHandling(exception -> exception
-                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                    .accessDeniedHandler(jwtAccessDeniedHandler)
-            )
-            .exceptionHandling(Customizer.withDefaults())
-            .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                                .anyRequest().authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                        .accessDeniedHandler(jwtAccessDeniedHandler)
+                )
+                .exceptionHandling(Customizer.withDefaults())
+                .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

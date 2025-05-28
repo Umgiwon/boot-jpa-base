@@ -62,8 +62,7 @@ public class UserRepositoryCustom {
         return PageableExecutionUtils.getPage(resultList, pageable, countQuery::fetchOne);
     }
 
-    /* ******************* 동적 쿼리를 위한 BooleanExpression *******************/
-
+    /* ==================== 동적 쿼리를 위한 BooleanExpression ==================== */
 
     /**
      * 페이징 처리시 조건절

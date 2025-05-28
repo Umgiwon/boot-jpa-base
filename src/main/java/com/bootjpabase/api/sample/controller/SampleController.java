@@ -35,7 +35,7 @@ import static com.bootjpabase.global.constant.SwaggerExampleConst.*;
 public class SampleController {
 
     private final SampleService sampleService; // 조회 전용
-    private final SampleServiceTx sampleServiceTx; // 생성 | 수정 | 삭제 전용
+    private final SampleServiceTx sampleServiceTx; // 생성, 수정, 삭제 전용
 
     @Operation(summary = "샘플 저장", description = "샘플 저장 API <br>(단건 & 다건)")
     @PostMapping("")

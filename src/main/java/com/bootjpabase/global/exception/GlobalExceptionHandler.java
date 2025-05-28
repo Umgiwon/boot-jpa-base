@@ -31,7 +31,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    /* Collection valid를 위한 로직 추가 (해당 로직이 없어도 @Valid 어노테이션이 정상 작동 하는것으로 확인되어 주석처리(2025.01.24)
+    /*
+    Collection valid를 위한 로직 추가 (해당 로직이 없어도 @Valid 어노테이션이 정상 작동 하는것으로 확인되어 주석처리(2025.01.24)
     protected final LocalValidatorFactoryBean validator;
 
     @InitBinder
@@ -42,6 +43,7 @@ public class GlobalExceptionHandler {
 
     /**
      * RuntimeException 발생시 처리 핸들러
+     *
      * @param ex
      * @return
      */
@@ -62,6 +64,7 @@ public class GlobalExceptionHandler {
 
     /**
      * IllegalAccessException 발생시 처리 핸들러
+     *
      * @param ex
      * @return
      */
@@ -82,6 +85,7 @@ public class GlobalExceptionHandler {
 
     /**
      * request body의 argument validation 처리 핸들러 (@valid, @validated 어노테이션)
+     *
      * @param ex
      * @return
      */
@@ -105,6 +109,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Constraint Violdation Exception 처리 핸들러 (custom 어노테이션)
+     *
      * @param ex
      * @return
      */
@@ -126,6 +131,7 @@ public class GlobalExceptionHandler {
 
     /**
      * parameter 데이터 type이 일치하지 않을 때 처리 핸들러 (IllegalArgumentException의 하위)
+     *
      * @param ex
      * @return
      */
@@ -148,6 +154,7 @@ public class GlobalExceptionHandler {
 
     /**
      * missing parameter 발생 시 처리 핸들러
+     *
      * @param ex
      * @return
      */
@@ -167,6 +174,7 @@ public class GlobalExceptionHandler {
 
     /**
      * BusinessException 발생 시 처리 핸들러
+     *
      * @param ex
      * @return
      */
@@ -186,6 +194,7 @@ public class GlobalExceptionHandler {
 
     /**
      * NoHandlerFoundException 발생 시 처리 핸들러
+     *
      * @param request
      * @param ex
      * @return
@@ -207,6 +216,7 @@ public class GlobalExceptionHandler {
     /**
      * HttpRequestMethodNotSupportedException 발생 시 처리 핸들러
      * http 메소드 오류
+     *
      * @param request
      * @param ex
      * @return
@@ -228,6 +238,7 @@ public class GlobalExceptionHandler {
     /**
      * MissingServletRequestPartException 발생 시 처리 핸들러
      * 필수 첨부파일 누락시
+     *
      * @param request
      * @param ex
      * @return
@@ -249,6 +260,7 @@ public class GlobalExceptionHandler {
     /**
      * HttpMessageNotReadableException 발생 시 처리 핸들러
      * 클라이언트가 요청 본문을 잘못 전달한 경우
+     *
      * @param request
      * @param ex
      * @return
@@ -271,6 +283,7 @@ public class GlobalExceptionHandler {
     /**
      * UnsupportedMediaTypeStatusException 발생 시 처리 핸들러
      * 서버가 지원하지 않는 미디어 타입일 경우
+     *
      * @param request
      * @param ex
      * @return
@@ -293,6 +306,7 @@ public class GlobalExceptionHandler {
     /**
      * AccessDeniedException 발생 시 처리 핸들러
      * 사용자 권한이 부족하여 접근이 거부된 경우
+     *
      * @param request
      * @param ex
      * @return
@@ -314,6 +328,7 @@ public class GlobalExceptionHandler {
 
     /**
      * HttpMediaTypeNotSupportedException 발생 시 처리 핸들러
+     *
      * @param request
      * @param ex
      * @return

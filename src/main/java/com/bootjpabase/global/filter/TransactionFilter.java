@@ -7,24 +7,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
- * * transaction 관리를 처리하는 filter (모든 GET 요청에 대해서 readOnly 처리)
- * * JPA 사용시 불필요한 flush를 줄여서 성능 샹항(readOnly = true 일 경우)
- * 특정 목적이 있는 경우 filter 차원에서 transaction을 관리하지만,
- * 기본적으로 서비스 계층에서 Transaction 설정하는게 안정적이고 유지보수가 쉽다.
- * filter 차원에서 transaction을 관리할 경우 AOP로 적용되는 @Transactional 과 경계가 중첩될 수 있으니 주의
+ * transaction 관리를 처리하는 filter (모든 GET 요청에 대해서 readOnly 처리)
+ * <br> JPA 사용시 불필요한 flush를 줄여서 성능 샹항(readOnly = true 일 경우)
+ * <br> 특정 목적이 있는 경우 filter 차원에서 transaction을 관리하지만,
+ * <br> 기본적으로 서비스 계층에서 Transaction 설정하는게 안정적이고 유지보수가 쉽다.
+ * <br> filter 차원에서 transaction을 관리할 경우 AOP로 적용되는 @Transactional 과 경계가 중첩될 수 있으니 주의
  */
 @Slf4j
-//@Component /* 서비스 계층에서 사용하므로써 해당 filter 제외 */
+//@Component /* 서비스 계층에서 사용하므로 해당 filter 제외 */
 @RequiredArgsConstructor
 public class TransactionFilter implements Filter {
 

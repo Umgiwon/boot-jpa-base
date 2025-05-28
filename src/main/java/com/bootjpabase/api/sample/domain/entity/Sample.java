@@ -32,7 +32,7 @@ public class Sample extends BaseEntity {
 
     /**
      * 수정요청된 dto 값을 받아서 entity 영속성 컨텍스트를 수정한다.
-     * - 수정할 값이 있는 데이터만 수정
+     * <p> 수정할 값이 있는 데이터만 수정
      *
      * @param dto 수정요청된 Sample dto
      */

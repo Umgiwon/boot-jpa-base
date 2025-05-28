@@ -1,10 +1,10 @@
 package com.bootjpabase.global.util;
 
+import com.bootjpabase.api.file.domain.entity.File;
+import com.bootjpabase.global.config.FileUploadConfig;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.enums.file.UploadFileType;
 import com.bootjpabase.global.exception.BusinessException;
-import com.bootjpabase.api.file.domain.entity.File;
-import com.bootjpabase.global.config.FileUploadConfig;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,26 +21,20 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * * 파일관련 util
+ * 파일관련 util
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class FileUtils {
 
-    private final FileUploadConfig fileUploadProperties;
-
     private static String ROOT_PATH;
     private static long FILE_MAX_SIZE; // 10MB
-
-    @PostConstruct
-    public void init() {
-        ROOT_PATH = fileUploadProperties.getRootPath();
-        FILE_MAX_SIZE = fileUploadProperties.getFileMaxSize();
-    }
+    private final FileUploadConfig fileUploadProperties;
 
     /**
      * 파일 업로드
+     *
      * @param uploadFileType
      * @param file
      * @return
@@ -77,27 +71,29 @@ public class FileUtils {
 
     /**
      * 파일 업로드시 validate
+     *
      * @param file
      */
     public static void validateFile(MultipartFile file, UploadFileType uploadFileType) {
 
-        if(ObjectUtils.isEmpty(file)) {
+        if (ObjectUtils.isEmpty(file)) {
             throw new BusinessException(ApiReturnCode.FILE_UPLOAD_ERROR);
         }
 
         // 파일 사이즈
-        if(file.getSize() > FILE_MAX_SIZE) {
+        if (file.getSize() > FILE_MAX_SIZE) {
             throw new BusinessException(ApiReturnCode.FILE_SIZE_EXCEEDING_ERROR);
         }
 
         // 파일 확장자
-        if(!uploadFileType.getFileExtTypes().contains(getExtension(Objects.requireNonNull(file.getOriginalFilename())))) {
+        if (!uploadFileType.getFileExtTypes().contains(getExtension(Objects.requireNonNull(file.getOriginalFilename())))) {
             throw new BusinessException(ApiReturnCode.FILE_EXTENSION_ERROR);
         }
     }
 
     /**
      * 파일명에서 확장자 추출
+     *
      * @param fileName
      * @return
      */
@@ -107,6 +103,7 @@ public class FileUtils {
 
     /**
      * 원본 파일명을 UUID값으로 변경
+     *
      * @param fileName
      * @return
      */
@@ -122,10 +119,16 @@ public class FileUtils {
      */
     public static boolean deleteFile(File file) {
         java.io.File deleteFile = new java.io.File(file.getFilePath());
-        if(!deleteFile.exists()) {
+        if (!deleteFile.exists()) {
             throw new BusinessException(ApiReturnCode.NO_FILE_DATA_ERROR);
         }
 
         return deleteFile.delete();
+    }
+
+    @PostConstruct
+    public void init() {
+        ROOT_PATH = fileUploadProperties.getRootPath();
+        FILE_MAX_SIZE = fileUploadProperties.getFileMaxSize();
     }
 }

@@ -13,6 +13,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidNotEmptyFile {
     String message() default "파일을 업로드해야 합니다.";
+
     Class[] groups() default {};
+
     Class[] payload() default {};
 }

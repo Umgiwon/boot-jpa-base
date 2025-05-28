@@ -14,7 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 /**
- * * 토큰 관련 - filter
+ * 토큰 관련 - filter
  */
 @Component
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String token = tokenProvider.getAccessToken(authorizationHeader);
 
         try {
-            if(token != null && tokenProvider.validateToken(token)) {
+            if (token != null && tokenProvider.validateToken(token)) {
                 Authentication authentication = tokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

@@ -13,14 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * * QueryDSL 사용 시 관련 util
+ * QueryDSL 사용 시 관련 util
  */
 @UtilityClass
 @Slf4j
 public class QueryDslUtils {
 
-    /** V1
-     * queryDsl 페이징 처리 시 정렬 정보 가져와서 return
+    /**
+     * V1
+     * <br> queryDsl 페이징 처리 시 정렬 정보 가져와서 return
+     *
      * @param pageable
      * @param entityPath
      * @return
@@ -36,10 +38,11 @@ public class QueryDslUtils {
                 }).toArray(OrderSpecifier<?>[]::new);
     }
 
-    /** V2
-     * queryDsl 페이징 처리 시 정렬 정보 가져와서 return
-     * ** 작동은 이상 없으나 맞지않는 컬럼 보낼 경우 에러발생
-     * *** 사용법) .orderBy(QueryDslUtils.getOrderSpecifiers2(pageable, Sample.class, "sample"))
+    /**
+     * V2
+     * <br> queryDsl 페이징 처리 시 정렬 정보 가져와서 return
+     * <br> 작동은 이상 없으나 맞지않는 컬럼 보낼 경우 에러발생
+     * <br> 사용법 .orderBy(QueryDslUtils.getOrderSpecifiers2(pageable, Sample.class, "sample"))
      *
      * @param pageable
      * @param clazz

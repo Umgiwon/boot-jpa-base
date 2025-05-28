@@ -21,6 +21,7 @@ public enum UploadFileType {
 
     /**
      * 파일 타입 목록
+     *
      * @return
      */
     public List<String> getFileExtTypes() {

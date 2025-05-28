@@ -35,7 +35,7 @@ import static com.bootjpabase.global.constant.SwaggerExampleConst.*;
 public class CarController {
 
     private final CarService carService; // 조회 전용
-    private final CarServiceTx carServiceTx; // 생성 | 수정 | 삭제 전용
+    private final CarServiceTx carServiceTx; // 생성, 수정, 삭제 전용
 
     @Operation(summary = "자동차 저장", description = "자동차 저장 API <br>(단건 & 다건)")
     @PostMapping("")

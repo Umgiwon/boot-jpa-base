@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL) // 객체를 json 으로 직렬화할 때 null 값인 필드를 무시
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TokenResponseDTO {
 
     @Schema(description = "jwt access 토큰", example = "Bearer ")

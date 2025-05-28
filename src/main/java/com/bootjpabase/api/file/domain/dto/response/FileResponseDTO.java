@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Builder
 @Data
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true) // json 데이터를 java 객체로 역직렬화 할 때 매핑되지 않은 필드를 무시
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FileResponseDTO implements Serializable {
 
     @Schema(description = "첨부파일 순번", example = "1")

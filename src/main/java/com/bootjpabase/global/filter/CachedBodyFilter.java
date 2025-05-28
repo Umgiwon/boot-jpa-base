@@ -17,7 +17,7 @@ public class CachedBodyFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         // httpServletRequest 가 아니면 원본 요청을 전달
-        if(!(request instanceof HttpServletRequest httpRequest)) {
+        if (!(request instanceof HttpServletRequest httpRequest)) {
             chain.doFilter(request, response);
             return;
         }
@@ -26,7 +26,7 @@ public class CachedBodyFilter implements Filter {
         String contentType = httpRequest.getContentType();
 
         // Multipart 요청이면 원본 요청을 전달
-        if(contentType != null && contentType.startsWith("multipart/")) {
+        if (contentType != null && contentType.startsWith("multipart/")) {
             chain.doFilter(request, response); // multipart 요청이면 캐싱하지 않고 그대로 전달
             return;
         }

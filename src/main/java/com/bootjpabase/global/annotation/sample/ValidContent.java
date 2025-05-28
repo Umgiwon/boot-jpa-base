@@ -13,6 +13,8 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = CustomContentValidator.class)
 public @interface ValidContent {
     String message() default "내용은 150글자 이하로 입력해야 합니다";
+
     Class[] groups() default {};
+
     Class[] payload() default {};
 }
