@@ -69,15 +69,16 @@ public class SwaggerConfig {
      */
     @Bean
     public OpenApiCustomizer globalResponseCustomizer() {
-        return openApi -> openApi.getPaths().forEach((path, pathItem) -> pathItem.readOperations().forEach(operation -> {
-            ApiResponses responses = operation.getResponses();
+        return openApi -> openApi.getPaths().forEach((path, pathItem) ->
+                pathItem.readOperations().forEach(operation -> {
+                    ApiResponses responses = operation.getResponses();
 
-            // 공통 응답 추가 (중복 방지)
-            addIfMissing(responses, "400", "입력값 유효성 검증 실패");
-            addIfMissing(responses, "404", "데이터 오류");
-            addIfMissing(responses, "409", "데이터 중복");
-            addIfMissing(responses, "500", "서버 내부 오류 발생");
-        }));
+                    // 공통 응답 추가 (중복 방지)
+                    addIfMissing(responses, "400", "입력값 유효성 검증 실패");
+                    addIfMissing(responses, "404", "데이터 오류");
+                    addIfMissing(responses, "409", "데이터 중복");
+                    addIfMissing(responses, "500", "서버 내부 오류 발생");
+                }));
     }
 
     private void addIfMissing(ApiResponses responses, String code, String description) {
