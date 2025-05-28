@@ -32,23 +32,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest()
 class APITest {
 
+    private final BCryptPasswordEncoder encoder;
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @Autowired
     private CarRepository carRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private TokenProvider tokenProvider;
-
-    private final BCryptPasswordEncoder encoder;
-
     private String token;
 
     @Autowired
@@ -91,6 +85,7 @@ class APITest {
 
     /**
      * 초기화 Car 객체 builder 메소드
+     *
      * @param category
      * @param manufacturer
      * @param modelName
