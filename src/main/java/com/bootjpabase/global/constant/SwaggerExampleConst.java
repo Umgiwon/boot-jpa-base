@@ -3,7 +3,9 @@ package com.bootjpabase.global.constant;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
-/** 스웨거 예제 json 상수 */
+/**
+ * 스웨거 예제 json 상수
+ */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE) // 인스턴스화 방지를 위한 private 생성자
 public class SwaggerExampleConst {
 

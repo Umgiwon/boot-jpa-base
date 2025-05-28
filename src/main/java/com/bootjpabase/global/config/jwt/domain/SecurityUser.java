@@ -14,14 +14,14 @@ import java.util.Set;
 @NoArgsConstructor
 public class SecurityUser implements UserDetails {
 
-    private String id;
-    private String userName;
-    private String password;
     private final Set<GrantedAuthority> authorities = new HashSet<>();
     private final boolean accountNonExpired = true;
     private final boolean accountNonLocked = true;
     private final boolean credentialsNonExpired = true;
     private final boolean enabled = true;
+    private String id;
+    private String userName;
+    private String password;
     private Map<String, Object> information = new HashMap<>();
 
     public SecurityUser(String id, String userName, String password, Map<String, Object> information) {

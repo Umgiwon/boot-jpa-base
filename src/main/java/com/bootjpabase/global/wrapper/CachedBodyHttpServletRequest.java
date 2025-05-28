@@ -56,7 +56,7 @@ public class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
 
     /**
      * inner class
-     * 캐싱된 body 데이터를 inputSream으로 제공하는 이너 클래스
+     * 캐싱된 body 데이터를 inputStream 으로 제공하는 이너 클래스
      */
     private static class CachedBodyServletInputStream extends ServletInputStream {
         private final ByteArrayInputStream byteArrayInputStream;

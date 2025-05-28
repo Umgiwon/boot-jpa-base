@@ -18,7 +18,7 @@ public class TokenServiceTx {
      * 토큰 저장
      *
      * @param refreshToken 리프레쉬 토큰
-     * @param user User entity
+     * @param user         User entity
      */
     public void saveRefreshToken(String refreshToken, User user) {
 
@@ -33,7 +33,7 @@ public class TokenServiceTx {
      * 토큰 entity 생성
      *
      * @param refreshToken 리프레쉬 토큰
-     * @param user User entity
+     * @param user         User entity
      * @return 리프레쉬 토큰 entity
      */
     private RefreshToken createRefreshTokenEntity(String refreshToken, User user) {

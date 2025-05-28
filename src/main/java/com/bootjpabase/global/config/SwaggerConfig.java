@@ -69,8 +69,7 @@ public class SwaggerConfig {
      */
     @Bean
     public OpenApiCustomizer globalResponseCustomizer() {
-        return openApi -> {
-            openApi.getPaths().forEach((path, pathItem) -> {
+        return openApi -> openApi.getPaths().forEach((path, pathItem) ->
                 pathItem.readOperations().forEach(operation -> {
                     ApiResponses responses = operation.getResponses();
 
@@ -79,9 +78,7 @@ public class SwaggerConfig {
                     addIfMissing(responses, "404", "데이터 오류");
                     addIfMissing(responses, "409", "데이터 중복");
                     addIfMissing(responses, "500", "서버 내부 오류 발생");
-                });
-            });
-        };
+                }));
     }
 
     private void addIfMissing(ApiResponses responses, String code, String description) {

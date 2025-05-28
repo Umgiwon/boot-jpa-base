@@ -2,6 +2,7 @@ package com.bootjpabase.api.file.service;
 
 import com.bootjpabase.api.file.domain.dto.response.FileResponseDTO;
 import com.bootjpabase.api.file.domain.entity.File;
+import com.bootjpabase.api.file.mapper.FileMapper;
 import com.bootjpabase.api.file.repository.FileRepository;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.enums.file.UploadFileType;
@@ -19,6 +20,7 @@ import java.io.IOException;
 @Transactional
 public class FileServiceTx {
 
+    private final FileMapper fileMapper;
     private final FileRepository fileRepository;
 
     /**
@@ -56,23 +58,7 @@ public class FileServiceTx {
         // DB에 저장된 파일정보 삭제
         fileRepository.delete(deleteFile);
 
-        // 삭제 후 dto로 변환하여 반환
-        return fileEntityToDto(deleteFile);
-    }
-
-    /**
-     * 파일 entity를 dto로 변환
-     *
-     * @param file 파일
-     * @return 파일 응답 dto
-     */
-    private FileResponseDTO fileEntityToDto(File file) {
-        return FileResponseDTO.builder()
-                .fileSn(file.getFileSn())
-                .realFileNm(file.getRealFileNm())
-                .saveFileNm(file.getSaveFileNm())
-                .filePath(file.getFilePath())
-                .fileSize(file.getFileSize())
-                .build();
+        // 삭제 후 dto 반환
+        return fileMapper.toFileResponseDTO(deleteFile);
     }
 }
