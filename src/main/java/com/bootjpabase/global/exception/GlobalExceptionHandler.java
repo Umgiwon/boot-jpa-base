@@ -1,6 +1,10 @@
 package com.bootjpabase.global.exception;
 
 import com.bootjpabase.global.enums.common.ApiReturnCode;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -29,6 +33,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "400", description = "입력값 유효성 검증 실패", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+        @ApiResponse(responseCode = "404", description = "데이터 오류", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+        @ApiResponse(responseCode = "409", description = "데이터 중복", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+        @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
+})
 public class GlobalExceptionHandler {
 
     /*

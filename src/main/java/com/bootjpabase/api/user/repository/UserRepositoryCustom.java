@@ -86,6 +86,6 @@ public class UserRepositoryCustom {
      * @return 조회할 이름 조건절
      */
     private BooleanExpression containsName(String name) {
-        return (!StringUtils.isEmpty(name)) ? user.userName.contains(name) : null;
+        return StringUtils.isNotBlank(name) ? user.userName.contains(name) : null;
     }
 }

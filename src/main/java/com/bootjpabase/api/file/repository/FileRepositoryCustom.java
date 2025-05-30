@@ -1,13 +1,13 @@
 package com.bootjpabase.api.file.repository;
 
 import com.bootjpabase.api.file.domain.dto.response.FileResponseDTO;
-import com.bootjpabase.global.file.domain.dto.response.QFileResponseDTO;
+import com.bootjpabase.api.file.domain.dto.response.QFileResponseDTO;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.bootjpabase.global.file.domain.entity.QFile.file;
+import static com.bootjpabase.api.file.domain.entity.QFile.file;
 
 
 @Repository

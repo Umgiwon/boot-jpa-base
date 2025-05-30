@@ -100,7 +100,7 @@ public class SampleRepositoryCustom {
      * @return 조회할 제목 조건절
      */
     private BooleanExpression containsTitle(String title) {
-        return (!StringUtils.isNotBlank(title)) ? sample.title.contains(title) : null;
+        return StringUtils.isNotBlank(title) ? sample.title.contains(title) : null;
     }
 
     /**
@@ -110,6 +110,6 @@ public class SampleRepositoryCustom {
      * @return 조회할 내용 조건절
      */
     private BooleanExpression containsContent(String content) {
-        return (!StringUtils.isNotBlank(content)) ? sample.content.contains(content) : null;
+        return StringUtils.isNotBlank(content) ? sample.content.contains(content) : null;
     }
 }

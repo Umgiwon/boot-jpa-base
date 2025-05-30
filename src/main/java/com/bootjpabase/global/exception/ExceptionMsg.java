@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Schema(description = "Exception Msg")
 @Builder
 @Getter
 public class ExceptionMsg {
