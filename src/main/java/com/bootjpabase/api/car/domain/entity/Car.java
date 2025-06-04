@@ -2,7 +2,7 @@ package com.bootjpabase.api.car.domain.entity;
 
 import com.bootjpabase.api.car.domain.dto.request.CarUpdateRequestDTO;
 import com.bootjpabase.global.domain.entity.BaseEntity;
-import io.micrometer.common.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;

@@ -33,9 +33,14 @@ public class TokenProvider {
     private final TokenProperties tokenProperties;
     private Key key;
 
+    private Key accessKey;
+    private Key refreshKey;
+
     @PostConstruct
     private void init() {
-        this.key = Keys.hmacShaKeyFor(tokenProperties.getAccessTokenSecretKey().getBytes());
+        this.accessKey = Keys.hmacShaKeyFor(tokenProperties.getAccessTokenSecretKey().getBytes());
+        this.refreshKey = Keys.hmacShaKeyFor(tokenProperties.getRefreshTokenSecretKey().getBytes());
+        this.key = this.accessKey; // 기존 메소드와의 하위 호환성을 위함
     }
 
     /**
@@ -60,9 +65,12 @@ public class TokenProvider {
     public String createToken(User user, String tokenType) {
         Date date = new Date();
 
-        long expiration = ACCESS.equals(tokenType)
+        boolean isAccessToken = ACCESS.equals(tokenType);
+        long expiration = isAccessToken
                 ? tokenProperties.getAccessTokenExpiration()
                 : tokenProperties.getRefreshTokenExpiration();
+
+        Key signingKey = isAccessToken ? accessKey : refreshKey;
 
         return Jwts.builder()
                 .setSubject(user.getUserId())
@@ -71,7 +79,8 @@ public class TokenProvider {
                 .claim("userSn", user.getUserSn())
                 .claim("userId", user.getUserId())
                 .claim("userName", user.getUserName())
-                .signWith(key, SignatureAlgorithm.HS256)
+                .claim("name", user.getUserName()) // 하위 호환성을 위한 name 클레임 추가
+                .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -139,12 +148,8 @@ public class TokenProvider {
      * @return
      */
     public String getNameFromToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        Claims claims = getClaims(token);
+        return (String) claims.get("userName");
     }
 
     /**

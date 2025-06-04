@@ -31,12 +31,12 @@ public class BaseEntity {
     private LocalDateTime createdDate;
 
     @LastModifiedBy
-    @Column(name = "UPDATED_USER", length = 20, updatable = false)
+    @Column(name = "UPDATED_USER", length = 20)
     @Comment("수정자")
     private String updatedUser;
 
     @LastModifiedDate
-    @Column(name = "UPDATED_DATE", updatable = false)
+    @Column(name = "UPDATED_DATE")
     @Comment("수정일")
     private LocalDateTime updatedDate;
 }

@@ -3,7 +3,7 @@ package com.bootjpabase.api.user.domain.entity;
 
 import com.bootjpabase.api.user.domain.dto.request.UserUpdateRequestDTO;
 import com.bootjpabase.global.domain.entity.BaseEntity;
-import io.micrometer.common.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
