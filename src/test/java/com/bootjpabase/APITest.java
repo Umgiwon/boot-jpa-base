@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,6 +74,10 @@ class APITest {
 
         // 토큰 발급
         token = tokenProvider.createToken(testUser, "access");
+
+        // 인증 컨텍스트 설정 (JPA Auditing을 위해)
+        Authentication auth = tokenProvider.getAuthentication(token);
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
         // 테스트 초기 데이터 생성
         List<Car> cars = List.of(
@@ -137,7 +144,9 @@ class APITest {
     void getCarListTest() throws Exception {
 
         // Given
-        Car car = carRepository.findAll().get(0);
+        List<Car> cars = carRepository.findAll();
+        assertThat(cars).isNotEmpty();
+        Car car = cars.get(0);
 
         // When & Then
         mockMvc.perform(get("/api/car")
@@ -156,7 +165,9 @@ class APITest {
     void getCarByRentalYnTest() throws Exception {
 
         // Given
-        Car car = carRepository.findAll().get(0);
+        List<Car> cars = carRepository.findAll();
+        assertThat(cars).isNotEmpty();
+        Car car = cars.get(0);
 
         // When & Then
         mockMvc.perform(get("/api/car")
@@ -176,7 +187,9 @@ class APITest {
     void getCarByCategoryTest() throws Exception {
 
         // Given
-        Car car = carRepository.findAll().get(0);
+        List<Car> cars = carRepository.findAll();
+        assertThat(cars).isNotEmpty();
+        Car car = cars.get(0);
 
         // When & Then
         mockMvc.perform(get("/api/car")
@@ -196,7 +209,9 @@ class APITest {
     void getCarByConditionTest() throws Exception {
 
         // Given
-        Car car = carRepository.findAll().get(0);
+        List<Car> cars = carRepository.findAll();
+        assertThat(cars).isNotEmpty();
+        Car car = cars.get(0);
 
         // When & Then
         mockMvc.perform(get("/api/car")
@@ -219,6 +234,7 @@ class APITest {
 
         // Given
         Car car = carRepository.findAll().get(0);
+        Long carSn = car.getCarSn();
 
         // 수정할 데이터
         CarUpdateRequestDTO updateDto = CarUpdateRequestDTO.builder()
@@ -227,7 +243,7 @@ class APITest {
                 .build();
 
         // When : API 호출 (자동차 수정)
-        mockMvc.perform(patch("/api/car/{carSn}", car.getCarSn())
+        mockMvc.perform(patch("/api/car/{carSn}", carSn)
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateDto)))
@@ -235,7 +251,7 @@ class APITest {
                 .andDo(print()); // 요청/응답 출력
 
         // then : 수정된 데이터 검증
-        Car updatedCar = carRepository.findAll().get(0);
+        Car updatedCar = carRepository.findById(carSn).orElse(null);
         assertThat(updatedCar).isNotNull();
         assertThat(updatedCar.getRentalYn()).isEqualTo(updateDto.getRentalYn());
         assertThat(updatedCar.getRentalDescription()).isEqualTo(updateDto.getRentalDescription());
