@@ -46,8 +46,8 @@ public class TokenProvider {
     /**
      * access & refresh 토큰 생성하여 dto return
      *
-     * @param user
-     * @return
+     * @param user 사용자 정보
+     * @return 생성된 토큰 응답 dto
      */
     public TokenResponseDTO createAllToken(User user) {
         return TokenResponseDTO.builder()
@@ -59,8 +59,9 @@ public class TokenProvider {
     /**
      * 토큰 생성
      *
-     * @param user
-     * @return
+     * @param user 사용자 정보
+     * @param tokenType 토큰 타입 (access 또는 refresh)
+     * @return 생성된 토큰 문자열
      */
     public String createToken(User user, String tokenType) {
         Date date = new Date();
@@ -87,8 +88,8 @@ public class TokenProvider {
     /**
      * 헤더에서 토큰 추출
      *
-     * @param authorizationHeader
-     * @return
+     * @param authorizationHeader 인증 헤더 문자열
+     * @return 추출된 액세스 토큰
      */
     public String getAccessToken(String authorizationHeader) {
         return (authorizationHeader != null && authorizationHeader.startsWith(BEARER_PREFIX))
@@ -99,8 +100,8 @@ public class TokenProvider {
     /**
      * 토큰에서 authentication 추출
      *
-     * @param token
-     * @return
+     * @param token 토큰 문자열
+     * @return 인증 객체
      */
     public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
@@ -115,8 +116,8 @@ public class TokenProvider {
     /**
      * 토큰에서 claims 추출
      *
-     * @param token
-     * @return
+     * @param token 토큰 문자열
+     * @return 토큰의 클레임 정보
      */
     public Claims getClaims(String token) {
         return Jwts.parserBuilder()
@@ -127,10 +128,10 @@ public class TokenProvider {
     }
 
     /**
-     * 토근에서 id 추출
+     * 토큰에서 id 추출
      *
-     * @param token
-     * @return
+     * @param token 토큰 문자열
+     * @return 토큰에서 추출한 사용자 ID
      */
     public String getIdFromToken(String token) {
         return Jwts.parserBuilder()
@@ -142,10 +143,10 @@ public class TokenProvider {
     }
 
     /**
-     * 토근에서 name 추출
+     * 토큰에서 name 추출
      *
-     * @param token
-     * @return
+     * @param token 토큰 문자열
+     * @return 토큰에서 추출한 사용자 이름
      */
     public String getNameFromToken(String token) {
         Claims claims = getClaims(token);
@@ -155,8 +156,8 @@ public class TokenProvider {
     /**
      * 토큰 검증
      *
-     * @param token
-     * @return
+     * @param token 검증할 토큰 문자열
+     * @return 토큰 유효성 여부
      */
     public boolean validateToken(String token) {
         try {
@@ -175,7 +176,7 @@ public class TokenProvider {
     /**
      * 토큰의 로그인 정보
      *
-     * @return
+     * @return 현재 인증된 사용자 정보
      */
     public SecurityUser getUserLoginInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
