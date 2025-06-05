@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -122,11 +121,11 @@ class APITest {
                 .productionYear(2024)
                 .build();
 
-        // When : API 호출
+        // When : API 호출 - 컨트롤러가 List<CarSaveRequestDTO>를 기대하므로 리스트로 감싸서 전송
         mockMvc.perform(post("/api/car")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + token)
-                        .content(objectMapper.writeValueAsString(saveDto)))
+                        .content(objectMapper.writeValueAsString(List.of(saveDto))))
                 .andExpect(status().isOk()) // API 응답 상태가 200인지 확인
                 .andDo(print()); // 요청/응답 출력
 
