@@ -6,13 +6,12 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 
 
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 @Table(name = "TB_FILE")
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Getter
-@Setter
 public class File extends BaseEntity {
 
     @Id

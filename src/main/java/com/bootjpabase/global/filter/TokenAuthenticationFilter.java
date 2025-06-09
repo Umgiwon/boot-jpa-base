@@ -43,7 +43,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             logger.error("JWT 토큰 처리 중 오류 발생", e);
             // 더 구체적인 예외 발생
             throw new com.bootjpabase.global.exception.BusinessException(
-                com.bootjpabase.global.enums.common.ApiReturnCode.UNAUTHORIZED_ERROR);
+                    com.bootjpabase.global.enums.common.ApiReturnCode.UNAUTHORIZED_ERROR);
         }
     }
 }

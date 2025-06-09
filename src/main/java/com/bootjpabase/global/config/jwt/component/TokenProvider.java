@@ -59,7 +59,7 @@ public class TokenProvider {
     /**
      * 토큰 생성
      *
-     * @param user 사용자 정보
+     * @param user      사용자 정보
      * @param tokenType 토큰 타입 (access 또는 refresh)
      * @return 생성된 토큰 문자열
      */

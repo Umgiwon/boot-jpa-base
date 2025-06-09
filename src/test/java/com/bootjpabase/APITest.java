@@ -92,11 +92,11 @@ class APITest {
     /**
      * 초기화 Car 객체 builder 메소드
      *
-     * @param category 차량 카테고리
-     * @param manufacturer 제조사
-     * @param modelName 모델명
+     * @param category       차량 카테고리
+     * @param manufacturer   제조사
+     * @param modelName      모델명
      * @param productionYear 생산년도
-     * @param rentalYn 대여가능여부
+     * @param rentalYn       대여가능여부
      * @return 생성된 Car 객체
      */
     private Car createCar(String category, String manufacturer, String modelName, int productionYear, String rentalYn) {

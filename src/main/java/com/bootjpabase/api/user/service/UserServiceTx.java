@@ -59,7 +59,7 @@ public class UserServiceTx {
         // 프로필 이미지 파일이 있을 경우 저장
         if (!ObjectUtils.isEmpty(profileImgFile)) {
             File saveProfileImgFile = fileServiceTx.saveFile(profileImgFile, UploadFileType.USER);
-            user.setProfileImgFileSn(saveProfileImgFile.getFileSn());
+            user.updateProfileImgFileSn(saveProfileImgFile.getFileSn());
         }
 
         // entity 저장 후 dto 반환
@@ -179,7 +179,7 @@ public class UserServiceTx {
 
         // 있으면 token 업데이트, 없으면 새로 저장
         if (!org.apache.commons.lang3.ObjectUtils.isEmpty(savedToken)) {
-            savedToken.setToken(tokenDto.getRefreshToken());
+            savedToken.updateToken(tokenDto.getRefreshToken());
         } else {
             tokenServiceTx.saveRefreshToken(tokenDto.getRefreshToken(), user);
         }

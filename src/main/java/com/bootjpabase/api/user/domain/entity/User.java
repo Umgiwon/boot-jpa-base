@@ -3,16 +3,15 @@ package com.bootjpabase.api.user.domain.entity;
 
 import com.bootjpabase.api.user.domain.dto.request.UserUpdateRequestDTO;
 import com.bootjpabase.global.domain.entity.BaseEntity;
-import org.apache.commons.lang3.StringUtils;
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Comment;
 
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @Entity
 @Table(name = "TB_USER")
 public class User extends BaseEntity {
@@ -46,6 +45,15 @@ public class User extends BaseEntity {
     @Column(name = "PROFILE_IMG_FILE_SN")
     @Comment("프로필 파일순번")
     private Long profileImgFileSn;
+
+    /**
+     * 프로필 파일순번 수정
+     *
+     * @param profileImgFileSn 프로필 파일순번
+     */
+    public void updateProfileImgFileSn(Long profileImgFileSn) {
+        this.profileImgFileSn = profileImgFileSn;
+    }
 
     /**
      * 수정요청된 dto 값을 받아서 entity 영속성 컨텍스트를 수정한다.

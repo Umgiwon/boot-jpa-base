@@ -2,15 +2,15 @@ package com.bootjpabase.api.sample.domain.entity;
 
 import com.bootjpabase.api.sample.domain.dto.request.SampleUpdateRequestDTO;
 import com.bootjpabase.global.domain.entity.BaseEntity;
-import org.apache.commons.lang3.StringUtils;
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Comment;
 
 
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)   // Builder를 위한 생성자는 private
+@NoArgsConstructor(access = AccessLevel.PROTECTED)  // JPA 기본 생성자는 protected
 @Getter
 @Entity
 @Table(name = "TB_SAMPLE")

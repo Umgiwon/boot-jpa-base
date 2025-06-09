@@ -7,13 +7,12 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 @Table(name = "TB_REFRESH_TOKEN")
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Getter
-@Setter
 public class RefreshToken {
 
     @Id
@@ -31,4 +30,13 @@ public class RefreshToken {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Comment("사용자")
     private User user;
+
+    /**
+     * 토큰값 수정
+     *
+     * @param token 토큰
+     */
+    public void updateToken(String token) {
+        this.token = token;
+    }
 }

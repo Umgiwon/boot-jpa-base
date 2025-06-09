@@ -2,17 +2,16 @@ package com.bootjpabase.api.car.domain.entity;
 
 import com.bootjpabase.api.car.domain.dto.request.CarUpdateRequestDTO;
 import com.bootjpabase.global.domain.entity.BaseEntity;
-import org.apache.commons.lang3.StringUtils;
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Comment;
 
 
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @Entity
 @Table(name = "TB_CAR")
 public class Car extends BaseEntity {
@@ -39,9 +38,9 @@ public class Car extends BaseEntity {
     @Comment("생산년도")
     private Integer productionYear;
 
+    @Builder.Default
     @Column(name = "RENTAL_YN", nullable = false)
     @Comment("대여 가능 여부(N: 불가능, Y: 가능)")
-    @Builder.Default
     private String rentalYn = "Y";
 
     @Column(name = "RENTAL_DESCRIPTION")
