@@ -11,7 +11,6 @@ import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.customizers.OpenApiCustomizer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,14 +19,48 @@ import java.util.Collections;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("${springdoc.info.title}")
-    private String API_TITLE;
+    private static final String API_TITLE = "boot-jpa-base API 문서";
+    private static final String API_VERSION = "1.0";
+    private static final String API_DESCRIPTION = """
+       ## boot-jpa-base API 문서 설명
+       
+       ---
+       
+       ### Paging 설명 :
+       
+       - 검색 조건이 없을 경우 전체목록 조회
+       - page: 선택 페이지, 0부터 시작
+       - size: 페이지당 표시할 데이터 갯수 설정
+       - sort: 정렬 기준 설정
+           - 여러 필드로 정렬 : {"createdDate", "sampleSn"}
+           - 단일 필드로 정렬 : "createdDate"
+       - API 호출 시 정렬 파라미터 예시
+       
+           ```
+           GET /api/sample?sort=title,desc&sort=content,asc
+           ```
+       
+       - pageable 예시
+       
+           ```java
+           {
+             "page": 0,
+             "size": 1,
+             "sort": [
+               "createdDate"
+             ]
+           }
+           ```
+       
+       
+       ---
+       
+       ### Token 설명 :
+       
+       - access token : 1시간 설정
+       - refresh token : 30일 설정
+       """;
 
-    @Value("${springdoc.info.description}")
-    private String API_DESCRIPTION;
-
-    @Value("${springdoc.info.version}")
-    private String API_VERSION;
 
     /**
      * Swagger 기본 정보

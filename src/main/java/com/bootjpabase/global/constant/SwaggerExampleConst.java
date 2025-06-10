@@ -77,5 +77,4 @@ public class SwaggerExampleConst {
                     "rentalDescription": "수리로 인한 대여 중단"
                 }
             """;
-
 }
