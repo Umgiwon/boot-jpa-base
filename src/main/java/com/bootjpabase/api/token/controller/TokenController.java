@@ -23,9 +23,14 @@ public class TokenController {
 
     private final TokenService tokenService;
 
-    @Operation(summary = "리프레쉬 토큰 검증 후 엑세스 토큰 발급", description = "리프레쉬 토큰 검증 후 엑세스 토큰 발급 API")
+    @Operation(summary = "엑세스 토큰 발급", description = "리프레쉬 토큰으로 검증 후 엑세스 토큰 발급")
     @PostMapping("refresh")
-    public BaseResponse<TokenResponseDTO> saveManager(@RequestHeader("Authorization") String token) {
-        return BaseResponseFactory.successWithMessage(tokenService.refreshAccessToken(token), ResponseMessageConst.LOGIN_ACCESS_TOKEN_SUCCESS);
+    public BaseResponse<TokenResponseDTO> saveManager(
+            @RequestHeader("Authorization") String token
+    ) {
+        return BaseResponseFactory.successWithMessage(
+                tokenService.refreshAccessToken(token)
+                , ResponseMessageConst.LOGIN_ACCESS_TOKEN_SUCCESS
+        );
     }
 }

@@ -67,12 +67,12 @@ public class SampleController {
             @Parameter(
                     description = "페이징 정보 (가능한 정렬조건 : sampleSn, title, createdDate)",
                     example = """
-                        {
-                          "page": 0,
-                          "size": 10,
-                          "sort": ["createdDate,desc"]
-                        }
-                        """
+                            {
+                              "page": 0,
+                              "size": 10,
+                              "sort": ["createdDate,desc"]
+                            }
+                            """
             )
             @PageableDefault Pageable pageable
     ) {

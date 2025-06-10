@@ -22,9 +22,11 @@ public class FileController {
 
     private final FileServiceTx fileServiceTx;
 
-    @Operation(summary = "첨부파일 삭제", description = "첨부파일 삭제 API")
+    @Operation(summary = "첨부파일 삭제", description = "첨부파일 순번으로 삭제")
     @DeleteMapping("/{fileSn}")
-    public BaseResponse<FileResponseDTO> deleteFile(@PathVariable("fileSn") Long fileSn) {
+    public BaseResponse<FileResponseDTO> deleteFile(
+            @PathVariable("fileSn") Long fileSn
+    ) {
         return BaseResponseFactory.success(fileServiceTx.deleteFile(fileSn));
     }
 }
