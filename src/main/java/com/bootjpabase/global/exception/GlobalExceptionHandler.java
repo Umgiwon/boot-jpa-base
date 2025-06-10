@@ -343,8 +343,9 @@ public class GlobalExceptionHandler {
      * @param ex
      * @return
      */
-    @ExceptionHandler({HttpMediaTypeNotSupportedException.class})
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ExceptionMsg> handleHttpMediaTypeNotSupportedException(HttpServletRequest request, HttpMediaTypeNotSupportedException ex) {
+        log.error(ex.getMessage(), ex);
 
         String unsupportedType = ex.getContentType() != null ? ex.getContentType().toString() : "null";
         String supportedTypes = ex.getSupportedMediaTypes().stream()
@@ -363,5 +364,27 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(exceptionMsg);
+    }
+
+    /**
+     * 목록조회 > 페이징 처리시 - 잘못된 정렬조건 요청시 처리 핸들러
+     *
+     * @param request
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(InvalidSortFieldException.class)
+    public ResponseEntity<ExceptionMsg> handleInvalidSortFieldException(HttpServletRequest request, InvalidSortFieldException ex) {
+        log.error(ex.getMessage(), ex);
+
+        ExceptionMsg exceptionMsg = ExceptionMsg.builder()
+                .success(false)
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .errorCode(ApiReturnCode.INVALID_SORT_FIELD.getCode())
+                .errorMessage(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 }

@@ -9,4 +9,9 @@ import lombok.Getter;
 public class BusinessException extends RuntimeException {
 
     private ApiReturnCode apiReturnCode;
+    private String message;
+
+    public BusinessException(ApiReturnCode apiReturnCode) {
+        this.apiReturnCode = apiReturnCode;
+    }
 }
