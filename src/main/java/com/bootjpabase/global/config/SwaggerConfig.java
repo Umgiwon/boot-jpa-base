@@ -24,8 +24,6 @@ public class SwaggerConfig {
     private static final String API_DESCRIPTION = """
             ## boot-jpa-base API 문서 설명
             
-            ---
-            
             ### Paging 설명 :
             
             - 검색 조건이 없을 경우 전체목록 조회
@@ -59,6 +57,7 @@ public class SwaggerConfig {
             
             - access token : 1시간 설정
             - refresh token : 30일 설정
+            
             """;
 
 
