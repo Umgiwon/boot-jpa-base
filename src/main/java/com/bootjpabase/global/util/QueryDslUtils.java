@@ -26,8 +26,8 @@ public class QueryDslUtils {
      * 사용법 .orderBy(QueryDslUtils.getOrderSpecifiers2(pageable, Sample.class, "sample"))
      *
      * @param pageable 페이징 정보
-     * @param clazz target 클래스
-     * @param alias target 클래스명
+     * @param clazz    target 클래스
+     * @param alias    target 클래스명
      * @return 정렬 정보
      */
     public static OrderSpecifier<?>[] getOrderSpecifiers(Pageable pageable, Class<?> clazz, String alias) {
