@@ -1,16 +1,22 @@
 package com.bootjpabase.global.filter;
 
 import com.bootjpabase.global.enums.common.ApiReturnCode;
+import com.bootjpabase.global.exception.ExceptionMsg;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.*;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * transaction 관리를 처리하는 filter (모든 GET 요청에 대해서 readOnly 처리)
@@ -27,36 +33,36 @@ public class TransactionFilter implements Filter {
     private final ReadOnlyTx readOnlyTx;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException {
 
         HttpServletRequest httpReq = (HttpServletRequest) request;
         HttpServletResponse httpRes = (HttpServletResponse) response;
-
         String method = httpReq.getMethod();
 
         try {
-            if ("GET".equalsIgnoreCase(method)) { // GET 요청에 대해서 readOnly
+            if (HttpMethod.GET.matches(method)) { // GET 요청에 대해서 readOnly
                 readOnlyTx.doInReadOnly(() -> chain.doFilter(request, response));
             } else {
                 readOnlyTx.doInWrite(() -> chain.doFilter(request, response));
             }
-        } catch (ServletException | IOException e) {
-            log.error("Error processing request [{} {}]", method, httpReq.getRequestURI(), e);
+        } catch (Exception e) {
             handleException(httpReq, httpRes, e);
         }
     }
 
     private void handleException(HttpServletRequest httpReq, HttpServletResponse httpRes, Exception e) throws IOException {
-        Map<String, Object> mapBodyException = Map.of(
-                "success", false,
-                "path", httpReq.getServletPath(),
-                "timestamp", LocalDateTime.now().toString(),
-                "errorCode", ApiReturnCode.SERVER_ERROR.getCode(),
-                "errorMessage", ApiReturnCode.SERVER_ERROR.getMessage()
-        );
-        httpRes.setContentType("application/json");
-        httpRes.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        new ObjectMapper().writeValue(httpRes.getOutputStream(), mapBodyException);
+        log.error("요청 처리 중 오류 발생 [{} {}]", httpReq.getMethod(), httpReq.getRequestURI(), e);
+
+        ExceptionMsg exceptionMsg = ExceptionMsg.builder()
+                .success(false)
+                .path(httpReq.getServletPath())
+                .timestamp(LocalDateTime.now())
+                .errorCode(ApiReturnCode.SERVER_ERROR.getCode())
+                .errorMessage(ApiReturnCode.SERVER_ERROR.getMessage())
+                .build();
+
+        httpRes.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        httpRes.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        new ObjectMapper().writeValue(httpRes.getOutputStream(), exceptionMsg);
     }
 }
