@@ -61,7 +61,7 @@ public class BaseResponseFactory {
             responseMessage = ResponseMessageConst.NO_CONTENT;
         }
 
-        return baseResponseBuilder(httpStatusCode, responseMessage, content.size(), content, new Pagination(page));
+        return baseResponseBuilder(httpStatusCode, responseMessage, content.size(), content, Pagination.from(page));
     }
 
     /**

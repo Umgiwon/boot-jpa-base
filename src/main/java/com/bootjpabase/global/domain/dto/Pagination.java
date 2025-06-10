@@ -1,11 +1,13 @@
 package com.bootjpabase.global.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 
 @Schema(description = "페이지네이션 정보")
 @Data
+@Builder
 public class Pagination {
 
     @Schema(description = "현재 페이지 번호", example = "1")
@@ -23,11 +25,13 @@ public class Pagination {
     @Schema(description = "전체 데이터 개수", example = "17")
     private long totalElements;
 
-    public Pagination(Page page) {
-        this.pageNumber = page.getNumber() + 1;
-        this.pageSize = page.getSize();
-        this.numberOfElements = page.getNumberOfElements();
-        this.totalPages = page.getTotalPages();
-        this.totalElements = page.getTotalElements();
+    public static <T> Pagination from(Page<T> page) {
+        return Pagination.builder()
+                .pageNumber(page.getNumber() + 1)
+                .pageSize(page.getSize())
+                .numberOfElements(page.getNumberOfElements())
+                .totalPages(page.getTotalPages())
+                .totalElements(page.getTotalElements())
+                .build();
     }
 }

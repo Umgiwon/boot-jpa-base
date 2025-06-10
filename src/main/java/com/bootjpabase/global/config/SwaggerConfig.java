@@ -22,42 +22,52 @@ public class SwaggerConfig {
     private static final String API_TITLE = "boot-jpa-base API 문서";
     private static final String API_VERSION = "1.0";
     private static final String API_DESCRIPTION = """
-            ## boot-jpa-base API 문서 설명
+            ## Paging 설명
             
-            ### Paging 설명 :
+            `검색 조건이 없을 경우 전체목록 조회`
             
-            - 검색 조건이 없을 경우 전체목록 조회
+            ### pageable request 예시
+            
+            ```java
+            {
+              "page": 0,
+              "size": 10,
+              "sort": [
+                "createdDate,desc"
+              ]
+            }
+            ```
+            
             - page: 선택 페이지, 0부터 시작
             - size: 페이지당 표시할 데이터 갯수 설정
             - sort: 정렬 기준 설정
-                - 여러 필드로 정렬 : {"createdDate", "sampleSn"}
+                - 여러 필드로 정렬 : "createdDate", "sampleSn"
                 - 단일 필드로 정렬 : "createdDate"
-            - API 호출 시 정렬 파라미터 예시
             
-                ```
-                GET /api/sample?sort=title,desc&sort=content,asc
-                ```
+            ### pageable response 예시
             
-            - pageable 예시
+            ```java
+            "pagination": {
+                "pageNumber": 1,
+                "pageSize": 10,
+                "numberOfElements": 10,
+                "totalPages": 2,
+                "totalElements": 14
+              }
+            ```
             
-                ```java
-                {
-                  "page": 0,
-                  "size": 1,
-                  "sort": [
-                    "createdDate"
-                  ]
-                }
-                ```
-            
+            - pageNumber: 현재 페이지 숫자
+            - pageSize: 페이지당 표시할 데이터 갯수
+            - numberOfElements: 현재 페이지 데이터 갯수
+            - totalPages: 전체 페이지 갯수
+            - totalElements: 전체 데이터 갯수
             
             ---
             
-            ### Token 설명 :
+            ## Token 설명
             
-            - access token : 1시간 설정
-            - refresh token : 30일 설정
-            
+            - access token: 1시간 설정
+            - refresh token: 30일 설정
             """;
 
 
