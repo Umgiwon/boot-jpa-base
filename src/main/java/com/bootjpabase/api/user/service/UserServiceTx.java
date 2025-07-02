@@ -193,7 +193,7 @@ public class UserServiceTx {
      * @param token 토큰
      * @return 삭제 결과
      */
-    public boolean logoutManager(String token) {
+    public boolean logoutUser(String token) {
 
         String accessToken = token.replace("Bearer ", "");
 

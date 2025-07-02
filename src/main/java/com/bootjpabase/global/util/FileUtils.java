@@ -28,9 +28,16 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileUtils {
 
+    private final FileUploadConfig fileUploadProperties;
+
     private static String ROOT_PATH;
     private static long FILE_MAX_SIZE; // 10MB
-    private final FileUploadConfig fileUploadProperties;
+
+    @PostConstruct
+    public void init() {
+        ROOT_PATH = fileUploadProperties.getRootPath();
+        FILE_MAX_SIZE = fileUploadProperties.getFileMaxSize();
+    }
 
     /**
      * 파일 업로드
@@ -124,11 +131,5 @@ public class FileUtils {
         }
 
         return deleteFile.delete();
-    }
-
-    @PostConstruct
-    public void init() {
-        ROOT_PATH = fileUploadProperties.getRootPath();
-        FILE_MAX_SIZE = fileUploadProperties.getFileMaxSize();
     }
 }

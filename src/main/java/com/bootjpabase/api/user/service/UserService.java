@@ -2,7 +2,6 @@ package com.bootjpabase.api.user.service;
 
 import com.bootjpabase.api.user.domain.dto.request.UserListRequestDTO;
 import com.bootjpabase.api.user.domain.dto.response.UserResponseDTO;
-import com.bootjpabase.api.user.repository.UserRepository;
 import com.bootjpabase.api.user.repository.UserRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserService {
 
-    private final UserRepository userRepository;
     private final UserRepositoryCustom userRepositoryCustom;
 
     /**

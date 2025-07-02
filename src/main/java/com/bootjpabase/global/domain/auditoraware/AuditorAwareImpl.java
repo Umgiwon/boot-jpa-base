@@ -24,9 +24,9 @@ public class AuditorAwareImpl implements AuditorAware<String> {
             return Optional.of("SYSTEM"); // 인증되지 않은 경우 SYSTEM으로 설정
         }
 
-        SecurityUser securityManager = (SecurityUser) authentication.getPrincipal();
+        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
 
         // 현재 인증된 사용자 정보 가져오기
-        return Optional.ofNullable(securityManager.getId());
+        return Optional.ofNullable(securityUser.getId());
     }
 }

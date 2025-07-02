@@ -25,7 +25,7 @@ public class TokenController {
 
     @Operation(summary = "엑세스 토큰 발급", description = "리프레쉬 토큰으로 검증 후 엑세스 토큰 발급")
     @PostMapping("refresh")
-    public BaseResponse<TokenResponseDTO> saveManager(
+    public BaseResponse<TokenResponseDTO> saveUser(
             @RequestHeader("Authorization") String token
     ) {
         return BaseResponseFactory.successWithMessage(

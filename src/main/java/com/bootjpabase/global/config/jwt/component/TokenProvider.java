@@ -108,9 +108,9 @@ public class TokenProvider {
 
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
 
-        SecurityUser manager = new SecurityUser(this.getIdFromToken(token), (String) this.getClaims(token).get("name"), "", claims);
+        SecurityUser user = new SecurityUser(this.getIdFromToken(token), (String) this.getClaims(token).get("name"), "", claims);
 
-        return new UsernamePasswordAuthenticationToken(manager, token, authorities);
+        return new UsernamePasswordAuthenticationToken(user, token, authorities);
     }
 
     /**

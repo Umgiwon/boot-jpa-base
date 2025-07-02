@@ -88,7 +88,7 @@ public class UserController {
 
     @Operation(summary = "사용자 로그인", description = "사용자 로그인 API")
     @PostMapping("/login")
-    public BaseResponse<TokenResponseDTO> userLogin(
+    public BaseResponse<TokenResponseDTO> loginUser(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "json",
                     content = @Content(schema = @Schema(implementation = UserLoginRequestDTO.class)))
@@ -102,11 +102,11 @@ public class UserController {
 
     @Operation(summary = "로그아웃", description = "로그아웃 API - refresh token 삭제")
     @PostMapping("/logout")
-    public BaseResponse<Boolean> logoutManager(
+    public BaseResponse<Boolean> logoutUser(
             @RequestHeader(value = "Authorization", required = false) String token
     ) {
         return BaseResponseFactory.successWithMessage(
-                userServiceTx.logoutManager(token)
+                userServiceTx.logoutUser(token)
                 , ResponseMessageConst.LOGOUT_SUCCESS
         );
     }

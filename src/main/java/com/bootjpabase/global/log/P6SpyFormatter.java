@@ -3,6 +3,7 @@ package com.bootjpabase.global.log;
 import com.p6spy.engine.logging.Category;
 import com.p6spy.engine.spy.P6SpyOptions;
 import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
+import io.micrometer.common.util.StringUtils;
 import jakarta.annotation.PostConstruct;
 import org.hibernate.engine.jdbc.internal.FormatStyle;
 import org.springframework.context.annotation.Configuration;
@@ -34,9 +35,8 @@ public class P6SpyFormatter implements MessageFormattingStrategy {
      * 로그 출력 형식 정의
      */
     @Override
-    public String formatMessage(int connectionId, String now, long elapsed,
-                                String category, String prepared, String sql, String url) {
-        if (isBlank(sql)) return EMPTY_RESULT;
+    public String formatMessage(int connectionId, String now, long elapsed, String category, String prepared, String sql, String url) {
+        if (StringUtils.isBlank(sql)) return EMPTY_RESULT;
 
         String formattedSql = formatSql(category, sql);
         return String.format(LOG_FORMAT, category, elapsed, formattedSql);
@@ -61,12 +61,5 @@ public class P6SpyFormatter implements MessageFormattingStrategy {
      */
     private boolean isDdlStatement(String sql) {
         return sql.startsWith(DDL_CREATE) || sql.startsWith(DDL_ALTER) || sql.startsWith(DDL_COMMENT);
-    }
-
-    /**
-     * null 또는 공백 문자열 검사
-     */
-    private boolean isBlank(String str) {
-        return str == null || str.trim().isEmpty();
     }
 }

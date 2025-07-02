@@ -22,10 +22,10 @@ import org.mapstruct.ReportingPolicy;
 public interface SampleMapper {
 
     /*
-        필드명이 동일한 경우 MapStruct가 자동으로 매핑을 수행합니다.
+        필드명이 동일한 경우 MapStruct가 자동으로 매핑을 수행한다.
         예시: source.sampleSn -> target.sampleSn
 
-        필드명이 다른 경우 @Mapping 어노테이션으로 수동 매핑이 가능합니다.
+        필드명이 다른 경우 @Mapping 어노테이션으로 수동 매핑이 가능하다.
         예시: @Mapping(target = "targetField", source = "sourceField")
      */
 

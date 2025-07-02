@@ -24,7 +24,7 @@ public enum ApiReturnCode {
     UNAUTHORIZED_TOKEN_ERROR("유효하지 않은 토큰입니다.", 401),
     FORBIDDEN_ERROR("접근 권한이 없습니다.", 403),
 
-    // ===== manager =====
+    // ===== user =====
     LOGIN_ID_FAIL_ERROR("등록된 아이디가 없습니다.", 404),
     LOGIN_PWD_FAIL_ERROR("비밀번호가 틀렸습니다.", 401),
     ID_CONFLICT_ERROR("중복된 아이디 입니다.", 409),
