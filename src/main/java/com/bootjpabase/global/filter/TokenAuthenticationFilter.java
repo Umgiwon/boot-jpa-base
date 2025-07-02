@@ -1,6 +1,6 @@
 package com.bootjpabase.global.filter;
 
-import com.bootjpabase.global.config.jwt.component.TokenProvider;
+import com.bootjpabase.global.security.jwt.component.TokenProvider;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.exception.BusinessException;
 import jakarta.servlet.FilterChain;

@@ -1,4 +1,4 @@
-package com.bootjpabase.global.config.jwt.component;
+package com.bootjpabase.global.security.jwt.component;
 
 import lombok.Getter;
 import lombok.Setter;

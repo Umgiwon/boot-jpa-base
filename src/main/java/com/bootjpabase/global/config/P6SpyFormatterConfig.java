@@ -1,4 +1,4 @@
-package com.bootjpabase.global.log;
+package com.bootjpabase.global.config;
 
 import com.p6spy.engine.logging.Category;
 import com.p6spy.engine.spy.P6SpyOptions;
@@ -14,7 +14,7 @@ import java.util.Locale;
  * P6Spy 쿼리 로그 포매터 설정 클래스
  */
 @Configuration
-public class P6SpyFormatter implements MessageFormattingStrategy {
+public class P6SpyFormatterConfig implements MessageFormattingStrategy {
 
     private static final String DDL_CREATE = "create";
     private static final String DDL_ALTER = "alter";

@@ -6,7 +6,7 @@ import com.bootjpabase.api.car.domain.entity.Car;
 import com.bootjpabase.api.car.repository.CarRepository;
 import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.api.user.repository.UserRepository;
-import com.bootjpabase.global.config.jwt.component.TokenProvider;
+import com.bootjpabase.global.security.jwt.component.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -13,7 +13,7 @@ import com.bootjpabase.api.user.domain.dto.response.UserResponseDTO;
 import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.api.user.mapper.UserMapper;
 import com.bootjpabase.api.user.repository.UserRepository;
-import com.bootjpabase.global.config.jwt.component.TokenProvider;
+import com.bootjpabase.global.security.jwt.component.TokenProvider;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.enums.file.UploadFileType;
 import com.bootjpabase.global.exception.BusinessException;

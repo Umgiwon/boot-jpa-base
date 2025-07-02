@@ -1,4 +1,4 @@
-package com.bootjpabase.global.config.jwt.domain;
+package com.bootjpabase.global.security.jwt.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

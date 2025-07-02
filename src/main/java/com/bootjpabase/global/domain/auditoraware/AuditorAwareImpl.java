@@ -1,6 +1,6 @@
 package com.bootjpabase.global.domain.auditoraware;
 
-import com.bootjpabase.global.config.jwt.domain.SecurityUser;
+import com.bootjpabase.global.security.jwt.domain.SecurityUser;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;

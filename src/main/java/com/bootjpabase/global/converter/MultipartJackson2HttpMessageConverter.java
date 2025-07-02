@@ -1,4 +1,4 @@
-package com.bootjpabase.global.config.converter;
+package com.bootjpabase.global.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
