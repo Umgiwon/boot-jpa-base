@@ -11,6 +11,7 @@ import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.customizers.OpenApiCustomizer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,8 +20,13 @@ import java.util.Collections;
 @Configuration
 public class SwaggerConfig {
 
-    private static final String API_TITLE = "boot-jpa-base API 문서";
-    private static final String API_VERSION = "1.0";
+
+    @Value("${springdoc.title}")
+    private String API_TITLE;
+
+    @Value("${springdoc.version}")
+    private String API_VERSION;
+
     private static final String API_DESCRIPTION = """
             ## Paging 설명
             

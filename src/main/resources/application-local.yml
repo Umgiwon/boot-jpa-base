@@ -1,0 +1,57 @@
+spring:
+
+  # db setting
+  datasource:
+    url: jdbc:mariadb://localhost:3306/bootbase
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: root
+    password: 1234
+
+  # jpa setting
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        format_sql: true
+        show_sql: false  # p6spy가 대신 로그를 출력하므로 false로 설정
+
+# query logging setting
+logging:
+  level:
+    root: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    com.zaxxer.hikari.HikariDataSource: DEBUG
+    com.p6spy.engine.spy.P6SpyDriver: DEBUG
+
+# swagger setting
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha # 알파벳 순서로 정렬
+    operations-sorter: method # 메소드 순서로 정렬
+    doc-expansion: none # 카테고리가 접힌상태로 로딩
+    persist-authorization: true # 브라우저를 새로고침 하더라도 인증정보 유지
+  packages-to-scan: com.bootjpabase
+  title: boot-jpa-base API 문서 (local)
+  version: 1.1
+
+# jwt setting
+jwt:
+  issuer: bootjpabase
+  access-token-secret-key: bootjpabase_access_secret_bootjpabase_access_secret
+  access-token-expiration: 2592000000 # 1개월
+  refresh-token-secret-key: bootjpabase_refresh_secret_bootjpabase_refresh_secret
+  refresh-token-expiration: 2592000000 # 1개월
+
+# file
+bootjpabase:
+  file:
+    upload:
+      root-path: tmp/files/uploads
+      file-max-size: 10485760 # 10MB (10 * 1024 * 1024)
