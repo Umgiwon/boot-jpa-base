@@ -53,6 +53,9 @@ public class UserServiceTx {
         // 저장 전 data validate
         validateUser(dto);
 
+        // password 암호화
+        dto.setUserPassword(encoder.encode(dto.getUserPassword()));
+
         // 요청 dto를 entity로 변환
         User user = userMapper.toUserEntity(dto);
 
