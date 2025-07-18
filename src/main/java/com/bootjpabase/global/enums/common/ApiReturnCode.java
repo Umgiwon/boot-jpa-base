@@ -38,6 +38,9 @@ public enum ApiReturnCode {
     FILE_SIZE_EXCEEDING_ERROR("파일 사이즈(10MB)가 초과되었습니다.", 413),
     FILE_EXTENSION_ERROR("허용된 파일 확장자가 아닙니다.", 415),
 
+    // ===== sample =====
+    TITLE_CONFLICT_ERROR("중복된 제목입니다.", 409),
+
     /* ==================== 5XX ==================== */
     SERVER_ERROR("서버에서 오류가 발생했습니다.", 500);
 

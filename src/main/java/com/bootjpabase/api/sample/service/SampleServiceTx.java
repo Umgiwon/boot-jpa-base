@@ -30,6 +30,9 @@ public class SampleServiceTx {
      */
     public List<SampleResponseDTO> saveSample(List<SampleSaveRequestDTO> dtoList) {
 
+        // 저장 전 data validate
+        validateSample(dtoList);
+
         // 요청 dto를 entity로 변환
         List<Sample> sampleEntities = dtoList.stream()
                 .map(sampleMapper::toSampleEntity)
@@ -39,6 +42,20 @@ public class SampleServiceTx {
         return sampleRepository.saveAll(sampleEntities).stream()
                 .map(sampleMapper::toSampleResponseDTO)
                 .toList();
+    }
+
+    /**
+     * Sample validate
+     *
+     * @param dtoList Sample 저장 요청 dtoList
+     */
+    private void validateSample(List<SampleSaveRequestDTO> dtoList) {
+
+        dtoList.forEach(dto -> {
+            if (sampleRepository.existsByTitle(dto.getTitle()) ) {
+                throw new BusinessException(ApiReturnCode.TITLE_CONFLICT_ERROR);
+            }
+        });
     }
 
     /**
