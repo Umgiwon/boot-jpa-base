@@ -51,8 +51,9 @@ public class SampleServiceTx {
      */
     private void validateSample(List<SampleSaveRequestDTO> dtoList) {
 
+        // 제목 중복 체크
         dtoList.forEach(dto -> {
-            if (sampleRepository.existsByTitle(dto.getTitle()) ) {
+            if (sampleRepository.existsByTitle(dto.getTitle())) {
                 throw new BusinessException(ApiReturnCode.TITLE_CONFLICT_ERROR);
             }
         });
