@@ -6,6 +6,7 @@ import com.bootjpabase.api.car.domain.entity.Car;
 import com.bootjpabase.api.car.repository.CarRepository;
 import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.api.user.repository.UserRepository;
+import com.bootjpabase.global.enums.user.TokenType;
 import com.bootjpabase.global.security.jwt.component.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,7 +73,7 @@ class APITest {
         userRepository.save(testUser);
 
         // 토큰 발급
-        token = tokenProvider.createToken(testUser, "access");
+        token = tokenProvider.createToken(testUser, TokenType.ACCESS);
 
         // 인증 컨텍스트 설정 (JPA Auditing을 위해)
         Authentication auth = tokenProvider.getAuthentication(token);

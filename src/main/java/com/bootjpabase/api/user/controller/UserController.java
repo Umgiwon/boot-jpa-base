@@ -1,6 +1,6 @@
 package com.bootjpabase.api.user.controller;
 
-import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
+import com.bootjpabase.api.token.domain.dto.response.TokenResponseDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserListRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserLoginRequestDTO;
 import com.bootjpabase.api.user.domain.dto.request.UserSaveRequestDTO;

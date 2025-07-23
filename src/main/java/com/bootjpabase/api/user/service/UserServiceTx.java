@@ -2,7 +2,7 @@ package com.bootjpabase.api.user.service;
 
 import com.bootjpabase.api.file.domain.entity.File;
 import com.bootjpabase.api.file.service.FileServiceTx;
-import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
+import com.bootjpabase.api.token.domain.dto.response.TokenResponseDTO;
 import com.bootjpabase.api.token.domain.entity.RefreshToken;
 import com.bootjpabase.api.token.repository.TokenRepository;
 import com.bootjpabase.api.token.service.TokenServiceTx;
@@ -13,6 +13,7 @@ import com.bootjpabase.api.user.domain.dto.response.UserResponseDTO;
 import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.api.user.mapper.UserMapper;
 import com.bootjpabase.api.user.repository.UserRepository;
+import com.bootjpabase.global.enums.user.TokenType;
 import com.bootjpabase.global.security.jwt.component.TokenProvider;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.enums.file.UploadFileType;
@@ -201,9 +202,7 @@ public class UserServiceTx {
         String accessToken = token.replace("Bearer ", "");
 
         // access token 유효성 검사
-        if (!tokenProvider.validateToken(accessToken)) {
-            throw new BusinessException(ApiReturnCode.UNAUTHORIZED_TOKEN_ERROR);
-        }
+        tokenProvider.validateToken(accessToken, TokenType.ACCESS);
 
         // access 토큰에서 사용자 아이디 추출
         String id = tokenProvider.getIdFromToken(accessToken);
@@ -214,7 +213,7 @@ public class UserServiceTx {
 
         // 삭제할 refresh 토큰 entity 조회
         RefreshToken savedToken = Optional.ofNullable(tokenRepository.findByUser(user))
-                .orElseThrow(() -> new BusinessException(ApiReturnCode.UNAUTHORIZED_TOKEN_ERROR));
+                .orElseThrow(() -> new BusinessException(ApiReturnCode.UNSUPPORTED_TOKEN_ERROR));
 
         // refresh 토큰 삭제
         tokenRepository.delete(savedToken);

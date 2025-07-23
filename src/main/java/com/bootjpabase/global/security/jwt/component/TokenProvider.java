@@ -1,14 +1,12 @@
 package com.bootjpabase.global.security.jwt.component;
 
-import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
+import com.bootjpabase.api.token.domain.dto.response.TokenResponseDTO;
 import com.bootjpabase.api.user.domain.entity.User;
-import com.bootjpabase.global.security.jwt.domain.SecurityUser;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
+import com.bootjpabase.global.enums.user.TokenType;
 import com.bootjpabase.global.exception.BusinessException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.bootjpabase.global.security.jwt.domain.SecurityUser;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +25,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    private static final String ACCESS = "access";
-    private static final String REFRESH = "refresh";
     private static final String BEARER_PREFIX = "Bearer ";
     private final TokenProperties tokenProperties;
-    private Key key;
 
     private Key accessKey;
     private Key refreshKey;
@@ -40,7 +35,6 @@ public class TokenProvider {
     private void init() {
         this.accessKey = Keys.hmacShaKeyFor(tokenProperties.getAccessTokenSecretKey().getBytes());
         this.refreshKey = Keys.hmacShaKeyFor(tokenProperties.getRefreshTokenSecretKey().getBytes());
-        this.key = this.accessKey; // 기존 메소드와의 하위 호환성을 위함
     }
 
     /**
@@ -51,8 +45,8 @@ public class TokenProvider {
      */
     public TokenResponseDTO createAllToken(User user) {
         return TokenResponseDTO.builder()
-                .accessToken(createToken(user, ACCESS))
-                .refreshToken(createToken(user, REFRESH))
+                .accessToken(createToken(user, TokenType.ACCESS))
+                .refreshToken(createToken(user, TokenType.REFRESH))
                 .build();
     }
 
@@ -63,10 +57,10 @@ public class TokenProvider {
      * @param tokenType 토큰 타입 (access 또는 refresh)
      * @return 생성된 토큰 문자열
      */
-    public String createToken(User user, String tokenType) {
+    public String createToken(User user, TokenType tokenType) {
         Date date = new Date();
 
-        boolean isAccessToken = ACCESS.equals(tokenType);
+        boolean isAccessToken = TokenType.ACCESS.equals(tokenType);
         long expiration = isAccessToken
                 ? tokenProperties.getAccessTokenExpiration()
                 : tokenProperties.getRefreshTokenExpiration();
@@ -80,7 +74,6 @@ public class TokenProvider {
                 .claim("userSn", user.getUserSn())
                 .claim("userId", user.getUserId())
                 .claim("userName", user.getUserName())
-                .claim("name", user.getUserName()) // 하위 호환성을 위한 name 클레임 추가
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -108,7 +101,7 @@ public class TokenProvider {
 
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
 
-        SecurityUser user = new SecurityUser(this.getIdFromToken(token), (String) this.getClaims(token).get("name"), "", claims);
+        SecurityUser user = new SecurityUser(this.getIdFromToken(token), (String) this.getClaims(token).get("userName"), "", claims);
 
         return new UsernamePasswordAuthenticationToken(user, token, authorities);
     }
@@ -121,7 +114,7 @@ public class TokenProvider {
      */
     public Claims getClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(accessKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -134,12 +127,7 @@ public class TokenProvider {
      * @return 토큰에서 추출한 사용자 ID
      */
     public String getIdFromToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        return getClaims(token).getSubject();
     }
 
     /**
@@ -149,26 +137,32 @@ public class TokenProvider {
      * @return 토큰에서 추출한 사용자 이름
      */
     public String getNameFromToken(String token) {
-        Claims claims = getClaims(token);
-        return (String) claims.get("userName");
+        return (String) getClaims(token).get("userName");
     }
 
     /**
      * 토큰 검증
      *
      * @param token 검증할 토큰 문자열
-     * @return 토큰 유효성 여부
      */
-    public boolean validateToken(String token) {
+    public void validateToken(String token, TokenType tokenType) {
         try {
+
+            Key signingKey = TokenType.ACCESS.equals(tokenType) ? accessKey : refreshKey;
+
             Jwts.parserBuilder()
-                    .setSigningKey(key)
+                    .setSigningKey(signingKey)
                     .build()
                     .parseClaimsJws(token);
-            return true;
         } catch (ExpiredJwtException e) {
             throw new BusinessException(ApiReturnCode.EXPIRED_TOKEN_ERROR);
-        } catch (Exception e) {
+        } catch (UnsupportedJwtException e) {
+            throw new BusinessException(ApiReturnCode.UNSUPPORTED_TOKEN_ERROR);
+        } catch (MalformedJwtException e) {
+            throw new BusinessException(ApiReturnCode.MALFORMED_TOKEN_ERROR);
+        } catch (SignatureException e) {
+            throw new BusinessException(ApiReturnCode.INVALID_SIGNATURE_ERROR);
+        } catch (IllegalArgumentException e) {
             throw new BusinessException(ApiReturnCode.UNAUTHORIZED_ERROR);
         }
     }

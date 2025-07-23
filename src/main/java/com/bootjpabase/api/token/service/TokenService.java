@@ -1,9 +1,11 @@
 package com.bootjpabase.api.token.service;
 
-import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
+import com.bootjpabase.api.token.domain.dto.request.TokenRequestDto;
+import com.bootjpabase.api.token.domain.dto.response.TokenResponseDTO;
 import com.bootjpabase.api.token.domain.entity.RefreshToken;
 import com.bootjpabase.api.token.repository.TokenRepository;
 import com.bootjpabase.api.user.domain.entity.User;
+import com.bootjpabase.global.enums.user.TokenType;
 import com.bootjpabase.global.security.jwt.component.TokenProvider;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.exception.BusinessException;
@@ -27,24 +29,22 @@ public class TokenService {
      * @param token 리프레쉬 토큰
      * @return 토큰 dto
      */
-    public TokenResponseDTO refreshAccessToken(String token) {
+    public TokenResponseDTO refreshAccessToken(TokenRequestDto dto) {
 
-        String refreshToken = token.replace("Bearer ", "");
+        String refreshToken = dto.getRefreshToken().replace("Bearer ", "");
 
         // refresh token 유효성 검사
-        if (!tokenProvider.validateToken(refreshToken)) {
-            throw new BusinessException(ApiReturnCode.UNAUTHORIZED_TOKEN_ERROR);
-        }
+        tokenProvider.validateToken(refreshToken, TokenType.REFRESH);
 
         // 저장된 토큰 조회
         RefreshToken savedToken = Optional.ofNullable(tokenRepository.findByToken(refreshToken))
-                .orElseThrow(() -> new BusinessException(ApiReturnCode.UNAUTHORIZED_TOKEN_ERROR));
+                .orElseThrow(() -> new BusinessException(ApiReturnCode.UNSUPPORTED_TOKEN_ERROR));
 
         // 토큰 정보로 사용자 조회
         User user = savedToken.getUser();
 
         // access 토큰 재발급
-        String accessToken = tokenProvider.createToken(user, "access");
+        String accessToken = tokenProvider.createToken(user, TokenType.ACCESS);
 
         return TokenResponseDTO.builder()
                 .accessToken(accessToken)

@@ -1,6 +1,7 @@
 package com.bootjpabase.api.token.controller;
 
-import com.bootjpabase.api.token.domain.dto.TokenResponseDTO;
+import com.bootjpabase.api.token.domain.dto.request.TokenRequestDto;
+import com.bootjpabase.api.token.domain.dto.response.TokenResponseDTO;
 import com.bootjpabase.api.token.service.TokenService;
 import com.bootjpabase.global.constant.ResponseMessageConst;
 import com.bootjpabase.global.domain.dto.BaseResponse;
@@ -10,7 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,10 +27,10 @@ public class TokenController {
     @Operation(summary = "엑세스 토큰 발급", description = "리프레쉬 토큰으로 검증 후 엑세스 토큰 발급")
     @PostMapping("refresh")
     public BaseResponse<TokenResponseDTO> saveUser(
-            @RequestHeader("Authorization") String token
+            @RequestBody TokenRequestDto dto
     ) {
         return BaseResponseFactory.successWithMessage(
-                tokenService.refreshAccessToken(token)
+                tokenService.refreshAccessToken(dto)
                 , ResponseMessageConst.LOGIN_ACCESS_TOKEN_SUCCESS
         );
     }

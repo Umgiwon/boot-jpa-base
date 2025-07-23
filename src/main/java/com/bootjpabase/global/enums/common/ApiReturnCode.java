@@ -20,8 +20,10 @@ public enum ApiReturnCode {
 
     // ===== token =====
     EXPIRED_TOKEN_ERROR("만료된 토큰입니다.", 401),
+    INVALID_SIGNATURE_ERROR("잘못된 서명입니다.", 401),
+    MALFORMED_TOKEN_ERROR("잘못된 형식의 토큰입니다.", 401),
+    UNSUPPORTED_TOKEN_ERROR("유효하지 않은 토큰입니다.", 401),
     UNAUTHORIZED_ERROR("인증이 필요합니다.", 401),
-    UNAUTHORIZED_TOKEN_ERROR("유효하지 않은 토큰입니다.", 401),
     FORBIDDEN_ERROR("접근 권한이 없습니다.", 403),
 
     // ===== user =====
