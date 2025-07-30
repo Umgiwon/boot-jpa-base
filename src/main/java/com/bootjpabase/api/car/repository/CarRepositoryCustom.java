@@ -4,7 +4,7 @@ import com.bootjpabase.api.car.domain.dto.request.CarListRequestDTO;
 import com.bootjpabase.api.car.domain.dto.response.CarResponseDTO;
 import com.bootjpabase.api.car.domain.dto.response.QCarResponseDTO;
 import com.bootjpabase.api.car.domain.entity.Car;
-import com.bootjpabase.global.util.QueryDslUtils;
+import com.bootjpabase.global.utils.QueryDslUtil;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -53,7 +53,7 @@ public class CarRepositoryCustom {
                 .where(pagingCondition(dto))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(QueryDslUtils.getOrderSpecifiers(pageable, Car.class, "car"))
+                .orderBy(QueryDslUtil.getOrderSpecifiers(pageable, Car.class, "car"))
                 .fetch();
 
         // 전체 데이터 카운트

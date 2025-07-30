@@ -7,7 +7,7 @@ import com.bootjpabase.api.file.repository.FileRepository;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.enums.file.UploadFileType;
 import com.bootjpabase.global.exception.BusinessException;
-import com.bootjpabase.global.util.FileUtils;
+import com.bootjpabase.global.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +34,7 @@ public class FileServiceTx {
     public File saveFile(MultipartFile file, UploadFileType uploadFileType) throws IOException {
 
         // 서버에 파일 upload
-        File saveFile = FileUtils.uploadFile(file, uploadFileType);
+        File saveFile = FileUtil.uploadFile(file, uploadFileType);
 
         // 업로드된 파일정보 db에 저장
         return fileRepository.save(saveFile);
@@ -53,7 +53,7 @@ public class FileServiceTx {
                 .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_FILE_DATA_ERROR));
 
         // 서버에 저장된 파일 삭제
-        FileUtils.deleteFile(deleteFile);
+        FileUtil.deleteFile(deleteFile);
 
         // DB에 저장된 파일정보 삭제
         fileRepository.delete(deleteFile);

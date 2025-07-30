@@ -4,7 +4,7 @@ import com.bootjpabase.api.user.domain.dto.request.UserListRequestDTO;
 import com.bootjpabase.api.user.domain.dto.response.QUserResponseDTO;
 import com.bootjpabase.api.user.domain.dto.response.UserResponseDTO;
 import com.bootjpabase.api.user.domain.entity.User;
-import com.bootjpabase.global.util.QueryDslUtils;
+import com.bootjpabase.global.utils.QueryDslUtil;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -52,7 +52,7 @@ public class UserRepositoryCustom {
                 .where(pagingCondition(dto))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(QueryDslUtils.getOrderSpecifiers(pageable, User.class, "user"))
+                .orderBy(QueryDslUtil.getOrderSpecifiers(pageable, User.class, "user"))
                 .fetch();
 
         // 전체 데이터 카운트

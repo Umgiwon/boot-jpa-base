@@ -1,4 +1,4 @@
-package com.bootjpabase.global.util;
+package com.bootjpabase.global.utils;
 
 import com.bootjpabase.global.exception.InvalidSortFieldException;
 import com.querydsl.core.types.Order;
@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
  */
 @UtilityClass
 @Slf4j
-public class QueryDslUtils {
+public class QueryDslUtil {
 
     /**
      * queryDsl 페이징 처리 시 정렬 정보 가져와서 return <br>
-     * 사용법 .orderBy(QueryDslUtils.getOrderSpecifiers2(pageable, Sample.class, "sample"))
+     * 사용법 .orderBy(QueryDslUtil.getOrderSpecifiers2(pageable, Sample.class, "sample"))
      *
      * @param pageable 페이징 정보
      * @param clazz    target 클래스

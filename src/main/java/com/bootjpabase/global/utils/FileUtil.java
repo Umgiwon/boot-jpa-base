@@ -1,4 +1,4 @@
-package com.bootjpabase.global.util;
+package com.bootjpabase.global.utils;
 
 import com.bootjpabase.api.file.domain.entity.File;
 import com.bootjpabase.global.config.FileUploadConfig;
@@ -26,7 +26,7 @@ import java.util.UUID;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class FileUtils {
+public class FileUtil {
 
     private final FileUploadConfig fileUploadProperties;
 
