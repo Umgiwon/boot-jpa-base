@@ -41,16 +41,6 @@ import java.util.stream.Collectors;
 })
 public class GlobalExceptionHandler {
 
-    /*
-    Collection valid를 위한 로직 추가 (해당 로직이 없어도 @Valid 어노테이션이 정상 작동 하는것으로 확인되어 주석처리(2025.01.24)
-    protected final LocalValidatorFactoryBean validator;
-
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        binder.addValidators(new CustomCollectionValidator(validator));
-    }
-    */
-
     /**
      * RuntimeException 발생시 처리 핸들러
      *
@@ -80,7 +70,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(IllegalAccessException.class)
     public ResponseEntity<ExceptionMsg> handleIllegalAccessException(HttpServletRequest request, IllegalAccessException ex) {
-        log.error(ex.getMessage(), ex);
+        log.error("[IllegalAccessException] {}", ex.getMessage(), ex);
 
         ExceptionMsg exceptionMsg = ExceptionMsg.builder()
                 .success(false)
@@ -101,6 +91,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionMsg> handleMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException ex) {
+        log.error("[MethodArgumentNotValidException] {}", ex.getMessage(), ex);
 
         String errorMessage = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> "[" + error.getField() + "] " + error.getDefaultMessage())
@@ -125,6 +116,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ExceptionMsg> handleConstraintViolationException(HttpServletRequest request, ConstraintViolationException ex) {
+        log.error("[ConstraintViolationException] {}", ex.getMessage(), ex);
 
         Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
 
@@ -147,6 +139,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ExceptionMsg> handleTypeMismatchException(HttpServletRequest request, MethodArgumentTypeMismatchException ex) {
+        log.error("[MethodArgumentTypeMismatchException] {}", ex.getMessage(), ex);
 
         String errorMessage = String.format("'%s' 값은 잘못된 형식입니다. %s 타입이어야 합니다.",
                 ex.getValue(), ex.getRequiredType().getSimpleName());
@@ -170,6 +163,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ExceptionMsg> handleMissingParams(HttpServletRequest request, MissingServletRequestParameterException ex) {
+        log.error("[MissingServletRequestParameterException] {}", ex.getMessage(), ex);
 
         ExceptionMsg exceptionMsg = ExceptionMsg.builder()
                 .success(false)
@@ -190,6 +184,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ExceptionMsg> handleBusinessException(HttpServletRequest request, BusinessException ex) {
+        log.error("[BusinessException] {}", ex.getApiReturnCode().getMessage(), ex);
 
         ExceptionMsg exceptionMsg = ExceptionMsg.builder()
                 .success(false)
@@ -211,6 +206,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler({NoHandlerFoundException.class})
     public ResponseEntity<ExceptionMsg> handleNoHandlerFoundException(HttpServletRequest request, Exception ex) {
+        log.error("[NoHandlerFoundException] {}", ex.getMessage(), ex);
 
         ExceptionMsg exceptionMsg = ExceptionMsg.builder()
                 .success(false)
@@ -233,6 +229,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
     public ResponseEntity<ExceptionMsg> handleHttpRequestMethodNotSupportedException(HttpServletRequest request, Exception ex) {
+        log.error("[HttpRequestMethodNotSupportedException] {}", ex.getMessage(), ex);
 
         ExceptionMsg exceptionMsg = ExceptionMsg.builder()
                 .success(false)
@@ -255,6 +252,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler({MissingServletRequestPartException.class})
     public ResponseEntity<ExceptionMsg> handleMissingFileException(HttpServletRequest request, Exception ex) {
+        log.error("[MissingServletRequestPartException] {}", ex.getMessage(), ex);
 
         ExceptionMsg exceptionMsg = ExceptionMsg.builder()
                 .success(false)
@@ -277,7 +275,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ExceptionMsg> handleHttpMessageNotReadableException(HttpServletRequest request, HttpMessageNotReadableException ex) {
-        log.error(ex.getMessage(), ex);
+        log.error("[HttpMessageNotReadableException] {}", ex.getMessage(), ex);
 
         ExceptionMsg exceptionMsg = ExceptionMsg.builder()
                 .success(false)
@@ -300,7 +298,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(UnsupportedMediaTypeStatusException.class)
     public ResponseEntity<ExceptionMsg> handleUnsupportedMediaType(HttpServletRequest request, UnsupportedMediaTypeStatusException ex) {
-        log.error(ex.getMessage(), ex);
+        log.error("[UnsupportedMediaTypeStatusException] {}", ex.getMessage(), ex);
 
         ExceptionMsg exceptionMsg = ExceptionMsg.builder()
                 .success(false)
@@ -323,7 +321,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ExceptionMsg> handleAccessDeniedException(HttpServletRequest request, AccessDeniedException ex) {
-        log.error(ex.getMessage(), ex);
+        log.error("[AccessDeniedException] {}", ex.getMessage(), ex);
 
         ExceptionMsg exceptionMsg = ExceptionMsg.builder()
                 .success(false)
@@ -345,7 +343,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ExceptionMsg> handleHttpMediaTypeNotSupportedException(HttpServletRequest request, HttpMediaTypeNotSupportedException ex) {
-        log.error(ex.getMessage(), ex);
+        log.error("[HttpMediaTypeNotSupportedException] {}", ex.getMessage(), ex);
 
         String unsupportedType = ex.getContentType() != null ? ex.getContentType().toString() : "null";
         String supportedTypes = ex.getSupportedMediaTypes().stream()
@@ -375,7 +373,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(InvalidSortFieldException.class)
     public ResponseEntity<ExceptionMsg> handleInvalidSortFieldException(HttpServletRequest request, InvalidSortFieldException ex) {
-        log.error(ex.getMessage(), ex);
+        log.error("[InvalidSortFieldException] {}", ex.getMessage(), ex);
 
         ExceptionMsg exceptionMsg = ExceptionMsg.builder()
                 .success(false)
@@ -386,5 +384,50 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
+    }
+
+    /**
+     * 데이터 저장시 중복된 데이터 처리 핸들러
+     *
+     * @param request
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(DataConflictException.class)
+    public ResponseEntity<ExceptionMsg> handleDataConflictException(HttpServletRequest request, DataConflictException ex) {
+        log.error("[DataConflictException] {}", ex.getMessage(), ex);
+
+        ExceptionMsg exceptionMsg = ExceptionMsg.builder()
+                .success(false)
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .errorCode(ApiReturnCode.DATA_CONFLICT_ERROR.getCode())
+                .errorMessage(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
+    }
+
+    /**
+     * 존재해야될 데이터 없을 시 처리 핸들러
+     * 204가 아니라, 404
+     *
+     * @param request
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(NoDataException.class)
+    public ResponseEntity<ExceptionMsg> handleNoDataException(HttpServletRequest request, NoDataException ex) {
+        log.error("[NoDataException] {}", ex.getMessage(), ex);
+
+        ExceptionMsg exceptionMsg = ExceptionMsg.builder()
+                .success(false)
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .errorCode(ApiReturnCode.NO_DATA_ERROR.getCode())
+                .errorMessage(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionMsg);
     }
 }

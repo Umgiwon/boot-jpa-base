@@ -8,6 +8,7 @@ import com.bootjpabase.api.sample.mapper.SampleMapper;
 import com.bootjpabase.api.sample.repository.SampleRepository;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.exception.BusinessException;
+import com.bootjpabase.global.exception.DataConflictException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +55,7 @@ public class SampleServiceTx {
         // 제목 중복 체크
         dtoList.forEach(dto -> {
             if (sampleRepository.existsByTitle(dto.getTitle())) {
-                throw new BusinessException(ApiReturnCode.TITLE_CONFLICT_ERROR);
+                throw new DataConflictException(dto.getTitle());
             }
         });
     }

@@ -14,6 +14,7 @@ import com.bootjpabase.api.user.domain.entity.User;
 import com.bootjpabase.api.user.mapper.UserMapper;
 import com.bootjpabase.api.user.repository.UserRepository;
 import com.bootjpabase.global.enums.user.TokenType;
+import com.bootjpabase.global.exception.DataConflictException;
 import com.bootjpabase.global.security.jwt.component.TokenProvider;
 import com.bootjpabase.global.enums.common.ApiReturnCode;
 import com.bootjpabase.global.enums.file.UploadFileType;
@@ -79,17 +80,17 @@ public class UserServiceTx {
 
         // userId 중복 체크
         if (userRepository.existsByUserId(dto.getUserId())) {
-            throw new BusinessException(ApiReturnCode.ID_CONFLICT_ERROR);
+            throw new DataConflictException(dto.getUserId());
         }
 
         // userPhone 중복 체크
         if (userRepository.existsByUserPhone(dto.getUserPhone())) {
-            throw new BusinessException(ApiReturnCode.PHONE_CONFLICT_ERROR);
+            throw new DataConflictException(dto.getUserPhone());
         }
 
         // userEmail 중복 체크
         if (userRepository.existsByUserEmail(dto.getUserEmail())) {
-            throw new BusinessException(ApiReturnCode.EMAIL_CONFLICT_ERROR);
+            throw new DataConflictException(dto.getUserEmail());
         }
     }
 
