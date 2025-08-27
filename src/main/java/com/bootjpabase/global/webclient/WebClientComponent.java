@@ -20,9 +20,8 @@ import java.util.Map;
 @Component
 public class WebClientComponent {
 
-    private final WebClient webClient;
-
     private static final Duration TIMEOUT = Duration.ofSeconds(3);
+    private final WebClient webClient;
 
     /**
      * POST 요청

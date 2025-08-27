@@ -28,10 +28,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileUtil {
 
-    private final FileUploadConfig fileUploadProperties;
-
     private static String ROOT_PATH;
     private static long FILE_MAX_SIZE; // 10MB
+    private final FileUploadConfig fileUploadProperties;
 
     @PostConstruct
     public void init() {

@@ -10,7 +10,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
  * STOMP 설정 파일
  * STOMP는 WebSocket 위에서 동작한다.
  * WebSocket 연결 후(endPoint) 구독/발행으로 메시지를 주고 받는다.
- *
+ * <p>
  * 사용하고자 하는 위치에서 선언 - private final SimpMessagingTemplate messagingTemplate;
  * 사용하고자 하는 위치에서 사용 - messagingTemplate.convertAndSend("/sub/sample", payload);
  */

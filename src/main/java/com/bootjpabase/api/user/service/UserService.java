@@ -24,7 +24,7 @@ public class UserService {
      * User 상세 조회
      *
      * @param userId 조회할 User 아이디
-     * @return       조회된 User 응답 dto
+     * @return 조회된 User 응답 dto
      */
     public UserResponseDTO getUser(String userId) {
         return Optional.ofNullable(userRepositoryCustom.getUser(userId))

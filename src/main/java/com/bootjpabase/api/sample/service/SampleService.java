@@ -24,7 +24,7 @@ public class SampleService {
      * Sample 상세 조회
      *
      * @param sampleSn 조회할 Sample 순번
-     * @return         조회된 Sample 응답 dto
+     * @return 조회된 Sample 응답 dto
      */
     public SampleResponseDTO getSample(Long sampleSn) {
         return Optional.ofNullable(sampleRepositoryCustom.getSample(sampleSn))
@@ -37,7 +37,7 @@ public class SampleService {
      *
      * @param dto      조회할 Sample 조건 dto
      * @param pageable 페이징 조건
-     * @return         조회된 Sample 목록 응답 dto
+     * @return 조회된 Sample 목록 응답 dto
      */
     public Page<SampleResponseDTO> getSampleList(SampleListRequestDTO dto, Pageable pageable) {
         return sampleRepositoryCustom.getSampleList(dto, pageable);
