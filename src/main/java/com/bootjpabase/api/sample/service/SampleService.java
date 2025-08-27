@@ -3,7 +3,8 @@ package com.bootjpabase.api.sample.service;
 import com.bootjpabase.api.sample.domain.dto.request.SampleListRequestDTO;
 import com.bootjpabase.api.sample.domain.dto.response.SampleResponseDTO;
 import com.bootjpabase.api.sample.repository.SampleRepositoryCustom;
-import com.bootjpabase.global.exception.NoDataException;
+import com.bootjpabase.global.enums.common.ApiReturnCode;
+import com.bootjpabase.global.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,8 +28,8 @@ public class SampleService {
      */
     public SampleResponseDTO getSample(Long sampleSn) {
         return Optional.ofNullable(sampleRepositoryCustom.getSample(sampleSn))
-//                .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_DATA_ERROR));
-                .orElseThrow(() -> new NoDataException("샘플 상세"));
+                .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_DATA_ERROR));
+//                .orElseThrow(() -> new NoDataException("샘플 상세"));
     }
 
     /**

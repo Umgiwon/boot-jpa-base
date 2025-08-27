@@ -20,7 +20,6 @@ import java.util.Collections;
 @Configuration
 public class SwaggerConfig {
 
-
     @Value("${springdoc.title}")
     private String API_TITLE;
 

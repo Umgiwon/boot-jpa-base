@@ -38,7 +38,7 @@ springdoc:
     doc-expansion: none # 카테고리가 접힌상태로 로딩
   packages-to-scan: com.bootjpabase
   title: boot-jpa-base API 문서 (dev)
-  version: 1.1
+  version: 1.0.0
 
 # jwt setting
 jwt:

@@ -30,6 +30,17 @@ public class SampleRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     /**
+     * Sample select절 분리
+     */
+    private QSampleResponseDTO selectSampleResponseDTO() {
+        return new QSampleResponseDTO(
+                sample.sampleSn
+                , sample.title
+                , sample.content
+        );
+    }
+
+    /**
      * Sample 상세 조회
      *
      * @param sampleSn 조회할 Sample 순번
@@ -37,11 +48,7 @@ public class SampleRepositoryCustom {
      */
     public SampleResponseDTO getSample(Long sampleSn) {
         return queryFactory
-                .select(new QSampleResponseDTO(
-                        sample.sampleSn
-                        , sample.title
-                        , sample.content
-                ))
+                .select(selectSampleResponseDTO())
                 .from(sample)
                 .where(sample.sampleSn.eq(sampleSn))
                 .fetchOne();
@@ -56,11 +63,7 @@ public class SampleRepositoryCustom {
      */
     public Page<SampleResponseDTO> getSampleList(SampleListRequestDTO dto, Pageable pageable) {
         List<SampleResponseDTO> resultList = queryFactory
-                .select(new QSampleResponseDTO(
-                        sample.sampleSn
-                        , sample.title
-                        , sample.content
-                ))
+                .select(selectSampleResponseDTO())
                 .from(sample)
                 .where(pagingCondition(dto))
                 .offset(pageable.getOffset())

@@ -31,6 +31,35 @@ public class UserRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     /**
+     * User select절 분리
+     */
+    private QUserResponseDTO selectUserResponseDTO() {
+        return new QUserResponseDTO(
+                user.userSn
+                , user.userId
+                , user.userName
+                , user.userPhone
+                , user.userEmail
+                , user.createdUser
+                , user.createdDate
+        );
+    }
+
+    /**
+     * User 상세 조회
+     *
+     * @param userId 조회할 User 아이디
+     * @return 조회된 User 응답 dto
+     */
+    public UserResponseDTO getUser(String userId) {
+        return queryFactory
+                .select(selectUserResponseDTO())
+                .from(user)
+                .where(user.userId.eq(userId))
+                .fetchOne();
+    }
+
+    /**
      * User 목록 조회
      *
      * @param dto      조회할 User 조건 dto
@@ -39,15 +68,7 @@ public class UserRepositoryCustom {
      */
     public Page<UserResponseDTO> getUserList(UserListRequestDTO dto, Pageable pageable) {
         List<UserResponseDTO> resultList = queryFactory
-                .select(new QUserResponseDTO(
-                        user.userSn
-                        , user.userId
-                        , user.userName
-                        , user.userPhone
-                        , user.userEmail
-                        , user.createdUser
-                        , user.createdDate
-                ))
+                .select(selectUserResponseDTO())
                 .from(user)
                 .where(pagingCondition(dto))
                 .offset(pageable.getOffset())

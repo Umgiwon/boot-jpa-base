@@ -5,8 +5,9 @@ spring:
   application:
     name: boot-jpa-base
 
-  config:
-    import: application-secret.yml
+# 필요시 secret 파일 사용
+#  config:
+#    import: application-secret.yml
 
   profiles:
     active: local

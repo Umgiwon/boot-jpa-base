@@ -29,6 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static com.bootjpabase.global.constant.SwaggerExampleConst.PAGING_EXAMPLE;
+
 @Tag(name = "User API", description = "사용자 API")
 @CustomApiLogger
 @RestController
@@ -49,19 +51,21 @@ public class UserController {
         return BaseResponseFactory.success(userServiceTx.saveUser(dto, profileImgFile));
     }
 
+    @Operation(summary = "사용자 상세 조회", description = "사용자 아이디로 조회")
+    @GetMapping("/{userId}")
+    public BaseResponse<UserResponseDTO> getUser(
+            @PathVariable("userId") String userId
+    ) {
+        return BaseResponseFactory.success(userService.getUser(userId));
+    }
+
     @Operation(summary = "사용자 목록 조회", description = "이름으로 목록 조회 (페이징 처리)")
     @GetMapping("")
     public BaseResponse<List<UserResponseDTO>> getUserList(
             @ParameterObject UserListRequestDTO dto,
             @Parameter(
                     description = "페이징 정보 (가능한 정렬조건 : userSn, userId, userName, userPhone, userEmail, createdDate)",
-                    example = """
-                            {
-                              "page": 0,
-                              "size": 10,
-                              "sort": ["createdDate,desc"]
-                            }
-                            """
+                    example = PAGING_EXAMPLE
             )
             @PageableDefault Pageable pageable
     ) {

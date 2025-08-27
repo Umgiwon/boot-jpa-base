@@ -22,7 +22,7 @@ public class User extends BaseEntity {
     @Comment("사용자 순번")
     private Long userSn;
 
-    @Column(name = "USER_ID", nullable = false, updatable = false, length = 30)
+    @Column(name = "USER_ID", nullable = false, unique = true, updatable = false, length = 30)
     @Comment("사용자 아이디")
     private String userId;
 

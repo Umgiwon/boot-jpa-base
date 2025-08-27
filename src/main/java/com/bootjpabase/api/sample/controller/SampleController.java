@@ -66,13 +66,7 @@ public class SampleController {
             @ParameterObject SampleListRequestDTO dto,
             @Parameter(
                     description = "페이징 정보 (가능한 정렬조건 : sampleSn, title, createdDate)",
-                    example = """
-                            {
-                              "page": 0,
-                              "size": 10,
-                              "sort": ["createdDate,desc"]
-                            }
-                            """
+                    example = PAGING_EXAMPLE
             )
             @PageableDefault Pageable pageable
     ) {

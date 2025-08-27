@@ -20,35 +20,18 @@
 ### 1. 환경 설정
 
 - **Java 17** 이상이 필요합니다.
-- Gradle이 설치되어 있어야 합니다.
 
-### 2. 빌드 및 실행 방법
+### 2. 데이터베이스 설정
 
-1. 프로젝트 클론
-   ```bash
-   git clone <https://github.com/Umgiwon/boot-jpa-base.git>
-   ```
-
-2. Gradle 빌드
-   ```bash
-   ./gradlew build
-   ```
-
-3. 애플리케이션 실행
-   ```bash
-   ./gradlew bootRun
-   ```
-
-### 3. 데이터베이스 설정
-
-`application.properties` 또는 `application.yml`에서 MariaDB 설정을 추가해야 합니다.
+`application.yml`에서 MariaDB 설정을 해야 합니다.
 
 ```properties
-spring.datasource.url=jdbc:mariadb://localhost:3306/your_database
-spring.datasource.username=your_username
-spring.datasource.password=your_password
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
+spring:
+    datasource:
+        url: jdbc:mariadb://localhost:3306/your_database
+        driver-class-name: org.mariadb.jdbc.Driver
+        username: your_username
+        password: your_password
 ```
 
 ## 프로젝트 의존성
@@ -83,24 +66,8 @@ annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
 - Swagger UI를 통한 API 문서화
 - P6Spy를 통한 SQL 로깅 및 모니터링
 
-## 테스트
-
-테스트 실행:
-
-```bash
-./gradlew test
-```
-
-테스트 코드는 `src/test/java` 디렉토리에 위치합니다.
-
 ## API 문서 확인
 
 애플리케이션 실행 후, Swagger UI를 통해 API 문서를 확인할 수 있습니다.
 
 - [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-
-## 개발 환경
-
-- IDE: IntelliJ IDEA
-- 빌드 도구: Gradle
-- 데이터베이스 도구: DBeaver, MySQL Workbench

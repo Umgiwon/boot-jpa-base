@@ -58,13 +58,7 @@ public class CarController {
             @ParameterObject CarListRequestDTO dto,
             @Parameter(
                     description = "페이징 정보 (가능한 정렬조건 : carSn, category, manufacturer, modelName, productionYear, createdDate)",
-                    example = """
-                            {
-                              "page": 0,
-                              "size": 10,
-                              "sort": ["createdDate,desc"]
-                            }
-                            """
+                    example = PAGING_EXAMPLE
             )
             @PageableDefault Pageable pageable
     ) {
