@@ -41,10 +41,10 @@ public class FileUtil {
     /**
      * 파일 업로드
      *
-     * @param uploadFileType
-     * @param file
-     * @return
-     * @throws IOException
+     * @param uploadFileType 파일 업로드 타입
+     * @param file 업로드 파일
+     * @return 저장된 파일 엔티티 정보
+     * @throws IOException 입출력 예외
      */
     public static File uploadFile(MultipartFile file, UploadFileType uploadFileType) throws IOException {
 
@@ -78,7 +78,7 @@ public class FileUtil {
     /**
      * 파일 업로드시 validate
      *
-     * @param file
+     * @param file 업로드 파일
      */
     public static void validateFile(MultipartFile file, UploadFileType uploadFileType) {
 
