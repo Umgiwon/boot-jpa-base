@@ -1,12 +1,5 @@
 spring:
 
-  # db setting
-#  datasource:
-#    url: jdbc:mariadb://localhost:3306/bootbase
-#    driver-class-name: org.mariadb.jdbc.Driver
-#    username: root
-#    password: 1234
-
   # jpa setting
   jpa:
     hibernate:
@@ -48,6 +41,7 @@ decorator:
       multiline: true
       logging: slf4j
       log-format: "com.bootjpabase.global.config.P6SpyFormatterConfig"
+    exclude-beans: [masterDataSource, slaveDataSource, routingDataSource] # 커스텀 DataSource로 인해 중복 쿼리 로깅 방지
 
 
 # swagger setting

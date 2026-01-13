@@ -1,12 +1,5 @@
 spring:
 
-  # db setting
-#  datasource:
-#    url: jdbc:mariadb://localhost:3306/bootbase
-#    driver-class-name: org.mariadb.jdbc.Driver
-#    username: root
-#    password: 1234
-
   # jpa setting
   jpa:
     hibernate:
