@@ -1,6 +1,5 @@
 package com.bootjpabase.api.file.domain.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -13,7 +12,6 @@ import java.io.Serializable;
 @Builder
 @Data
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class FileResponseDTO implements Serializable {
 
     @Schema(description = "첨부파일 순번", example = "1")
